@@ -2,6 +2,8 @@
 
 用户指定账号为 **yyyx0402**，仓库名为 **navdiag**，目标为公开开源。当前项目已经准备源码、MIT 许可、复现命令、数据指纹、结果记录、截图、测试与 CI。原始数据和密钥不进入 Git。
 
+2026-10-10 已创建并推送公开仓库：[yyyx0402/navdiag](https://github.com/yyyx0402/navdiag)。使用账号公开 ID 对应的 noreply 邮箱提交，本机授权保存在 Windows 凭据存储。下述登录命令供其他环境复现发布；GitHub CLI 需从 [官方安装入口](https://cli.github.com/) 获取，本次项目缓存中的便携程序不随源码发布。
+
 ## 账号与发布
 
 仓库创建和推送需要本机登录 GitHub。用户名本身不能提供写权限；不要在聊天中传 token。可使用 GitHub CLI 浏览器授权：

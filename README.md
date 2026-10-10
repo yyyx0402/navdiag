@@ -1,5 +1,7 @@
 # NavDiag
 
+[![Python checks](https://github.com/yyyx0402/navdiag/actions/workflows/ci.yml/badge.svg)](https://github.com/yyyx0402/navdiag/actions/workflows/ci.yml)
+
 **GNSS 定位质量预测与证据诊断 / GNSS quality prediction and evidence-backed diagnostics**
 
 把卫星导航专业知识与机器学习、LLM 工具调用结合起来的开源项目。输入 GNSS 观测，计算基线定位和质量特征，预测当前水平误差是否超过 10 米，再通过实验工具与技术笔记解释结果。
