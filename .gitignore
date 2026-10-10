@@ -1,0 +1,19 @@
+# Local environments, caches, and credentials
+.venv/
+.cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.env
+.env.*
+!.env.example
+
+# Third-party datasets and experiment outputs stay local.
+data/*
+!data/README.md
+!data/schema.csv
+artifacts/*
+!artifacts/README.md
+build/
+dist/

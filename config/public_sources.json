@@ -1,0 +1,58 @@
+[
+  {
+    "path": "data/raw/gsdc2021/2020-05-14-US-MTV-1/Pixel4/Pixel4_derived.csv",
+    "url": "https://raw.githubusercontent.com/Stanford-NavLab/deep_gnss/4120337f87444c64d28e0b1ff8c76c9290ba1958/data/train/2020-05-14-US-MTV-1/Pixel4/Pixel4_derived.csv",
+    "sha256": "2b889c7b8529ed9033b9fd68578b48eb845cd0716b07f77e3c8ea212d0de4d1d",
+    "bytes": 10863386,
+    "source_commit": "4120337f87444c64d28e0b1ff8c76c9290ba1958"
+  },
+  {
+    "path": "data/raw/gsdc2021/2020-05-14-US-MTV-1/Pixel4/ground_truth.csv",
+    "url": "https://raw.githubusercontent.com/Stanford-NavLab/deep_gnss/4120337f87444c64d28e0b1ff8c76c9290ba1958/data/train/2020-05-14-US-MTV-1/Pixel4/ground_truth.csv",
+    "sha256": "954a7b654cd339ba83487159ef13d0724a48fd7d105492dfa8689f785a7468cf",
+    "bytes": 187347,
+    "source_commit": "4120337f87444c64d28e0b1ff8c76c9290ba1958"
+  },
+  {
+    "path": "data/raw/gsdc2021/2021-04-22-US-SJC-1/SamsungS20Ultra/SamsungS20Ultra_derived.csv",
+    "url": "https://raw.githubusercontent.com/Stanford-NavLab/deep_gnss/4120337f87444c64d28e0b1ff8c76c9290ba1958/data/val/2021-04-22-US-SJC-1/SamsungS20Ultra/SamsungS20Ultra_derived.csv",
+    "sha256": "06a82672611e59967d8dbef3368d2ff5e76d5ebc8471eacfd792404fc269f1b4",
+    "bytes": 12489422,
+    "source_commit": "4120337f87444c64d28e0b1ff8c76c9290ba1958"
+  },
+  {
+    "path": "data/raw/gsdc2021/2021-04-22-US-SJC-1/SamsungS20Ultra/ground_truth.csv",
+    "url": "https://raw.githubusercontent.com/Stanford-NavLab/deep_gnss/4120337f87444c64d28e0b1ff8c76c9290ba1958/data/val/2021-04-22-US-SJC-1/SamsungS20Ultra/ground_truth.csv",
+    "sha256": "5a1491f3f35c63a5c584fcfb3b04f2a6f44b11e5ec52999d19075a527f730a9d",
+    "bytes": 328245,
+    "source_commit": "4120337f87444c64d28e0b1ff8c76c9290ba1958"
+  },
+  {
+    "path": "data/raw/gsdc2022/published-sample/device/device_gnss.csv",
+    "url": "https://raw.githubusercontent.com/Stanford-NavLab/gnss_lib_py/3a5c43cdf9121b68414ec87cd3666b761f0faf8d/data/unit_test/google_decimeter_2022/device_gnss.csv",
+    "sha256": "3e2ebde29c573e2f59f3a92b5602b6fccb21316a9ba6385d1ff60c3aef91e97b",
+    "bytes": 122859,
+    "source_commit": "3a5c43cdf9121b68414ec87cd3666b761f0faf8d"
+  },
+  {
+    "path": "data/raw/gsdc2022/published-sample/device/ground_truth.csv",
+    "url": "https://raw.githubusercontent.com/Stanford-NavLab/gnss_lib_py/3a5c43cdf9121b68414ec87cd3666b761f0faf8d/data/unit_test/google_decimeter_2022/ground_truth.csv",
+    "sha256": "ce1dc3451e4d043990b6741640cb307889d79dffc73df57b328ece78a7fbd34e",
+    "bytes": 15932,
+    "source_commit": "3a5c43cdf9121b68414ec87cd3666b761f0faf8d"
+  },
+  {
+    "path": "data/raw/gsdc2023/2023-09-07-18-59-us-ca/pixel7pro/device_gnss.csv",
+    "url": "https://raw.githubusercontent.com/Stanford-NavLab/gnss_lib_py/3a5c43cdf9121b68414ec87cd3666b761f0faf8d/data/unit_test/google_decimeter_2023/2023-09-07-18-59-us-ca/pixel7pro/device_gnss.csv",
+    "sha256": "a675a1e99b8808e09e2360c77606641e8bec4282e250563eece309921904cfc5",
+    "bytes": 105559,
+    "source_commit": "3a5c43cdf9121b68414ec87cd3666b761f0faf8d"
+  },
+  {
+    "path": "data/raw/gsdc2023/2023-09-07-18-59-us-ca/pixel7pro/ground_truth.csv",
+    "url": "https://raw.githubusercontent.com/Stanford-NavLab/gnss_lib_py/3a5c43cdf9121b68414ec87cd3666b761f0faf8d/data/unit_test/google_decimeter_2023/2023-09-07-18-59-us-ca/pixel7pro/ground_truth.csv",
+    "sha256": "02c42837a8a8cfdabe6d14f5b638f4d5e1b55a739cd082db034a8a80310adb3c",
+    "bytes": 665,
+    "source_commit": "3a5c43cdf9121b68414ec87cd3666b761f0faf8d"
+  }
+]

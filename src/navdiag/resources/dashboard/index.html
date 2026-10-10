@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NavDiag · 定位实验与诊断</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="/"
+        ><span class="brand-icon">⌖</span
+        ><span>NavDiag<small>NAVIGATION INTELLIGENCE</small></span></a
+      >
+      <div class="nav-label">实验工作台</div>
+      <a href="#overview" class="nav-item active">◈ 实验概览</a>
+      <a href="#trajectories" class="nav-item">⌁ 轨迹与质量</a>
+      <a href="#diagnostics" class="nav-item">✧ 诊断助手</a>
+      <a href="#method" class="nav-item">☷ 方法与证据</a>
+      <div class="sidebar-note">
+        <span class="dot"></span>本地运行<br /><small
+          >公开数据 · 可复现实验</small
+        >
+      </div>
+    </aside>
+    <main>
+      <header class="topbar">
+        <span>WORKSPACE <b>/</b> 定位实验</span
+        ><span class="version">NavDiag v0.2</span>
+      </header>
+      <section id="overview">
+        <div class="eyebrow">GNSS QUALITY & DIAGNOSTICS</div>
+        <div class="title-row">
+          <div>
+            <h1>从观测，到可信的判断。</h1>
+            <p class="lead">比较定位算法，查看风险片段，用证据解释实验结果。</p>
+          </div>
+          <span id="data-badge" class="badge">正在加载</span>
+        </div>
+        <div id="provenance-warning" class="notice"></div>
+        <div class="metric-grid">
+          <article class="metric">
+            <span>当前选用模型</span><strong id="selected-model">—</strong
+            ><small>使用验证集选择</small>
+          </article>
+          <article class="metric">
+            <span>留出集历元</span><strong id="epoch-count">—</strong
+            ><small id="trip-count">—</small>
+          </article>
+          <article class="metric">
+            <span>失准识别 Recall</span><strong id="recall">—</strong
+            ><small id="task-label">—</small>
+          </article>
+          <article class="metric">
+            <span>基线位置 P95</span><strong id="position-p95">—</strong
+            ><small>离线参考轨迹评测</small>
+          </article>
+        </div>
+        <div class="panel">
+          <div class="panel-heading">
+            <h2>模型对照</h2>
+            <span>TEST SPLIT · 统一任务阈值</span>
+          </div>
+          <div id="model-table"></div>
+        </div>
+      </section>
+      <section id="trajectories">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">TRAJECTORY INSPECTION</div>
+            <h2>看见偏差，也看见风险。</h2>
+          </div>
+          <div class="selectors">
+            <label
+              >行程
+              <select id="trip-select"></select></label
+            ><label
+              >设备
+              <select id="device-select"></select
+            ></label>
+          </div>
+        </div>
+        <div class="chart-grid">
+          <div class="panel">
+            <div class="panel-heading">
+              <h3>局部平面轨迹</h3>
+              <span>ENU · 米</span>
+            </div>
+            <div class="legend">
+              <span class="legend-line truth">参考轨迹</span
+              ><span class="legend-line raw">GNSS 基线</span
+              ><span class="legend-line adaptive">自适应滤波</span>
+            </div>
+            <div id="trajectory-chart" class="chart"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-heading">
+              <h3>定位误差与风险</h3>
+              <span id="sample-info"></span>
+            </div>
+            <div id="error-chart" class="chart"></div>
+            <div class="chart-footnote">
+              蓝：水平误差（m）　橙：风险评分（0–1）；评分尚未校准为失准概率。
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading">
+            <h3>定位方法对照</h3>
+            <span>MEDIAN / P95 / RMSE</span>
+          </div>
+          <div id="position-table"></div>
+        </div>
+      </section>
+      <section id="diagnostics">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">EVIDENCE-BASED DIAGNOSTICS</div>
+            <h2>让解释有出处。</h2>
+          </div>
+          <label
+            >后端
+            <select id="provider">
+              <option value="offline">离线工具基线</option>
+              <option value="openai">GPT · Responses API</option>
+              <option value="deepseek">DeepSeek API</option>
+              <option value="compatible">兼容 API</option>
+            </select></label
+          >
+        </div>
+        <div class="agent-grid">
+          <div class="panel ask-panel">
+            <p>提问后查看实际调用的工具与证据。API 模式需先在本地配置密钥。</p>
+            <textarea
+              id="question"
+              placeholder="例如：哪个模型表现更好？为什么选择它？"
+            ></textarea>
+            <div class="example-questions">
+              <button>比较模型的 F1 和召回率</button
+              ><button>自适应滤波是否改善位置误差？</button
+              ><button>当前数据是真实还是模拟？</button
+              ><button>HDOP 能否证明发生了 NLOS？</button>
+            </div>
+            <button class="primary" id="ask-button">
+              分析实验 <span>↗</span>
+            </button>
+            <div id="agent-status" class="muted">
+              离线模式采用确定性工具流程，不是大语言模型。
+            </div>
+          </div>
+          <div class="panel answer-panel">
+            <div class="panel-heading">
+              <h3>诊断结果</h3>
+              <span id="answer-backend">等待提问</span>
+            </div>
+            <div id="answer" class="answer">
+              先选择一个问题。结果会在这里显示，证据记录保留在下方。
+            </div>
+            <div id="evidence-list"></div>
+          </div>
+        </div>
+      </section>
+      <section id="method">
+        <div class="panel method-panel">
+          <div>
+            <div class="eyebrow">REPRODUCIBILITY</div>
+            <h2>理解结果，也理解它的边界。</h2>
+            <p>
+              同一次采集的设备按整段行程分组。填充与标准化只在训练集拟合，模型、分类阈值与滤波设置由验证集选择。公开小样本不能代表全部城市和设备。
+            </p>
+          </div>
+          <dl>
+            <dt>随机种子</dt>
+            <dd id="seed">—</dd>
+            <dt>数据指纹 SHA-256</dt>
+            <dd id="dataset-hash">—</dd>
+            <dt>缺失而移除的特征</dt>
+            <dd id="missing-features">—</dd>
+          </dl>
+        </div>
+      </section>
+      <footer>
+        NavDiag · GNSS positioning quality & diagnostics　<span
+          >实验结果来自当前本地产物</span
+        >
+      </footer>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

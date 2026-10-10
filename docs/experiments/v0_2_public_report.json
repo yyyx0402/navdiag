@@ -1,0 +1,329 @@
+{
+  "version": "0.2.0",
+  "data_kind": "real",
+  "dataset_sha256": "1fe8536e3b25ffa643be5148a7da0e70e8639e65c52136cfae87a3bbdbcf236a",
+  "seed": 42,
+  "sklearn_version": "1.9.1",
+  "task": "horizontal_error_m > 10",
+  "error_limit_m": 10,
+  "features": [
+    "satellite_count",
+    "hdop",
+    "residual_rms_m",
+    "speed_mps"
+  ],
+  "missing_feature_fraction_train": {
+    "satellite_count": 0.0,
+    "cn0_mean_dbhz": 1.0,
+    "cn0_min_dbhz": 1.0,
+    "hdop": 0.0,
+    "residual_rms_m": 0.0,
+    "speed_mps": 0.0
+  },
+  "dropped_features": [
+    "cn0_mean_dbhz",
+    "cn0_min_dbhz"
+  ],
+  "min_feature_coverage_train": 0.5,
+  "evaluation_limitations": [
+    "Test split has no unreliable epochs; recall and F1 cannot be assessed."
+  ],
+  "splits": {
+    "train": {
+      "rows": 2825,
+      "trips": [
+        "2021-04-22-US-SJC-1"
+      ],
+      "positive_rate": 0.40991150442477875
+    },
+    "validation": {
+      "rows": 1739,
+      "trips": [
+        "2020-05-14-US-MTV-1"
+      ],
+      "positive_rate": 0.8895917193789534
+    },
+    "test": {
+      "rows": 11,
+      "trips": [
+        "2023-09-07-18-59-us-ca",
+        "published-sample"
+      ],
+      "positive_rate": 0.0
+    }
+  },
+  "models": {
+    "fixed_rules": {
+      "validation": {
+        "threshold": 0.5,
+        "precision": 0.6296296296296297,
+        "recall": 0.08791208791208792,
+        "f1": 0.1542824730572887,
+        "false_positive_rate": 0.4166666666666667,
+        "average_precision": 0.8667379092911007,
+        "roc_auc": 0.33562271062271054,
+        "brier_score": 0.8573893041978148,
+        "confusion_matrix": [
+          [
+            112,
+            80
+          ],
+          [
+            1411,
+            136
+          ]
+        ]
+      },
+      "test": {
+        "threshold": 0.5,
+        "precision": 0.0,
+        "recall": null,
+        "f1": null,
+        "false_positive_rate": 0.5454545454545454,
+        "average_precision": null,
+        "roc_auc": null,
+        "brier_score": 0.5454545454545454,
+        "confusion_matrix": [
+          [
+            5,
+            6
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "logistic_regression": {
+      "validation": {
+        "threshold": 0.3,
+        "precision": 0.9839021249195107,
+        "recall": 0.9877181641887525,
+        "f1": 0.9858064516129033,
+        "false_positive_rate": 0.13020833333333334,
+        "average_precision": 0.987437932683229,
+        "roc_auc": 0.959952731092437,
+        "brier_score": 0.22742816230527568,
+        "confusion_matrix": [
+          [
+            167,
+            25
+          ],
+          [
+            19,
+            1528
+          ]
+        ]
+      },
+      "test": {
+        "threshold": 0.3,
+        "precision": 0.0,
+        "recall": null,
+        "f1": null,
+        "false_positive_rate": 0.2727272727272727,
+        "average_precision": null,
+        "roc_auc": null,
+        "brier_score": 0.08708641194359278,
+        "confusion_matrix": [
+          [
+            8,
+            3
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "random_forest": {
+      "validation": {
+        "threshold": 0.55,
+        "precision": 0.97702616464582,
+        "recall": 0.9896574014221073,
+        "f1": 0.98330122029544,
+        "false_positive_rate": 0.1875,
+        "average_precision": 0.9923182491774635,
+        "roc_auc": 0.9661071159232925,
+        "brier_score": 0.09913935046399935,
+        "confusion_matrix": [
+          [
+            156,
+            36
+          ],
+          [
+            16,
+            1531
+          ]
+        ]
+      },
+      "test": {
+        "threshold": 0.55,
+        "precision": 0.0,
+        "recall": null,
+        "f1": null,
+        "false_positive_rate": 0.18181818181818182,
+        "average_precision": null,
+        "roc_auc": null,
+        "brier_score": 0.12026323983713172,
+        "confusion_matrix": [
+          [
+            9,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "gru": {
+      "validation": {
+        "threshold": 0.6500000000000001,
+        "precision": 0.9934980494148244,
+        "recall": 0.9877181641887525,
+        "f1": 0.9905996758508914,
+        "false_positive_rate": 0.052083333333333336,
+        "average_precision": 0.9953475298784605,
+        "roc_auc": 0.9906404869640164,
+        "brier_score": 0.053822875022888184,
+        "confusion_matrix": [
+          [
+            182,
+            10
+          ],
+          [
+            19,
+            1528
+          ]
+        ]
+      },
+      "test": {
+        "threshold": 0.6500000000000001,
+        "precision": null,
+        "recall": null,
+        "f1": null,
+        "false_positive_rate": 0.0,
+        "average_precision": null,
+        "roc_auc": null,
+        "brier_score": 0.012823394499719143,
+        "confusion_matrix": [
+          [
+            11,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "training_history": [
+        {
+          "epoch": 1,
+          "training_loss": 0.7252985809160315,
+          "validation_loss": 1.2423133850097656
+        },
+        {
+          "epoch": 2,
+          "training_loss": 0.6661785426347152,
+          "validation_loss": 0.7429191470146179
+        },
+        {
+          "epoch": 3,
+          "training_loss": 0.6549188442852186,
+          "validation_loss": 0.36039450764656067
+        },
+        {
+          "epoch": 4,
+          "training_loss": 0.6315192398817643,
+          "validation_loss": 0.3433188498020172
+        },
+        {
+          "epoch": 5,
+          "training_loss": 0.6398909428845281,
+          "validation_loss": 0.3770013749599457
+        },
+        {
+          "epoch": 6,
+          "training_loss": 0.6163341610328011,
+          "validation_loss": 0.4389839768409729
+        },
+        {
+          "epoch": 7,
+          "training_loss": 0.6135806052581124,
+          "validation_loss": 0.422817200422287
+        },
+        {
+          "epoch": 8,
+          "training_loss": 0.6237100570098214,
+          "validation_loss": 0.4409419894218445
+        },
+        {
+          "epoch": 9,
+          "training_loss": 0.6120391799056012,
+          "validation_loss": 0.4364026188850403
+        }
+      ],
+      "window_epochs": 10
+    }
+  },
+  "warning": "Performance applies only to this dataset and split; check unseen routes/devices.",
+  "selected_model": "gru",
+  "positioning": {
+    "methods": {
+      "wls": {
+        "epochs": 11,
+        "median_m": 5.308286494214888,
+        "p95_m": 9.300342725494772,
+        "rmse_m": 6.391090398796548
+      },
+      "fixed_filter": {
+        "epochs": 11,
+        "median_m": 5.308286494214888,
+        "p95_m": 9.272514049878843,
+        "rmse_m": 6.383685743601573
+      },
+      "adaptive_filter": {
+        "epochs": 11,
+        "median_m": 5.308286494214888,
+        "p95_m": 9.26756779082215,
+        "rmse_m": 6.42999788628551
+      },
+      "equal": {
+        "epochs": 11,
+        "median_m": 3.5623382062632136,
+        "p95_m": 14.874106556051215,
+        "rmse_m": 8.91592229514005
+      },
+      "robust": {
+        "epochs": 11,
+        "median_m": 2.5586173088778663,
+        "p95_m": 7.143870584614846,
+        "rmse_m": 3.7185440721478797
+      }
+    },
+    "settings_selected_on": "validation",
+    "fixed_sigma_m": 2,
+    "acceleration_noise_mps2": 3,
+    "risk_bin_edges": [
+      0.0,
+      0.2,
+      0.4,
+      0.6000000000000001,
+      0.8,
+      1.0
+    ],
+    "risk_bin_variances_m2": [
+      4.686599452786843,
+      8.803010164059437,
+      21.99744727653388,
+      292.73614416709876,
+      356.88213593749157
+    ],
+    "uses_imu": false,
+    "warning": "Empirical planar-filter baseline. Report failures as well as improvements; this is not a production INS."
+  }
+}

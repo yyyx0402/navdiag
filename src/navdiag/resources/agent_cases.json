@@ -1,0 +1,167 @@
+[
+  {
+    "id": "M01",
+    "question": "比较模型的 F1 和召回率",
+    "required_tool": "compare_models"
+  },
+  {
+    "id": "M02",
+    "question": "哪个模型是验证集选出的？",
+    "required_tool": "compare_models"
+  },
+  {
+    "id": "M03",
+    "question": "请给出测试 Precision 对照",
+    "required_tool": "compare_models"
+  },
+  {
+    "id": "M04",
+    "question": "测试 Recall 可以评估吗？",
+    "required_tool": "compare_models"
+  },
+  {
+    "id": "M05",
+    "question": "Compare model performance on the held-out trips",
+    "required_tool": "compare_models"
+  },
+  {
+    "id": "P01",
+    "question": "自适应滤波是否改善位置误差？",
+    "required_tool": "compare_positioning"
+  },
+  {
+    "id": "P02",
+    "question": "定位精度的中位数和 P95 是多少？",
+    "required_tool": "compare_positioning"
+  },
+  {
+    "id": "P03",
+    "question": "对照 GNSS 的 RMSE",
+    "required_tool": "compare_positioning"
+  },
+  {
+    "id": "P04",
+    "question": "固定滤波对照自适应滤波的结果如何？",
+    "required_tool": "compare_positioning"
+  },
+  {
+    "id": "P05",
+    "question": "Compare positioning results",
+    "required_tool": "compare_positioning"
+  },
+  {
+    "id": "D01",
+    "question": "当前数据是真实还是模拟？",
+    "required_tool": "list_trips",
+    "knowledge_id": "K7"
+  },
+  {
+    "id": "D02",
+    "question": "训练、验证和测试数据如何划分？",
+    "required_tool": "list_trips",
+    "knowledge_id": "K4"
+  },
+  {
+    "id": "D03",
+    "question": "有多少测试数据？",
+    "required_tool": "list_trips"
+  },
+  {
+    "id": "D04",
+    "question": "Which dataset was used?",
+    "required_tool": "list_trips",
+    "knowledge_id": "K7"
+  },
+  {
+    "id": "D05",
+    "question": "Are these synthetic results?",
+    "required_tool": "list_trips",
+    "knowledge_id": "K7"
+  },
+  {
+    "id": "S01",
+    "question": "概括当前行程的观测和风险",
+    "required_tool": "trip_summary"
+  },
+  {
+    "id": "S02",
+    "question": "当前接收机的信号质量如何？",
+    "required_tool": "trip_summary",
+    "knowledge_id": "K1"
+  },
+  {
+    "id": "S03",
+    "question": "报告前 10 秒的风险",
+    "required_tool": "segment_summary"
+  },
+  {
+    "id": "S04",
+    "question": "报告前 30 秒的告警数量",
+    "required_tool": "segment_summary"
+  },
+  {
+    "id": "S05",
+    "question": "Summarize the first 10 seconds",
+    "required_tool": "segment_summary"
+  },
+  {
+    "id": "K01",
+    "question": "C/N0 的含义是什么？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K1"
+  },
+  {
+    "id": "K02",
+    "question": "HDOP 是什么？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K2"
+  },
+  {
+    "id": "K03",
+    "question": "HDOP 能否证明发生了 NLOS？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K3"
+  },
+  {
+    "id": "K04",
+    "question": "为什么低载噪比不能直接证明多路径？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K3"
+  },
+  {
+    "id": "K05",
+    "question": "随机打乱历元会产生什么泄漏？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K4"
+  },
+  {
+    "id": "K06",
+    "question": "风险评分和概率有什么区别？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K5"
+  },
+  {
+    "id": "K07",
+    "question": "Kalman 滤波里的协方差 R 是什么？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K6"
+  },
+  {
+    "id": "K08",
+    "question": "GRU 会看到未来观测吗？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K8"
+  },
+  {
+    "id": "K09",
+    "question": "Explain the causal GRU window",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K8"
+  },
+  {
+    "id": "K10",
+    "question": "IMU 融合和完整惯导系统有什么区别？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K6"
+  }
+]

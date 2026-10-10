@@ -1,0 +1,66 @@
+[
+  {
+    "id": "K1",
+    "title": "载噪比 C/N0 与定位质量",
+    "keywords": ["C/N0", "CN0", "信号", "signal", "载噪比"],
+    "content": "载噪比描述信号载波功率相对于噪声功率谱密度的情况，单位通常为 dB-Hz。较低的载噪比可能伴随更大的码观测噪声，但不能仅凭载噪比判断 NLOS。需要结合残差、卫星几何和实际参考误差。",
+    "source_url": "https://gssc.esa.int/navipedia/index.php/Receiver_noise",
+    "source_type": "technical_background"
+  },
+  {
+    "id": "K2",
+    "title": "HDOP 和卫星几何",
+    "keywords": ["HDOP", "DOP", "几何", "satellite", "卫星"],
+    "content": "HDOP 描述卫星观测几何对水平位置精度的放大作用。它由定位设计矩阵的几何项计算，不是观测误差本身。较小 HDOP 不保证定位误差小，因为多路径、系统偏差和异常观测仍可能存在。",
+    "source_url": "https://gssc.esa.int/navipedia/index.php/Positioning_Error",
+    "source_type": "technical_background"
+  },
+  {
+    "id": "K3",
+    "title": "多路径与 NLOS 诊断的证据边界",
+    "keywords": ["NLOS", "多路径", "multipath", "原因", "漂移"],
+    "content": "反射、遮挡与非视距接收可能带来带偏伪距。载噪比、残差和轨迹跳变是风险线索，不能单独证明具体原因。没有专门的 NLOS 标签、环境观测或实验验证时，应将原因描述为候选解释，而非已证实结论。",
+    "source_url": "https://www.polyu.edu.hk/aae/ipn-lab/us/en/resources/urbannav-dataset/",
+    "source_type": "technical_background"
+  },
+  {
+    "id": "K4",
+    "title": "独立行程划分与数据泄漏",
+    "keywords": ["划分", "泄漏", "train", "validation", "test", "训练", "验证"],
+    "content": "相邻历元和同次采集的多部手机共享场景。项目按独立采集行程分组，同一行程不会跨训练、验证和测试集。标准化、缺失值填充只从训练集学习；模型、阈值和滤波参数使用验证集选择。测试集用于最后报告，重复路线仍需额外检查。",
+    "source_url": "https://scikit-learn.org/stable/modules/cross_validation.html",
+    "source_type": "project_method"
+  },
+  {
+    "id": "K5",
+    "title": "风险评分、阈值与分类指标",
+    "keywords": ["Precision", "Recall", "F1", "阈值", "召回", "误报", "概率"],
+    "content": "Precision 是被报为失准的历元中真实失准的比例；Recall 是真实失准历元中被找出的比例。F1 是两者的调和平均。降低分类阈值通常会增加告警，需要检查误报和漏报变化。未经校准的风险评分不能直接解释为真实失准概率。",
+    "source_url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+    "source_type": "technical_background"
+  },
+  {
+    "id": "K6",
+    "title": "质量估计与 Kalman 滤波",
+    "keywords": ["Kalman", "滤波", "融合", "IMU", "协方差", "R"],
+    "content": "滤波器用观测噪声协方差 R 调整对 GNSS 观测的信任程度。本项目用验证集误差与风险分箱估计一个经验方差，再比较固定观测方差与自适应方差。平面位置/速度滤波可接受已标定且变换到 ENU 的加速度，它不包含完整的姿态估计、惯性标定或 RTK 模糊度固定。",
+    "source_url": "docs/MODEL_CARD.md",
+    "source_type": "project_method"
+  },
+  {
+    "id": "K7",
+    "title": "真实数据与模拟实验",
+    "keywords": ["真实", "模拟", "synthetic", "数据", "GSDC", "dataset"],
+    "content": "教学模拟和原始观测模拟都标为 synthetic。GSDC 公开文件标为 real，并保存来源与 SHA-256。小型解析示例只适合流程验证；即使有真实误差指标，也不足以代表所有城市、设备或道路。不能把模拟指标写成真实导航性能提升。",
+    "source_url": "https://gnss-lib-py.readthedocs.io/en/stable/tutorials/parsers/tutorials_google_decimeter_notebook.html",
+    "source_type": "project_method"
+  },
+  {
+    "id": "K8",
+    "title": "GRU 的因果时间窗口",
+    "keywords": ["GRU", "时间", "时序", "future", "窗口"],
+    "content": "本项目 GRU 在每个时刻使用截至该时刻的历史观测窗口。跨行程、跨设备或过大的时间间隙会重置窗口；训练集拟合的填充和标准化参数用于验证、测试与推理。双向时序输入、中心平滑或使用未来坐标不适合声称实时预测的实验。",
+    "source_url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.GRU.html",
+    "source_type": "project_method"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "NavDiag: demo experiment",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "navdiag",
+      "args": ["demo", "--navigation", "--with-gru", "--out", "artifacts/navigation_demo"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "NavDiag: dashboard",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "navdiag",
+      "args": ["serve", "--artifacts", "artifacts/navigation_demo"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

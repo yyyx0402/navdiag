@@ -1,0 +1,1 @@
+trip_id,timestamp_ms,data_kind,satellite_count,cn0_mean_dbhz,cn0_min_dbhz,hdop,residual_rms_m,speed_mps,horizontal_error_m
