@@ -3,184 +3,807 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>NavDiag · 定位实验与诊断</title>
+    <title>NavDiag · GNSS 遮挡识别实验</title>
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
     <aside class="sidebar">
-      <a class="brand" href="/"
+      <a class="brand" href="#overview"
         ><span class="brand-icon">⌖</span
-        ><span>NavDiag<small>NAVIGATION INTELLIGENCE</small></span></a
+        ><span>NavDiag<small>GNSS EXPERIMENT LAB</small></span></a
       >
       <div class="nav-label">实验工作台</div>
-      <a href="#overview" class="nav-item active">◈ 实验概览</a>
-      <a href="#trajectories" class="nav-item">⌁ 轨迹与质量</a>
+      <a href="#overview" class="nav-item active">◈ 项目概览</a>
+      <a href="#obstruction" class="nav-item">◉ 新城区泛化</a>
+      <a href="#nlos-protocol-panel" class="nav-item">⇄ 同域与跨区域</a>
+      <a href="#nlos-fold-panel" class="nav-item">⌁ 逐卫星检查</a>
       <a href="#diagnostics" class="nav-item">✧ 诊断助手</a>
+      <a href="#trajectories" class="nav-item">▧ 定位辅助实验</a>
       <a href="#method" class="nav-item">☷ 方法与证据</a>
       <div class="sidebar-note">
         <span class="dot"></span>本地运行<br /><small
-          >公开数据 · 可复现实验</small
+          >公开观测 · 可复现实验</small
         >
       </div>
     </aside>
     <main>
       <header class="topbar">
-        <span>WORKSPACE <b>/</b> 定位实验</span
-        ><span class="version">NavDiag v0.2</span>
+        <span>WORKSPACE <b>/</b> GNSS 遮挡识别</span
+        ><span class="version">NavDiag · 本地开发版</span>
       </header>
       <section id="overview">
-        <div class="eyebrow">GNSS QUALITY & DIAGNOSTICS</div>
+        <div class="eyebrow">SATELLITE LOS / NLOS · REAL OBSERVATIONS</div>
         <div class="title-row">
           <div>
-            <h1>从观测，到可信的判断。</h1>
-            <p class="lead">比较定位算法，查看风险片段，用证据解释实验结果。</p>
+            <h1>真实场景下的遮挡识别。</h1>
+            <p class="lead">比较模型、检查区域差异，让每个实验结论都有依据。</p>
           </div>
-          <span id="data-badge" class="badge">正在加载</span>
+          <span id="project-badge" class="badge real">正在加载</span>
         </div>
-        <div id="provenance-warning" class="notice"></div>
-        <div class="metric-grid">
-          <article class="metric">
-            <span>当前选用模型</span><strong id="selected-model">—</strong
-            ><small>使用验证集选择</small>
-          </article>
-          <article class="metric">
-            <span>留出集历元</span><strong id="epoch-count">—</strong
-            ><small id="trip-count">—</small>
-          </article>
-          <article class="metric">
-            <span>失准识别 Recall</span><strong id="recall">—</strong
-            ><small id="task-label">—</small>
-          </article>
-          <article class="metric">
-            <span>基线位置 P95</span><strong id="position-p95">—</strong
-            ><small>离线参考轨迹评测</small>
-          </article>
-        </div>
-        <div class="panel">
-          <div class="panel-heading">
-            <h2>模型对照</h2>
-            <span>TEST SPLIT · 统一任务阈值</span>
+        <details class="panel overview-panel" id="project-overview" open>
+          <summary>
+            <span class="summary-title">数据概览</span
+            ><span class="summary-meta" id="project-data-source"
+              >真实卫星观测</span
+            >
+          </summary>
+          <div class="panel-body">
+            <div class="metric-grid">
+              <article class="metric">
+                <span>新城区观测历元</span><strong id="project-epochs">—</strong
+                ><small id="project-drives">按完整采集段评估</small>
+              </article>
+              <article class="metric">
+                <span>卫星观测</span><strong id="project-rows">—</strong
+                ><small>多颗卫星共享同一历元</small>
+              </article>
+              <article class="metric">
+                <span>可评分参考标签</span><strong id="project-scored">—</strong
+                ><small id="project-coverage">同时报告未确定标签</small>
+              </article>
+              <article class="metric">
+                <span>神经网络 / 传统参照</span
+                ><strong id="project-models">5 / 3</strong
+                ><small>MLP · CNN · LSTM · GRU · Transformer</small>
+              </article>
+            </div>
+            <p class="chart-footnote" id="project-scope">
+              只展示已完成的本地实验，跨城市能力仍未验证。
+            </p>
           </div>
-          <div id="model-table"></div>
-        </div>
+        </details>
       </section>
-      <section id="trajectories">
+      <section id="obstruction">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">TRAJECTORY INSPECTION</div>
-            <h2>看见偏差，也看见风险。</h2>
+            <div class="eyebrow">EXPERIMENT COMPARISON</div>
+            <h2>模型优势，随测试场景怎样变化？</h2>
           </div>
-          <div class="selectors">
-            <label
-              >行程
-              <select id="trip-select"></select></label
-            ><label
-              >设备
-              <select id="device-select"></select
-            ></label>
+          <div class="section-actions">
+            <button class="subtle-button" id="expand-sections">全部展开</button
+            ><button class="subtle-button" id="collapse-sections">
+              全部收起
+            </button>
           </div>
         </div>
-        <div class="chart-grid">
-          <div class="panel">
-            <div class="panel-heading">
-              <h3>局部平面轨迹</h3>
-              <span>ENU · 米</span>
-            </div>
-            <div class="legend">
-              <span class="legend-line truth">参考轨迹</span
-              ><span class="legend-line raw">GNSS 基线</span
-              ><span class="legend-line adaptive">自适应滤波</span>
-            </div>
-            <div id="trajectory-chart" class="chart"></div>
-          </div>
-          <div class="panel">
-            <div class="panel-heading">
-              <h3>定位误差与风险</h3>
-              <span id="sample-info"></span>
-            </div>
-            <div id="error-chart" class="chart"></div>
-            <div class="chart-footnote">
-              蓝：水平误差（m）　橙：风险评分（0–1）；评分尚未校准为失准概率。
-            </div>
-          </div>
+        <div id="nlos-load-status" class="muted" role="status">
+          正在加载识别实验…
         </div>
-        <div class="panel">
-          <div class="panel-heading">
-            <h3>定位方法对照</h3>
-            <span>MEDIAN / P95 / RMSE</span>
-          </div>
-          <div id="position-table"></div>
+        <div id="nlos-content" hidden>
+          <details
+            class="panel section-panel"
+            id="nlos-generalization-panel"
+            hidden
+            open
+          >
+            <summary>
+              <span class="summary-number">01</span
+              ><span class="summary-title">新城区泛化 · UrbanNav</span
+              ><span class="summary-meta">尖沙咀 / 黄埔 / 旺角</span>
+            </summary>
+            <div class="panel-body">
+              <p id="nlos-generalization-note" class="section-description"></p>
+              <div class="protocol-flow">
+                <div>
+                  <span>冻结外部迁移</span
+                  ><strong>KLT 源模型 → 三个新城区</strong
+                  ><small>权重与阈值保持源验证集取值</small>
+                </div>
+                <div>
+                  <span>城区互斥实验</span
+                  ><strong>训练区 → 验证区 → 测试区</strong
+                  ><small>三城区互斥 · 交换训练与验证，共六折</small>
+                </div>
+              </div>
+              <div class="chart-grid experiment-charts">
+                <details class="chart-card" open>
+                  <summary>
+                    模型对比<span class="summary-meta">三城区等权平均</span>
+                  </summary>
+                  <div class="chart-card-body">
+                    <div class="chart-toolbar">
+                      <div
+                        class="metric-switch"
+                        id="generalization-metric"
+                        aria-label="泛化对比指标"
+                      >
+                        <button data-metric="f1" aria-pressed="true">F1</button
+                        ><button data-metric="precision" aria-pressed="false">
+                          Precision</button
+                        ><button data-metric="recall" aria-pressed="false">
+                          Recall
+                        </button>
+                      </div>
+                    </div>
+                    <div class="legend">
+                      <span class="legend-dot external">冻结外部迁移</span
+                      ><span class="legend-dot district">城区互斥</span>
+                    </div>
+                    <div
+                      id="generalization-comparison"
+                      class="comparison-chart"
+                    ></div>
+                    <p class="chart-footnote">
+                      刻度固定为
+                      0–1。点击模型可同步查看其各城区表现；测试排名仅用于比较，不重新选模。
+                      C/N0 规则不进行训练，两组共享目标观测，因此两列成绩相同。
+                    </p>
+                  </div>
+                </details>
+                <details class="chart-card" open>
+                  <summary>
+                    区域表现热力图<span class="summary-meta"
+                      >查看总分背后的差异</span
+                    >
+                  </summary>
+                  <div class="chart-card-body">
+                    <label
+                      >实验<select id="generalization-heatmap-protocol">
+                        <option value="external">冻结外部迁移</option>
+                        <option value="district">城区互斥</option>
+                      </select></label
+                    >
+                    <div id="generalization-heatmap" class="heatmap"></div>
+                    <div class="heatmap-key">
+                      <span>0</span><i></i><span>1</span
+                      ><span id="heatmap-metric-label">F1</span>
+                    </div>
+                    <div class="insight" id="generalization-insight"></div>
+                  </div>
+                </details>
+              </div>
+              <details class="chart-card" open>
+                <summary>
+                  参考标签覆盖率<span class="summary-meta"
+                    >LOS / NLOS / unknown</span
+                  >
+                </summary>
+                <div class="chart-card-body">
+                  <div class="legend">
+                    <span class="legend-dot los">LOS 参考</span
+                    ><span class="legend-dot nlos">NLOS 参考</span
+                    ><span class="legend-dot unknown">unknown · 不评分</span>
+                  </div>
+                  <div id="generalization-coverage-chart"></div>
+                  <p class="chart-footnote">
+                    标签来自位置真值与静态建筑图，不是人工核验的接收状态。边界、真值质量与覆盖检查未通过的观测保留为
+                    unknown；得分仅描述可评分样本，不能代表整段路线。
+                  </p>
+                </div>
+              </details>
+              <details class="chart-card" open>
+                <summary>
+                  逐城区比较<span class="summary-meta"
+                    >同一模型 · 两种实验</span
+                  >
+                </summary>
+                <div class="chart-card-body">
+                  <label
+                    >对比模型<select id="nlos-generalization-model"></select
+                  ></label>
+                  <div id="generalization-area-chart"></div>
+                  <details class="data-detail">
+                    <summary>展开逐城区精确指标</summary>
+                    <div
+                      id="nlos-generalization-areas"
+                      class="table-scroll"
+                    ></div>
+                  </details>
+                </div>
+              </details>
+              <details class="data-detail">
+                <summary>展开完整模型指标与数据计数</summary>
+                <div id="nlos-generalization-models" class="table-scroll"></div>
+                <div
+                  id="nlos-generalization-coverage"
+                  class="table-scroll"
+                ></div>
+              </details>
+              <p class="chart-footnote">
+                每折模型、阈值与检查点只用该折验证区选择。六折重复使用三个测试采集段，不是六份独立测试数据。外部迁移同时改变了天线、日期和标签方法；全部区域均在香港，跨城市泛化尚未验证。
+              </p>
+            </div>
+          </details>
+          <details class="panel section-panel" id="nlos-protocol-panel" hidden>
+            <summary>
+              <span class="summary-number">02</span
+              ><span class="summary-title">同域与跨区域 · KLT</span
+              ><span class="summary-meta">三个相邻区域 · 成对测试</span>
+            </summary>
+            <div class="panel-body">
+              <div class="chart-toolbar">
+                <h3>同一测试集，两种训练范围</h3>
+                <div
+                  class="metric-switch"
+                  id="protocol-metric"
+                  aria-label="KLT 对比指标"
+                >
+                  <button data-metric="f1" aria-pressed="true">F1</button
+                  ><button data-metric="precision" aria-pressed="false">
+                    Precision</button
+                  ><button data-metric="recall" aria-pressed="false">
+                    Recall
+                  </button>
+                </div>
+              </div>
+              <div class="legend">
+                <span class="legend-dot external">同域</span
+                ><span class="legend-dot district">跨区域</span>
+              </div>
+              <div id="protocol-comparison" class="comparison-chart"></div>
+              <p id="nlos-protocol-note" class="chart-footnote"></p>
+              <details class="chart-card" open>
+                <summary>
+                  各区域的变化<span class="summary-meta">同域与跨区域 F1</span>
+                </summary>
+                <div class="chart-card-body">
+                  <label>对比模型<select id="nlos-area-model"></select></label>
+                  <div id="protocol-area-chart"></div>
+                  <details class="data-detail">
+                    <summary>展开各区域精确指标</summary>
+                    <div id="nlos-area-results" class="table-scroll"></div>
+                  </details>
+                </div>
+              </details>
+              <details class="data-detail">
+                <summary>展开 KLT 完整模型指标</summary>
+                <div id="nlos-protocol-results" class="table-scroll"></div>
+              </details>
+              <p class="chart-footnote">
+                测试共 24,243 条卫星观测、1,557 个历元，只有 4 段采集、3
+                个相邻区域。区域跨度与独立场景有限，各区域的上升和下降可能在总平均中抵消。
+              </p>
+            </div>
+          </details>
+          <details class="panel section-panel" id="nlos-fold-panel">
+            <summary>
+              <span class="summary-number">03</span
+              ><span class="summary-title">单次实验与逐卫星检查 · KLT</span
+              ><span class="summary-meta" id="nlos-fold-label">验证集选模</span>
+            </summary>
+            <div class="panel-body">
+              <div class="chart-toolbar">
+                <label id="nlos-experiment-label"
+                  >具体实验<select id="nlos-experiment"></select></label
+                ><span id="nlos-badge" class="badge">实验待加载</span>
+              </div>
+              <div id="nlos-notice" class="notice"></div>
+              <div class="metric-grid">
+                <article class="metric">
+                  <span>NLOS Precision</span
+                  ><strong id="nlos-precision">—</strong
+                  ><small>报警中有多少确为 NLOS</small>
+                </article>
+                <article class="metric">
+                  <span>NLOS Recall</span><strong id="nlos-recall">—</strong
+                  ><small>被遮挡信号中找到了多少</small>
+                </article>
+                <article class="metric">
+                  <span>NLOS F1</span><strong id="nlos-f1">—</strong
+                  ><small id="nlos-model">—</small>
+                </article>
+                <article class="metric">
+                  <span>测试卫星观测</span><strong id="nlos-count">—</strong
+                  ><small>同历元卫星不是独立场景</small>
+                </article>
+              </div>
+              <div class="chart-grid experiment-charts">
+                <details class="chart-card" open>
+                  <summary>
+                    测试集模型表现<span class="summary-meta"
+                      >Precision / Recall / F1</span
+                    >
+                  </summary>
+                  <div class="chart-card-body">
+                    <div class="legend">
+                      <span class="legend-dot external">Precision</span
+                      ><span class="legend-dot district">Recall</span
+                      ><span class="legend-dot nlos">F1</span>
+                    </div>
+                    <div id="fold-model-chart" class="comparison-chart"></div>
+                  </div>
+                </details>
+                <details class="chart-card" open>
+                  <summary>
+                    选中模型的混淆矩阵<span class="summary-meta"
+                      >真实标签 × 模型预测</span
+                    >
+                  </summary>
+                  <div class="chart-card-body">
+                    <div id="fold-confusion"></div>
+                    <p id="nlos-errors" class="chart-footnote"></p>
+                  </div>
+                </details>
+              </div>
+              <details class="chart-card">
+                <summary>
+                  数据与分组<span class="summary-meta">完整采集段</span>
+                </summary>
+                <div class="chart-card-body">
+                  <div id="fold-split-chart"></div>
+                  <div id="nlos-splits" class="table-scroll"></div>
+                </div>
+              </details>
+              <details class="chart-card">
+                <summary>
+                  验证集选模依据<span class="summary-meta"
+                    >Precision 与 Recall 共同评估</span
+                  >
+                </summary>
+                <div class="chart-card-body">
+                  <div id="nlos-validation" class="table-scroll"></div>
+                  <p class="chart-footnote">
+                    F1 是 Precision 与 NLOS Recall 的调和平均；模型和阈值按验证
+                    F1 选择，没有硬性 90% 召回门槛，测试成绩不参与选模。
+                  </p>
+                </div>
+              </details>
+              <details class="chart-card" id="nlos-neural-panel">
+                <summary>
+                  <span id="nlos-neural-title">五种神经网络对比</span
+                  ><span class="summary-meta">测试集精确指标</span>
+                </summary>
+                <div class="chart-card-body">
+                  <div id="nlos-models" class="table-scroll"></div>
+                  <p class="chart-footnote">
+                    五种网络使用同源五项特征；预处理只拟合训练集，阈值和训练检查点由验证集选择。
+                  </p>
+                </div>
+              </details>
+              <details class="chart-card">
+                <summary>
+                  传统方法参照<span class="summary-meta">测试集精确指标</span>
+                </summary>
+                <div class="chart-card-body">
+                  <div id="nlos-reference-models" class="table-scroll"></div>
+                </div>
+              </details>
+              <details class="chart-card" id="nlos-tuning-panel" hidden>
+                <summary>
+                  调参前后<span class="summary-meta">历史结果</span>
+                </summary>
+                <div class="chart-card-body">
+                  <div id="nlos-tuning-results" class="table-scroll"></div>
+                  <p id="nlos-tuning-note" class="chart-footnote"></p>
+                </div>
+              </details>
+              <details class="chart-card" id="nlos-tradeoff-panel" hidden>
+                <summary>查看验证集上的 Precision / Recall 阈值权衡</summary>
+                <div class="chart-card-body">
+                  <label>模型<select id="nlos-tradeoff-model"></select></label>
+                  <div class="legend">
+                    <span class="legend-dot external">Precision</span
+                    ><span class="legend-dot district">Recall</span
+                    ><span class="legend-dot nlos">F1</span>
+                  </div>
+                  <div id="nlos-tradeoff-chart" class="chart"></div>
+                  <details class="data-detail">
+                    <summary>展开阈值对应的精确指标</summary>
+                    <div id="nlos-tradeoff" class="table-scroll"></div>
+                  </details>
+                  <p class="chart-footnote">
+                    仅展示验证集；切换模型和查看曲线不会修改已保存的实验阈值。
+                  </p>
+                </div>
+              </details>
+              <details class="chart-card" id="nlos-satellite-panel" open>
+                <summary>
+                  逐卫星检查参考标签与预测<span class="summary-meta"
+                    >鱼眼相机标签对照</span
+                  >
+                </summary>
+                <div class="chart-card-body">
+                  <div class="selectors">
+                    <label>测试采集段<select id="nlos-trip"></select></label
+                    ><label
+                      >历元<input
+                        id="nlos-epoch"
+                        type="range"
+                        min="0"
+                        max="0"
+                        value="0" /><span id="nlos-time"></span
+                    ></label>
+                  </div>
+                  <div id="nlos-satellite-chart" class="satellite-chart"></div>
+                  <details class="data-detail">
+                    <summary>展开逐卫星观测数值</summary>
+                    <div id="nlos-satellites" class="table-scroll"></div>
+                  </details>
+                  <p class="chart-footnote">
+                    卡片同时显示参考标签和预测，误报与漏报用颜色标记。LOS
+                    仍可能存在多径；当前标签不区分高楼、树木与车辆。完全丢失的信号不在观测表中。
+                  </p>
+                </div>
+              </details>
+              <details class="chart-card">
+                <summary>
+                  错误集中在哪里？<span class="summary-meta">按 C/N0 分组</span>
+                </summary>
+                <div class="chart-card-body">
+                  <div id="fold-error-chart"></div>
+                  <div class="legend">
+                    <span class="legend-dot nlos">误报</span
+                    ><span class="legend-dot missed">漏报</span>
+                  </div>
+                  <div id="nlos-slices" class="table-scroll"></div>
+                </div>
+              </details>
+            </div>
+          </details>
         </div>
       </section>
       <section id="diagnostics">
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">EVIDENCE-BASED DIAGNOSTICS</div>
-            <h2>让解释有出处。</h2>
+        <details class="panel section-panel" id="diagnostics-panel">
+          <summary>
+            <span class="summary-number">04</span
+            ><span class="summary-title">诊断助手</span
+            ><span class="summary-meta">工具调用与证据</span>
+          </summary>
+          <div class="panel-body">
+            <div class="chart-toolbar">
+              <p class="section-description">
+                从实验记录中回答问题，检查模型结论对应的证据。
+              </p>
+              <label
+                >问答任务<select id="diagnostic-task">
+                  <option value="satellite_nlos">卫星遮挡识别</option>
+                  <option value="position_error">定位辅助实验</option>
+                </select></label
+              >
+              <label
+                >后端<select id="provider">
+                  <option value="offline">离线工具基线</option>
+                  <option value="connection">自定义模型 API</option>
+                  <option value="compatible">本地 .env 兼容配置</option>
+                </select></label
+              >
+              <label id="connection-select-label" hidden
+                >已保存连接<select id="connection-select">
+                  <option value="">新建连接</option>
+                </select></label
+              >
+            </div>
+            <div
+              id="connection-summary"
+              class="connection-summary"
+              hidden
+            ></div>
+            <details class="chart-card connection-panel" id="connection-panel">
+              <summary>
+                <span class="summary-title">配置模型与 API</span
+                ><span class="summary-meta">自选服务 · Chat Completions</span>
+              </summary>
+              <div class="chart-card-body">
+                <p class="section-description">
+                  填写服务商提供的地址和模型
+                  ID，或连接本地模型。保存后即可切换使用。
+                </p>
+                <form id="connection-form" autocomplete="off">
+                  <div class="connection-fields">
+                    <label
+                      >连接名称<input
+                        id="connection-name"
+                        maxlength="80"
+                        placeholder="例如：我的模型服务"
+                        required
+                    /></label>
+                    <label
+                      >地址快捷填写<select id="connection-preset">
+                        <option value="manual">手动填写</option>
+                        <option value="ollama">Ollama 本地</option>
+                        <option value="vllm">vLLM 本地</option>
+                      </select></label
+                    >
+                    <label class="field-wide"
+                      >API 基础地址<input
+                        id="connection-url"
+                        type="url"
+                        placeholder="https://服务地址/v1"
+                        maxlength="2048"
+                        required
+                      /><small
+                        >最终调用：基础地址 +
+                        /chat/completions；也可粘贴完整调用地址。</small
+                      ></label
+                    >
+                    <label class="field-wide"
+                      >模型 ID<input
+                        id="connection-model"
+                        list="connection-models"
+                        placeholder="填写你账户可用或本地已安装的模型名称"
+                        maxlength="2048"
+                        required /><datalist id="connection-models"></datalist
+                    ></label>
+                    <label class="field-wide"
+                      >API 密钥<input
+                        id="connection-key"
+                        type="password"
+                        autocomplete="new-password"
+                        placeholder="本地无鉴权服务可留空"
+                        maxlength="2048"
+                      /><small id="connection-key-state"
+                        >密钥仅在本机保存，不回显到页面。</small
+                      ></label
+                    >
+                    <label class="checkbox-label field-wide"
+                      ><input
+                        id="connection-clear-key"
+                        type="checkbox"
+                      />清除该连接保存的密钥</label
+                    >
+                    <label class="field-wide"
+                      >回答方式<select id="connection-mode">
+                        <option value="evidence">
+                          证据问答：本地读取后交给模型解释
+                        </option>
+                        <option value="tools">
+                          工具 Agent：由模型选择分析工具
+                        </option></select
+                      ><small
+                        >证据问答无需模型支持工具调用；工具 Agent
+                        需要模型与服务同时支持 function calling。</small
+                      ></label
+                    >
+                  </div>
+                  <details class="connection-options">
+                    <summary>输出与超时设置</summary>
+                    <div class="connection-fields">
+                      <label
+                        >输出上限（tokens）<input
+                          id="connection-tokens"
+                          type="number"
+                          min="128"
+                          max="32768"
+                          value="4096"
+                          required /></label
+                      ><label
+                        >单次请求超时（秒）<input
+                          id="connection-timeout"
+                          type="number"
+                          min="5"
+                          max="300"
+                          value="90"
+                          required
+                      /></label>
+                      <label
+                        >推理强度<select id="connection-reasoning">
+                          <option value="default">
+                            服务默认（不额外传参）
+                          </option>
+                          <option value="low">Low · 轻度推理</option>
+                          <option value="medium">Medium · 中等推理</option>
+                          <option value="high">High · 增强推理</option>
+                          <option value="max">Max · 深度推理</option></select
+                        ><small
+                          >仅选择服务支持的值；GLM-5.3 支持
+                          low、high、max，始终启用推理。输出预算包含思考和正文，建议先用
+                          low 与 8,192 tokens。</small
+                        ></label
+                      >
+                    </div>
+                  </details>
+                  <div class="connection-actions">
+                    <button
+                      type="submit"
+                      class="subtle-button connection-save"
+                      id="connection-save"
+                    >
+                      保存并使用</button
+                    ><button
+                      type="button"
+                      class="subtle-button"
+                      id="connection-discover"
+                    >
+                      获取模型列表</button
+                    ><button
+                      type="button"
+                      class="subtle-button"
+                      id="connection-new"
+                    >
+                      新建连接</button
+                    ><button
+                      type="button"
+                      class="subtle-button"
+                      id="connection-delete"
+                      disabled
+                    >
+                      删除当前连接
+                    </button>
+                  </div>
+                  <p class="chart-footnote">
+                    获取列表只访问
+                    /models，不进行推理。若服务未提供列表，可直接填写模型
+                    ID。连接信息以明文保存在本机的 Git 忽略目录
+                    .navdiag；问答会把问题和所需证据发送给你选择的服务。
+                  </p>
+                  <div id="connection-status" class="muted" role="status">
+                    尚未配置模型服务。离线模式可直接使用。
+                  </div>
+                </form>
+              </div>
+            </details>
+            <div class="agent-grid">
+              <div class="chart-card ask-panel">
+                <p>选择已保存的模型连接进行问答，或使用离线工具查看实验。</p>
+                <textarea
+                  id="question"
+                  placeholder="例如：新城区泛化中，哪些模型更占优势？"
+                ></textarea>
+                <div class="example-questions">
+                  <button>
+                    新城区泛化中，随机森林与 Transformer 的表现如何？</button
+                  ><button>同域与跨区域实验中，哪些模型更占优势？</button
+                  ><button>遮挡识别模型效果如何？</button
+                  ><button>HDOP 能否证明发生了 NLOS？</button
+                  ><button>自适应滤波是否改善位置误差？</button>
+                </div>
+                <button class="primary" id="ask-button">
+                  分析实验<span>↗</span>
+                </button>
+                <div id="agent-status" class="muted" role="status">
+                  离线模式采用确定性工具流程，不是大语言模型。
+                </div>
+              </div>
+              <div class="chart-card answer-panel">
+                <div class="panel-heading">
+                  <h3>诊断结果</h3>
+                  <span id="answer-backend">等待提问</span>
+                </div>
+                <div id="answer" class="answer">
+                  先选择一个问题。结果会在这里显示，证据记录保留在下方。
+                </div>
+                <div id="evidence-list"></div>
+              </div>
+            </div>
           </div>
-          <label
-            >后端
-            <select id="provider">
-              <option value="offline">离线工具基线</option>
-              <option value="openai">GPT · Responses API</option>
-              <option value="deepseek">DeepSeek API</option>
-              <option value="compatible">兼容 API</option>
-            </select></label
-          >
-        </div>
-        <div class="agent-grid">
-          <div class="panel ask-panel">
-            <p>提问后查看实际调用的工具与证据。API 模式需先在本地配置密钥。</p>
-            <textarea
-              id="question"
-              placeholder="例如：哪个模型表现更好？为什么选择它？"
-            ></textarea>
-            <div class="example-questions">
-              <button>比较模型的 F1 和召回率</button
-              ><button>自适应滤波是否改善位置误差？</button
-              ><button>当前数据是真实还是模拟？</button
-              ><button>HDOP 能否证明发生了 NLOS？</button>
-            </div>
-            <button class="primary" id="ask-button">
-              分析实验 <span>↗</span>
-            </button>
-            <div id="agent-status" class="muted">
-              离线模式采用确定性工具流程，不是大语言模型。
-            </div>
+        </details>
+      </section>
+      <section id="trajectories">
+        <details class="panel section-panel" id="positioning-panel">
+          <summary>
+            <span class="summary-number">05</span
+            ><span class="summary-title">定位与失准告警 · 辅助实验</span
+            ><span id="data-badge" class="summary-meta">正在加载</span>
+          </summary>
+          <div class="panel-body">
+            <p class="section-description">
+              这部分用于检查定位与告警流程，任务和数据与上述卫星 NLOS 识别分开。
+            </p>
+            <div id="provenance-warning" class="notice"></div>
+            <details class="chart-card">
+              <summary>
+                定位失准告警模型<span class="summary-meta">独立辅助任务</span>
+              </summary>
+              <div class="chart-card-body">
+                <div class="metric-grid">
+                  <article class="metric">
+                    <span>告警模型</span><strong id="selected-model">—</strong
+                    ><small>预测位置误差超限</small>
+                  </article>
+                  <article class="metric">
+                    <span>留出集历元</span><strong id="epoch-count">—</strong
+                    ><small id="trip-count">—</small>
+                  </article>
+                  <article class="metric">
+                    <span>失准 Recall</span><strong id="recall">—</strong
+                    ><small id="task-label">—</small>
+                  </article>
+                  <article class="metric">
+                    <span>基线位置 P95</span><strong id="position-p95">—</strong
+                    ><small>离线参考轨迹评测</small>
+                  </article>
+                </div>
+                <div id="model-table" class="table-scroll"></div>
+                <p id="risk-errors" class="chart-footnote"></p>
+              </div>
+            </details>
+            <details class="chart-card" open>
+              <summary>
+                轨迹与误差<span class="summary-meta">局部平面 ENU</span>
+              </summary>
+              <div class="chart-card-body">
+                <div class="selectors">
+                  <label>行程<select id="trip-select"></select></label
+                  ><label>设备<select id="device-select"></select></label>
+                </div>
+                <div class="chart-grid">
+                  <div>
+                    <div class="panel-heading">
+                      <h3>局部平面轨迹</h3>
+                      <span>ENU · 米</span>
+                    </div>
+                    <div class="legend">
+                      <span class="legend-line truth">参考轨迹</span
+                      ><span class="legend-line raw">GNSS 基线</span
+                      ><span class="legend-line adaptive">自适应滤波</span>
+                    </div>
+                    <div id="trajectory-chart" class="chart"></div>
+                  </div>
+                  <div>
+                    <div class="panel-heading">
+                      <h3>定位误差与风险</h3>
+                      <span id="sample-info"></span>
+                    </div>
+                    <div id="error-chart" class="chart"></div>
+                    <p class="chart-footnote">
+                      蓝：水平误差（m）。橙：风险评分（0–1），尚未校准为失准概率。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </details>
+            <details class="chart-card">
+              <summary>
+                定位方法对照<span class="summary-meta"
+                  >Median / P95 / RMSE</span
+                >
+              </summary>
+              <div class="chart-card-body">
+                <div id="position-table" class="table-scroll"></div>
+                <p class="chart-footnote">
+                  精度用连续位置误差和 2 米、5
+                  米内比例评估；告警的误差阈值不是已达到的定位精度。识别 NLOS
+                  对定位的收益还需要同源实验验证。
+                </p>
+              </div>
+            </details>
           </div>
-          <div class="panel answer-panel">
-            <div class="panel-heading">
-              <h3>诊断结果</h3>
-              <span id="answer-backend">等待提问</span>
-            </div>
-            <div id="answer" class="answer">
-              先选择一个问题。结果会在这里显示，证据记录保留在下方。
-            </div>
-            <div id="evidence-list"></div>
-          </div>
-        </div>
+        </details>
       </section>
       <section id="method">
-        <div class="panel method-panel">
-          <div>
-            <div class="eyebrow">REPRODUCIBILITY</div>
-            <h2>理解结果，也理解它的边界。</h2>
-            <p>
-              同一次采集的设备按整段行程分组。填充与标准化只在训练集拟合，模型、分类阈值与滤波设置由验证集选择。公开小样本不能代表全部城市和设备。
-            </p>
+        <details class="panel section-panel" id="method-panel">
+          <summary>
+            <span class="summary-number">06</span
+            ><span class="summary-title">方法与证据</span
+            ><span class="summary-meta">结论的适用范围</span>
+          </summary>
+          <div class="panel-body method-cards">
+            <article>
+              <h3>参考标签</h3>
+              <p>
+                KLT 使用鱼眼相机标签，UrbanNav
+                使用静态建筑几何参考。动态遮挡物类型未知；unknown
+                不计入得分，覆盖率与成绩一起展示。
+              </p>
+            </article>
+            <article>
+              <h3>模型与划分</h3>
+              <p>
+                五种神经网络与逻辑回归、随机森林、C/N0
+                固定规则对比。完整采集段隔离；预处理拟合训练集，模型与阈值使用验证集。
+              </p>
+            </article>
+            <article>
+              <h3>证据边界</h3>
+              <p>
+                目前完成同域、香港同城区域留出和跨数据集迁移。区域与日期、设备或标签方法存在混杂；跨城市、遮挡物类型和定位收益仍未验证。
+              </p>
+            </article>
           </div>
-          <dl>
-            <dt>随机种子</dt>
-            <dd id="seed">—</dd>
-            <dt>数据指纹 SHA-256</dt>
-            <dd id="dataset-hash">—</dd>
-            <dt>缺失而移除的特征</dt>
-            <dd id="missing-features">—</dd>
-          </dl>
-        </div>
+        </details>
       </section>
       <footer>
-        NavDiag · GNSS positioning quality & diagnostics　<span
+        NavDiag · GNSS LOS / NLOS experiments<span
           >实验结果来自当前本地产物</span
         >
       </footer>

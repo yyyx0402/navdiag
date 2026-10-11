@@ -75,9 +75,11 @@ def position_metrics(errors: np.ndarray) -> dict:
     values = np.asarray(errors, float)
     values = values[np.isfinite(values)]
     if len(values) == 0:
-        return {'epochs': 0, 'median_m': None, 'p95_m': None, 'rmse_m': None}
+        return {'epochs': 0, 'median_m': None, 'p95_m': None, 'rmse_m': None,
+                'within_error_limits_m': {str(limit): None for limit in [1, 2, 5, 10]}}
     return {'epochs': len(values), 'median_m': float(np.median(values)),
-            'p95_m': float(np.quantile(values, 0.95)), 'rmse_m': float(np.sqrt(np.mean(values ** 2)))}
+            'p95_m': float(np.quantile(values, 0.95)), 'rmse_m': float(np.sqrt(np.mean(values ** 2))),
+            'within_error_limits_m': {str(limit): float(np.mean(values <= limit)) for limit in [1, 2, 5, 10]}}
 
 
 def evaluate_positioning(validation: pd.DataFrame, test: pd.DataFrame, bundle: dict) -> dict:

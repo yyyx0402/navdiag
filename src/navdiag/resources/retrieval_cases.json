@@ -1,0 +1,175 @@
+[
+  {
+    "id": "R01",
+    "split": "development",
+    "question": "HDOP 小是否就代表定位可靠？",
+    "expected": [{ "document_id": "K2" }]
+  },
+  {
+    "id": "R02",
+    "split": "development",
+    "question": "信号强度很高也会是 NLOS 吗？",
+    "expected": [
+      { "document_id": "K3" },
+      { "document_id": "D03", "heading": "直达、多径和 NLOS" }
+    ]
+  },
+  {
+    "id": "R03",
+    "split": "development",
+    "question": "模型会不会读到后面的观测？",
+    "expected": [
+      { "document_id": "K8" },
+      { "document_id": "D03", "heading": "论文网络为什么同时看时间和其他卫星" }
+    ]
+  },
+  {
+    "id": "R04",
+    "split": "development",
+    "question": "论文中各颗卫星怎样交换信息？",
+    "expected": [
+      { "document_id": "D03", "heading": "论文网络为什么同时看时间和其他卫星" }
+    ]
+  },
+  {
+    "id": "R05",
+    "split": "development",
+    "question": "同域列和跨区域列的 C/N0 分数为何一样？",
+    "expected": [
+      { "document_id": "D04", "heading": "相同测试段上的固定规则为何不变" }
+    ]
+  },
+  {
+    "id": "R06",
+    "split": "development",
+    "question": "Transformeru 跨区域是不是就一定比随机森林好？",
+    "expected": [
+      { "document_id": "K11" },
+      { "document_id": "D08", "heading": "本次运行结果" }
+    ]
+  },
+  {
+    "id": "R07",
+    "split": "development",
+    "question": "Precision 和 NLOS 检出率应该怎样一起看？",
+    "expected": [
+      { "document_id": "K5" },
+      {
+        "document_id": "D03",
+        "heading": "怎样读 Precision、Recall 和 Accuracy"
+      }
+    ]
+  },
+  {
+    "id": "R08",
+    "split": "development",
+    "question": "地图标签是否都是人工标注的真值？",
+    "expected": [{ "document_id": "K10" }]
+  },
+  {
+    "id": "R09",
+    "split": "development",
+    "question": "可以用测试集选分类阈值吗？",
+    "expected": [{ "document_id": "K5" }, { "document_id": "K4" }]
+  },
+  {
+    "id": "R10",
+    "split": "development",
+    "question": "同一次采集的历元随机打散会不会泄漏？",
+    "expected": [{ "document_id": "K4" }]
+  },
+  {
+    "id": "R11",
+    "split": "development",
+    "question": "残差 RSS 与 RMS 是否一样？",
+    "expected": [{ "document_id": "D03", "heading": "为什么是这些特征" }]
+  },
+  {
+    "id": "R12",
+    "split": "development",
+    "question": "我们已经完整复现 Zhang 2023 吗？",
+    "expected": [{ "document_id": "D05" }]
+  },
+  {
+    "id": "R13",
+    "split": "holdout",
+    "question": "新城区只改变了建筑环境吗，天线和日期会不会也影响结论？",
+    "expected": [
+      { "document_id": "K9" },
+      { "document_id": "D04", "heading": "C/N0 并不只由城市决定" }
+    ]
+  },
+  {
+    "id": "R14",
+    "split": "holdout",
+    "question": "BiLSTM 双向遍历历史就意味着偷看未来吗？",
+    "expected": [
+      { "document_id": "D03", "heading": "论文网络为什么同时看时间和其他卫星" }
+    ]
+  },
+  {
+    "id": "R15",
+    "split": "holdout",
+    "question": "unknown 占比高的地区，能直接比较分数吗？",
+    "expected": [{ "document_id": "K10" }]
+  },
+  {
+    "id": "R16",
+    "split": "holdout",
+    "question": "为什么跨区域成绩接近也不能说不存在域偏移？",
+    "expected": [
+      { "document_id": "K9" },
+      { "document_id": "D04", "heading": "先明确自己要回答的问题" }
+    ]
+  },
+  {
+    "id": "R17",
+    "split": "holdout",
+    "question": "随机森林只看当前值，而时序网络看历史，这样能证明结构更强吗？",
+    "expected": [{ "document_id": "K11" }]
+  },
+  {
+    "id": "R18",
+    "split": "holdout",
+    "question": "误报好卫星会影响定位几何和冗余吗？",
+    "expected": [
+      {
+        "document_id": "D03",
+        "heading": "怎样读 Precision、Recall 和 Accuracy"
+      }
+    ]
+  },
+  {
+    "id": "R19",
+    "split": "holdout",
+    "question": "发现遮挡就证明位置误差超过十米了吗？",
+    "expected": [{ "document_id": "K3" }, { "document_id": "D01" }]
+  },
+  {
+    "id": "R20",
+    "split": "holdout",
+    "question": "香港几个城区的结果可以代表另一个城市吗？",
+    "expected": [
+      { "document_id": "K9" },
+      { "document_id": "D04", "heading": "先明确自己要回答的问题" }
+    ]
+  },
+  {
+    "id": "R21",
+    "split": "holdout",
+    "question": "苹果派怎么烤？",
+    "expect_no_results": true
+  },
+  {
+    "id": "R22",
+    "split": "holdout",
+    "question": "Explain quantum chromodynamics hadronization",
+    "expect_no_results": true
+  },
+  {
+    "id": "R23",
+    "split": "holdout",
+    "question": "宜家沙发什么颜色适合客厅？",
+    "expect_no_results": true
+  }
+]

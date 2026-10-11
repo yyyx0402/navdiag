@@ -1,0 +1,417 @@
+{
+  "description": "Predefined bounded development search; all proposals frozen before any test evaluation.",
+  "neural_epochs": 30,
+  "models": {
+    "logistic_regression": [
+      {
+        "id": "C_1.0_weight_balanced",
+        "parameters": {
+          "C": 1.0,
+          "class_weight": "balanced"
+        }
+      },
+      {
+        "id": "C_0.01_weight_balanced",
+        "parameters": {
+          "C": 0.01,
+          "class_weight": "balanced"
+        }
+      },
+      {
+        "id": "C_0.1_weight_balanced",
+        "parameters": {
+          "C": 0.1,
+          "class_weight": "balanced"
+        }
+      },
+      {
+        "id": "C_10.0_weight_balanced",
+        "parameters": {
+          "C": 10.0,
+          "class_weight": "balanced"
+        }
+      },
+      {
+        "id": "C_1.0_weight_None",
+        "parameters": {
+          "C": 1.0,
+          "class_weight": null
+        }
+      },
+      {
+        "id": "C_0.01_weight_None",
+        "parameters": {
+          "C": 0.01,
+          "class_weight": null
+        }
+      },
+      {
+        "id": "C_0.1_weight_None",
+        "parameters": {
+          "C": 0.1,
+          "class_weight": null
+        }
+      },
+      {
+        "id": "C_10.0_weight_None",
+        "parameters": {
+          "C": 10.0,
+          "class_weight": null
+        }
+      }
+    ],
+    "random_forest": [
+      {
+        "id": "default",
+        "parameters": {}
+      },
+      {
+        "id": "shallow",
+        "parameters": {
+          "max_depth": 6,
+          "min_samples_leaf": 16
+        }
+      },
+      {
+        "id": "medium",
+        "parameters": {
+          "max_depth": 8
+        }
+      },
+      {
+        "id": "deeper",
+        "parameters": {
+          "max_depth": 20,
+          "min_samples_leaf": 4
+        }
+      },
+      {
+        "id": "unlimited",
+        "parameters": {
+          "max_depth": null,
+          "min_samples_leaf": 2
+        }
+      },
+      {
+        "id": "all_features",
+        "parameters": {
+          "n_estimators": 300,
+          "max_features": 1.0
+        }
+      },
+      {
+        "id": "large_leaf",
+        "parameters": {
+          "min_samples_leaf": 30
+        }
+      },
+      {
+        "id": "subsample_balance",
+        "parameters": {
+          "max_depth": 16,
+          "min_samples_leaf": 4,
+          "class_weight": "balanced_subsample"
+        }
+      }
+    ],
+    "mlp": [
+      {
+        "id": "default",
+        "parameters": {}
+      },
+      {
+        "id": "faster_lr",
+        "parameters": {
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "slower_lr",
+        "parameters": {
+          "learning_rate": 0.0002
+        }
+      },
+      {
+        "id": "compact",
+        "parameters": {
+          "width": 32,
+          "layers": 1,
+          "window": 16,
+          "dropout": 0.2,
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "regularized",
+        "parameters": {
+          "window": 16,
+          "dropout": 0.3,
+          "weight_decay": 0.05
+        }
+      },
+      {
+        "id": "wider",
+        "parameters": {
+          "width": 128,
+          "dropout": 0.2
+        }
+      },
+      {
+        "id": "current_only",
+        "parameters": {
+          "window": 1,
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "short_history",
+        "parameters": {
+          "window": 8,
+          "layers": 1,
+          "learning_rate": 0.001,
+          "weight_decay": 0.001
+        }
+      }
+    ],
+    "cnn": [
+      {
+        "id": "default",
+        "parameters": {}
+      },
+      {
+        "id": "faster_lr",
+        "parameters": {
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "slower_lr",
+        "parameters": {
+          "learning_rate": 0.0002
+        }
+      },
+      {
+        "id": "compact",
+        "parameters": {
+          "width": 32,
+          "layers": 1,
+          "window": 16,
+          "dropout": 0.2,
+          "learning_rate": 0.001,
+          "kernel_size": 3
+        }
+      },
+      {
+        "id": "regularized",
+        "parameters": {
+          "window": 16,
+          "dropout": 0.3,
+          "weight_decay": 0.05
+        }
+      },
+      {
+        "id": "wider",
+        "parameters": {
+          "width": 128,
+          "dropout": 0.2
+        }
+      },
+      {
+        "id": "current_only",
+        "parameters": {
+          "window": 1,
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "short_history",
+        "parameters": {
+          "window": 8,
+          "layers": 1,
+          "learning_rate": 0.001,
+          "weight_decay": 0.001,
+          "kernel_size": 3
+        }
+      }
+    ],
+    "lstm": [
+      {
+        "id": "default",
+        "parameters": {}
+      },
+      {
+        "id": "faster_lr",
+        "parameters": {
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "slower_lr",
+        "parameters": {
+          "learning_rate": 0.0002
+        }
+      },
+      {
+        "id": "compact",
+        "parameters": {
+          "width": 32,
+          "layers": 1,
+          "window": 16,
+          "dropout": 0.2,
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "regularized",
+        "parameters": {
+          "window": 16,
+          "dropout": 0.3,
+          "weight_decay": 0.05
+        }
+      },
+      {
+        "id": "wider",
+        "parameters": {
+          "width": 128,
+          "dropout": 0.2
+        }
+      },
+      {
+        "id": "current_only",
+        "parameters": {
+          "window": 1,
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "short_history",
+        "parameters": {
+          "window": 8,
+          "layers": 1,
+          "learning_rate": 0.001,
+          "weight_decay": 0.001
+        }
+      }
+    ],
+    "gru": [
+      {
+        "id": "default",
+        "parameters": {}
+      },
+      {
+        "id": "faster_lr",
+        "parameters": {
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "slower_lr",
+        "parameters": {
+          "learning_rate": 0.0002
+        }
+      },
+      {
+        "id": "compact",
+        "parameters": {
+          "width": 32,
+          "layers": 1,
+          "window": 16,
+          "dropout": 0.2,
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "regularized",
+        "parameters": {
+          "window": 16,
+          "dropout": 0.3,
+          "weight_decay": 0.05
+        }
+      },
+      {
+        "id": "wider",
+        "parameters": {
+          "width": 128,
+          "dropout": 0.2
+        }
+      },
+      {
+        "id": "current_only",
+        "parameters": {
+          "window": 1,
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "short_history",
+        "parameters": {
+          "window": 8,
+          "layers": 1,
+          "learning_rate": 0.001,
+          "weight_decay": 0.001
+        }
+      }
+    ],
+    "transformer": [
+      {
+        "id": "default",
+        "parameters": {}
+      },
+      {
+        "id": "faster_lr",
+        "parameters": {
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "slower_lr",
+        "parameters": {
+          "learning_rate": 0.0002
+        }
+      },
+      {
+        "id": "compact",
+        "parameters": {
+          "width": 32,
+          "layers": 1,
+          "window": 16,
+          "dropout": 0.2,
+          "learning_rate": 0.001,
+          "heads": 2
+        }
+      },
+      {
+        "id": "regularized",
+        "parameters": {
+          "window": 16,
+          "dropout": 0.3,
+          "weight_decay": 0.05
+        }
+      },
+      {
+        "id": "wider",
+        "parameters": {
+          "width": 128,
+          "dropout": 0.2,
+          "heads": 8
+        }
+      },
+      {
+        "id": "current_only",
+        "parameters": {
+          "window": 1,
+          "learning_rate": 0.001
+        }
+      },
+      {
+        "id": "short_history",
+        "parameters": {
+          "window": 8,
+          "layers": 1,
+          "learning_rate": 0.001,
+          "weight_decay": 0.001
+        }
+      }
+    ]
+  }
+}

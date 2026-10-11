@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "seed": 42,
+  "neural_epochs": 30,
+  "source_bundle": "artifacts/klt_protocols/folds/cross_region_klt3",
+  "target_areas": ["TST", "WP", "MK"],
+  "protocol": "Frozen KLT models to unseen UrbanNav districts; additionally six whole-drive train/validation/test district permutations inside UrbanNav",
+  "reference_policy": {
+    "margin_deg": 5.0,
+    "max_grid_distance_m": 2.0,
+    "neighbor_radius_m": 3.0,
+    "max_height_difference_m": 3.0,
+    "max_quality": 2
+  },
+  "selection_policy": "Existing KLT source validation thresholds for external transfer; other-district validation only for UrbanNav checkpoints and thresholds; no target-test tuning"
+}

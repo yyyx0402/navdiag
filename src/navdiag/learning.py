@@ -43,6 +43,13 @@ def evaluate(labels: np.ndarray, scores: np.ndarray, threshold: float) -> dict:
     tn, fp, fn, tp = matrix.ravel()
     return {
         "threshold": threshold,
+        "rows": len(labels),
+        "positives": int(tp + fn),
+        "predicted_positives": int(tp + fp),
+        "true_positives": int(tp), "true_negatives": int(tn),
+        "false_positives": int(fp), "false_negatives": int(fn),
+        "accuracy": float((tp + tn) / len(labels)),
+        "balanced_accuracy": float((tp / (tp + fn) + tn / (tn + fp)) / 2) if both_classes else None,
         "precision": float(precision_score(labels, predicted, zero_division=0)) if tp + fp else None,
         "recall": float(recall_score(labels, predicted, zero_division=0)) if tp + fn else None,
         "f1": float(f1_score(labels, predicted, zero_division=0)) if tp + fn else None,
@@ -81,7 +88,7 @@ def train_and_evaluate(csv_path: Path, output: Path, error_limit_m: float = 10, 
             class_weight="balanced", random_state=seed, n_jobs=1)),
     }
     report = {
-        "version": "0.2.0", "data_kind": str(frame["data_kind"].iloc[0]),
+        "version": "0.3.0", "data_kind": str(frame["data_kind"].iloc[0]),
         "dataset_sha256": hashlib.sha256(csv_path.read_bytes()).hexdigest(),
         "seed": seed, "sklearn_version": sklearn.__version__,
         "task": f"horizontal_error_m > {error_limit_m:g}",
@@ -93,6 +100,11 @@ def train_and_evaluate(csv_path: Path, output: Path, error_limit_m: float = 10, 
         "splits": {name: {"rows": len(part), "trips": sorted(part["trip_id"].unique().tolist()),
                            "positive_rate": float(labels[name].mean())} for name, part in splits.items()},
         "models": {},
+        "task_type": "epoch_position_error",
+        "label_definition": "Reference horizontal error only; no obstruction or LOS/NLOS ground truth.",
+        "sanity_baselines": {name: {split: evaluate(labels[split], np.full(len(part), value), 0.5)
+                                   for split, part in splits.items() if split != 'train'}
+                             for name, value in [('always_reliable', 0), ('always_unreliable', 1)]},
         "warning": "Synthetic demo results are not real GNSS performance." if frame["data_kind"].iloc[0] == "synthetic"
                    else "Performance applies only to this dataset and split; check unseen routes/devices.",
     }
@@ -136,7 +148,7 @@ def train_and_evaluate(csv_path: Path, output: Path, error_limit_m: float = 10, 
     (output / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False), encoding="utf-8")
     test.to_csv(output / "predictions.csv", index=False)
     bundle = {"models": models, "selected_model": selected, "threshold": threshold,
-              "features": active_features, "data_kind": report["data_kind"], "report_version": '0.2.0'}
+              "features": active_features, "data_kind": report["data_kind"], "report_version": '0.3.0'}
     joblib.dump(bundle, output / "models.joblib")
     if all(name in frame for name in ['wls_e_m', 'wls_n_m', 'gt_e_m', 'gt_n_m']):
         from navdiag.fusion import evaluate_positioning

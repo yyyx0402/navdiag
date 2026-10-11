@@ -1,6 +1,7 @@
 # Local environments, caches, and credentials
 .venv/
 .cache/
+.navdiag/
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -13,6 +14,7 @@ __pycache__/
 data/*
 !data/README.md
 !data/schema.csv
+!data/satellite_schema.csv
 artifacts/*
 !artifacts/README.md
 build/

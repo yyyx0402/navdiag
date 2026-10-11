@@ -11,7 +11,7 @@ secret_patterns = re.compile(r'sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{30,}|
 problems = []
 for relative in paths:
     path = ROOT / relative
-    if any(part in {'.venv', '.cache', '__pycache__', 'raw', 'processed'} for part in path.relative_to(ROOT).parts):
+    if any(part in {'.venv', '.cache', '.navdiag', '__pycache__', 'raw', 'processed'} for part in path.relative_to(ROOT).parts):
         problems.append(f'Local-only content selected: {relative}')
     if path.suffix.lower() in {'.jpg', '.png'} or not path.is_file():
         continue

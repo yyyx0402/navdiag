@@ -1,3 +1,5 @@
+certifi==2026.7.22
+charset-normalizer==3.5.2
 cloudpickle==3.1.2
 colorama==0.4.6
 contourpy==1.4.0
@@ -5,6 +7,8 @@ cycler==0.12.1
 filelock==3.32.3
 fonttools==4.66.1
 fsspec==2026.7.0
+huggingface_hub==0.36.2
+idna==3.20
 iniconfig==2.3.1
 Jinja2==3.1.6
 joblib==1.6.0
@@ -22,13 +26,22 @@ pluggy==1.6.0
 Pygments==2.21.0
 pyparsing==3.3.3
 pytest==9.1.1
+pyrtklib==0.2.7
 python-dateutil==2.9.0.post0
 pytz==2026.5
+PyYAML==6.0.3
+regex==2026.9.29
+requests==2.34.2
+safetensors==0.8.0
 scikit-learn==1.9.1
 scipy==1.18.1
 setuptools==84.0.0
 six==1.17.0
 sympy==1.14.0
 threadpoolctl==3.7.0
+tokenizers==0.22.2
+tqdm==4.70.1
+transformers==4.57.6
 typing_extensions==4.16.0
 tzdata==2026.5
+urllib3==2.8.0

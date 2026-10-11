@@ -1,0 +1,206 @@
+[
+  {
+    "id": "D01",
+    "split": "development",
+    "question": "接收到的电波功率很强，为什么仍可能绕过楼房才到天线？",
+    "expected": [
+      { "document_id": "K3" },
+      { "document_id": "D03", "heading": "直达、多径和 NLOS" }
+    ]
+  },
+  {
+    "id": "D02",
+    "split": "development",
+    "question": "这套研究能推广到上海的道路吗？",
+    "expected": [
+      { "document_id": "K9" },
+      { "document_id": "D04", "heading": "先明确自己要回答的问题" }
+    ]
+  },
+  {
+    "id": "D03",
+    "split": "development",
+    "question": "把一趟车的记录打散分给训练和测试，会高估成绩吗？",
+    "expected": [{ "document_id": "K4" }]
+  },
+  {
+    "id": "D04",
+    "split": "development",
+    "question": "判为坏信号的样本有多准，与真的坏信号找到多少，是一回事吗？",
+    "expected": [
+      { "document_id": "K5" },
+      {
+        "document_id": "D03",
+        "heading": "怎样读 Precision、Recall 和 Accuracy"
+      }
+    ]
+  },
+  {
+    "id": "D05",
+    "split": "development",
+    "question": "楼房地图自动产生的参考类别有何局限？",
+    "expected": [{ "document_id": "K10" }]
+  },
+  {
+    "id": "D06",
+    "split": "development",
+    "question": "网络观察之前几秒的记录，是否存在时间上的信息穿越？",
+    "expected": [
+      { "document_id": "K8" },
+      { "document_id": "D03", "heading": "论文网络为什么同时看时间和其他卫星" }
+    ]
+  },
+  {
+    "id": "D07",
+    "split": "development",
+    "question": "Transformer 和森林胜负的差距能归结为注意力机制吗？",
+    "expected": [{ "document_id": "K11" }]
+  },
+  {
+    "id": "D08",
+    "split": "development",
+    "question": "雅可比几何很好，但伪距有系统偏差，位置还可靠吗？",
+    "expected": [{ "document_id": "K2" }]
+  },
+  {
+    "id": "D09",
+    "split": "development",
+    "question": "模拟行程的好成绩能当作真实导航的表现吗？",
+    "expected": [{ "document_id": "K7" }]
+  },
+  {
+    "id": "D10",
+    "split": "development",
+    "question": "晚饭煮什么比较方便？",
+    "expect_no_results": true
+  },
+  {
+    "id": "D11",
+    "split": "development",
+    "question": "解释一下足球比赛的越位规则",
+    "expect_no_results": true
+  },
+  {
+    "id": "D12",
+    "split": "development",
+    "question": "客厅墙面刷成绿色好看吗？",
+    "expect_no_results": true
+  },
+  {
+    "id": "D13",
+    "split": "development",
+    "question": "苹果公司明天的股价会涨吗？",
+    "expect_no_results": true
+  },
+  {
+    "id": "D14",
+    "split": "development",
+    "question": "今天雨会停吗？",
+    "expect_no_results": true
+  },
+  {
+    "id": "D15",
+    "split": "development",
+    "question": "How do I bake sourdough bread?",
+    "expect_no_results": true
+  },
+  {
+    "id": "H01",
+    "split": "reserved",
+    "question": "一座城市的几个街区都测好了，就可以给外地用户使用了吗？",
+    "expected": [
+      { "document_id": "K9" },
+      { "document_id": "D04", "heading": "先明确自己要回答的问题" }
+    ]
+  },
+  {
+    "id": "H02",
+    "split": "reserved",
+    "question": "看到了信号却看不到卫星，这种情况是什么？",
+    "expected": [
+      { "document_id": "K3" },
+      { "document_id": "D03", "heading": "直达、多径和 NLOS" }
+    ]
+  },
+  {
+    "id": "H03",
+    "split": "reserved",
+    "question": "把本来正常的观测丢掉太多，会有什么代价？",
+    "expected": [
+      {
+        "document_id": "D03",
+        "heading": "怎样读 Precision、Recall 和 Accuracy"
+      }
+    ]
+  },
+  {
+    "id": "H04",
+    "split": "reserved",
+    "question": "同一辆车相邻的两个时间点能算两个独立实验吗？",
+    "expected": [{ "document_id": "K4" }]
+  },
+  {
+    "id": "H05",
+    "split": "reserved",
+    "question": "如果参考类别只覆盖少数观测，还能说整个城区的分数可信吗？",
+    "expected": [{ "document_id": "K10" }]
+  },
+  {
+    "id": "H06",
+    "split": "reserved",
+    "question": "一次训练赢了，怎么确认换个随机初始化还能赢？",
+    "expected": [{ "document_id": "K11" }]
+  },
+  {
+    "id": "H07",
+    "split": "reserved",
+    "question": "双向网络从已经收集的过去片段反着读，和窥视下一时刻有何不同？",
+    "expected": [
+      { "document_id": "D03", "heading": "论文网络为什么同时看时间和其他卫星" }
+    ]
+  },
+  {
+    "id": "H08",
+    "split": "reserved",
+    "question": "这篇文章的网络会让一颗卫星向另外几颗借信息吗？",
+    "expected": [
+      { "document_id": "D03", "heading": "论文网络为什么同时看时间和其他卫星" }
+    ]
+  },
+  {
+    "id": "H09",
+    "split": "reserved",
+    "question": "推荐三道适合周末做的家常菜",
+    "expect_no_results": true
+  },
+  {
+    "id": "H10",
+    "split": "reserved",
+    "question": "卧室窗帘怎样搭配木地板？",
+    "expect_no_results": true
+  },
+  {
+    "id": "H11",
+    "split": "reserved",
+    "question": "帮我比较两家银行的存款利率",
+    "expect_no_results": true
+  },
+  {
+    "id": "H12",
+    "split": "reserved",
+    "question": "下一届奥运会的田径比赛安排是什么？",
+    "expect_no_results": true
+  },
+  {
+    "id": "H13",
+    "split": "reserved",
+    "question": "What is the best way to grow tomatoes?",
+    "expect_no_results": true
+  },
+  {
+    "id": "H14",
+    "split": "reserved",
+    "question": "如何选购一台家用洗碗机？",
+    "expect_no_results": true
+  }
+]

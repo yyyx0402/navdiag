@@ -9,7 +9,8 @@ from navdiag.agent import LLMConfig, ask
 
 
 def evaluate_agent(artifacts: Path, output: Path, config: LLMConfig | None = None,
-                   cases_path: Path | None = None) -> dict:
+                   cases_path: Path | None = None, nlos_artifacts: Path | None = None,
+                   generalization_artifacts: Path | None = None) -> dict:
     config = config or LLMConfig()
     source = cases_path or files('navdiag').joinpath('resources/agent_cases.json')
     cases = json.loads(source.read_text(encoding='utf-8'))
@@ -20,7 +21,8 @@ def evaluate_agent(artifacts: Path, output: Path, config: LLMConfig | None = Non
         if not {'id', 'question', 'required_tool'} <= set(case):
             raise ValueError('Every case needs id, question and required_tool')
         try:
-            answer = ask(case['question'], artifacts, config)
+            answer = ask(case['question'], artifacts, config, nlos_artifacts=nlos_artifacts,
+                         generalization_artifacts=generalization_artifacts, task_context=case.get('task_context'))
             evidence = answer['evidence']
             tools = {item['tool'] for item in evidence}
             notes = {note['id'] for item in evidence if item['tool'] == 'search_knowledge'
@@ -29,10 +31,14 @@ def evaluate_agent(artifacts: Path, output: Path, config: LLMConfig | None = Non
                 'required_tool_called': case['required_tool'] in tools,
                 'has_evidence_citations': answer['citation_check']['has_evidence_citations'],
                 'no_unknown_citations': not answer['citation_check']['unknown_citations'],
-                'all_evidence_has_provenance': all(item['data_kind'] in {'real', 'synthetic'} for item in evidence),
+                'all_evidence_has_provenance': all(
+                    item['data_kind'] in {'real', 'synthetic'} or
+                    (item['data_kind'] == 'knowledge' and item['tool'] == 'search_knowledge' and
+                     all({'id', 'source_url', 'source_type'} <= set(note) for note in item['payload']['notes']))
+                    for item in evidence),
             }
             if case.get('knowledge_id'):
-                checks['expected_note_in_top_3'] = case['knowledge_id'] in notes
+                checks['expected_note_in_top_5'] = case['knowledge_id'] in notes
             results.append({'id': case['id'], 'question': case['question'], 'checks': checks,
                             'passed': all(checks.values()), 'result': answer})
         except (ValueError, RuntimeError, FileNotFoundError) as error:
@@ -40,7 +46,8 @@ def evaluate_agent(artifacts: Path, output: Path, config: LLMConfig | None = Non
     latencies = [row['result']['elapsed_s'] for row in results if 'result' in row]
     passed = sum(row['passed'] for row in results)
     report = {
-        'backend': config.provider, 'model': config.model or 'deterministic_tool_baseline',
+        'backend': config.provider, 'answer_mode': config.answer_mode,
+        'model': config.model or 'deterministic_tool_baseline',
         'cases': len(results), 'passed': passed, 'pass_rate': passed / len(results),
         'latency_p50_s': float(np.median(latencies)) if latencies else None,
         'latency_p95_s': float(np.percentile(latencies, 95)) if latencies else None,

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "navdiag"
-version = "0.2.0"
-description = "A learning-first GNSS positioning quality and diagnostic toolkit"
+version = "0.3.0"
+description = "GNSS LOS/NLOS experiments and evidence-backed diagnostics"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -13,6 +13,7 @@ dependencies = [
   "numpy>=1.26,<3",
   "pandas>=2.2,<3",
   "scikit-learn>=1.5,<2",
+  "scipy>=1.11,<2",
   "matplotlib>=3.9,<4",
   "joblib>=1.4,<2",
 ]
@@ -20,6 +21,8 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8,<10"]
 temporal = ["torch>=2.6,<3"]
+gnss = ["pyrtklib==0.2.7"]
+rag = ["torch>=2.6,<3", "transformers>=4.45,<5", "safetensors>=0.4,<1"]
 
 [project.scripts]
 navdiag = "navdiag.cli:main"

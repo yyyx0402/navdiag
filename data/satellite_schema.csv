@@ -1,0 +1,1 @@
+trip_id,device_id,timestamp_ms,satellite_id,system,data_kind,scene_id,scene_label,scene_label_source,signal_label,signal_label_source,obstruction_type,cn0_dbhz,elevation_deg,residual_normalized,pr_rate_consistency_mps,cn0_std_dbhz

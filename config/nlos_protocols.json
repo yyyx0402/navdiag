@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "description": "Three paired area folds. Same validation and test runs in each pair; only target-area training acquisitions are removed for cross-region evaluation.",
+  "target_epoch_ratio": [0.6, 0.2, 0.2],
+  "seed": 42,
+  "neural_epochs": 30,
+  "hyperparameter_policy": "Original fixed defaults; no hyperparameter search or reuse of the previous tuned winners.",
+  "folds": [
+    {
+      "id": "klt1",
+      "test_area": "KLT1",
+      "test": ["1109_KLT1_421"],
+      "validation": ["0610_KLT3_404", "1116_KLT2_169"],
+      "in_domain_train": ["0610_KLT1_203", "0610_KLT2_209", "1109_KLT2_301", "1109_KLT2_294", "1109_KLT3_666", "1116_KLT1_184"]
+    },
+    {
+      "id": "klt2",
+      "test_area": "KLT2",
+      "test": ["1109_KLT2_301", "1116_KLT2_169"],
+      "validation": ["0610_KLT3_404", "1116_KLT1_184"],
+      "in_domain_train": ["0610_KLT1_203", "0610_KLT2_209", "1109_KLT2_294", "1109_KLT1_421", "1109_KLT3_666"]
+    },
+    {
+      "id": "klt3",
+      "test_area": "KLT3",
+      "test": ["1109_KLT3_666"],
+      "validation": ["0610_KLT1_203", "1109_KLT2_301"],
+      "in_domain_train": ["0610_KLT2_209", "0610_KLT3_404", "1109_KLT2_294", "1109_KLT1_421", "1116_KLT2_169", "1116_KLT1_184"]
+    }
+  ]
+}

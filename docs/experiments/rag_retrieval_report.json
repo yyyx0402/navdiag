@@ -1,0 +1,1128 @@
+{
+  "retrieval_method": "bm25_char_tfidf_v1",
+  "top_k": 5,
+  "splits": {
+    "development": {
+      "positive_cases": 12,
+      "hit_at_5": 1.0,
+      "mrr_at_5": 0.8611111111111112,
+      "negative_cases": 0,
+      "negative_rejections": 0
+    },
+    "holdout": {
+      "positive_cases": 8,
+      "hit_at_5": 0.875,
+      "mrr_at_5": 0.7916666666666666,
+      "negative_cases": 3,
+      "negative_rejections": 2
+    }
+  },
+  "baselines": {
+    "notes_only_char_tfidf": {
+      "development": {
+        "hit_at_5": 0.5833333333333334,
+        "mrr_at_5": 0.5833333333333334,
+        "negative_rejections": 0,
+        "negative_cases": 0
+      },
+      "holdout": {
+        "hit_at_5": 0.75,
+        "mrr_at_5": 0.75,
+        "negative_rejections": 1,
+        "negative_cases": 3
+      }
+    },
+    "same_corpus_char_tfidf": {
+      "development": {
+        "hit_at_5": 0.9166666666666666,
+        "mrr_at_5": 0.7916666666666666,
+        "negative_rejections": 0,
+        "negative_cases": 0
+      },
+      "holdout": {
+        "hit_at_5": 0.875,
+        "mrr_at_5": 0.8125,
+        "negative_rejections": 1,
+        "negative_cases": 3
+      }
+    }
+  },
+  "corpus_sha256": "fc43c72a2664704b184d037cb8bcec3875019686aee79d1f0b795b48147ebe38",
+  "queries_sha256": "796ef8d787176f901264a40f54942344235e3cf1e766ca262b25bd21c8931f32",
+  "scope": "Source/heading retrieval only. No external API calls.",
+  "limitations": [
+    "Small manually authored query set, not a representative user benchmark.",
+    "A source hit does not establish that every returned passage is relevant or the answer is correct.",
+    "Sparse vocabulary expansion does not replace semantic embeddings."
+  ],
+  "results": [
+    {
+      "id": "R01",
+      "split": "development",
+      "question": "HDOP 小是否就代表定位可靠？",
+      "expected": [
+        {
+          "document_id": "K2"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K2",
+          "document_id": "K2",
+          "heading": "HDOP 和卫星几何",
+          "source_url": "https://gssc.esa.int/navipedia/index.php/Positioning_Error",
+          "relevance_score": 0.6287284922752112
+        },
+        {
+          "id": "D01-6b7cae8e2f20",
+          "document_id": "D01",
+          "heading": "下一步",
+          "source_url": "docs/OBSTRUCTION_LABELS.md",
+          "relevance_score": 0.33720001683577505
+        },
+        {
+          "id": "D02-88fa5c3b3c4d",
+          "document_id": "D02",
+          "heading": "Observations and labels",
+          "source_url": "docs/MODEL_CARD.md",
+          "relevance_score": 0.21399193161440355
+        },
+        {
+          "id": "D02-de8449cdb441",
+          "document_id": "D02",
+          "heading": "Models and selection",
+          "source_url": "docs/MODEL_CARD.md",
+          "relevance_score": 0.2106948357208785
+        },
+        {
+          "id": "K7",
+          "document_id": "K7",
+          "heading": "真实数据与模拟实验",
+          "source_url": "https://gnss-lib-py.readthedocs.io/en/stable/tutorials/parsers/tutorials_google_decimeter_notebook.html",
+          "relevance_score": 0.20364388224590102
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "split": "development",
+      "question": "信号强度很高也会是 NLOS 吗？",
+      "expected": [
+        {
+          "document_id": "K3"
+        },
+        {
+          "document_id": "D03",
+          "heading": "直达、多径和 NLOS"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 0.5,
+      "hits": [
+        {
+          "id": "K1",
+          "document_id": "K1",
+          "heading": "载噪比 C/N0 与定位质量",
+          "source_url": "https://gssc.esa.int/navipedia/index.php/Receiver_noise",
+          "relevance_score": 0.6377019984253356
+        },
+        {
+          "id": "K3",
+          "document_id": "K3",
+          "heading": "多路径与 NLOS 诊断的证据边界",
+          "source_url": "https://github.com/ebhrz/KLTDataset",
+          "relevance_score": 0.41122238821337087
+        },
+        {
+          "id": "D03-8d32ce7b09f8",
+          "document_id": "D03",
+          "heading": "直达、多径和 NLOS",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.36711433088568474
+        },
+        {
+          "id": "D04-ddffb373abc0",
+          "document_id": "D04",
+          "heading": "C/N0 并不只由城市决定",
+          "source_url": "docs/lessons/06_generalization.md",
+          "relevance_score": 0.2680538730937664
+        },
+        {
+          "id": "D03-ac8c69aa170e",
+          "document_id": "D03",
+          "heading": "为什么是这些特征",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.22510173339727874
+        }
+      ]
+    },
+    {
+      "id": "R03",
+      "split": "development",
+      "question": "模型会不会读到后面的观测？",
+      "expected": [
+        {
+          "document_id": "K8"
+        },
+        {
+          "document_id": "D03",
+          "heading": "论文网络为什么同时看时间和其他卫星"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K8",
+          "document_id": "K8",
+          "heading": "GRU 的因果时间窗口",
+          "source_url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.GRU.html",
+          "relevance_score": 0.5748732663401677
+        },
+        {
+          "id": "D03-d1429e5ef63f",
+          "document_id": "D03",
+          "heading": "论文网络为什么同时看时间和其他卫星",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.2409217193990029
+        },
+        {
+          "id": "D05-9369ab97905c",
+          "document_id": "D05",
+          "heading": "论文实际做了什么",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.23271834514281406
+        },
+        {
+          "id": "K4",
+          "document_id": "K4",
+          "heading": "独立行程划分与数据泄漏",
+          "source_url": "https://scikit-learn.org/stable/modules/cross_validation.html",
+          "relevance_score": 0.22910780351471277
+        },
+        {
+          "id": "D07-1d47f10f250a",
+          "document_id": "D07",
+          "heading": "固定规则成绩相同的原因",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.1847079393961291
+        }
+      ]
+    },
+    {
+      "id": "R04",
+      "split": "development",
+      "question": "论文中各颗卫星怎样交换信息？",
+      "expected": [
+        {
+          "document_id": "D03",
+          "heading": "论文网络为什么同时看时间和其他卫星"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 0.3333333333333333,
+      "hits": [
+        {
+          "id": "D05-e177286f7bef",
+          "document_id": "D05",
+          "heading": "当前可执行边界与下一步",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.4958692593955691
+        },
+        {
+          "id": "D05-9369ab97905c",
+          "document_id": "D05",
+          "heading": "论文实际做了什么",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.49409337836313527
+        },
+        {
+          "id": "D03-d1429e5ef63f",
+          "document_id": "D03",
+          "heading": "论文网络为什么同时看时间和其他卫星",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.4826062089872405
+        },
+        {
+          "id": "D09-41b7f73f3683",
+          "document_id": "D09",
+          "heading": "实际结果",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.2268917529949034
+        },
+        {
+          "id": "D03-1dff852a341f",
+          "document_id": "D03",
+          "heading": "怎样读 Precision、Recall 和 Accuracy",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.21089773240498835
+        }
+      ]
+    },
+    {
+      "id": "R05",
+      "split": "development",
+      "question": "同域列和跨区域列的 C/N0 分数为何一样？",
+      "expected": [
+        {
+          "document_id": "D04",
+          "heading": "相同测试段上的固定规则为何不变"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "D04-001d64f5ed88",
+          "document_id": "D04",
+          "heading": "相同测试段上的固定规则为何不变",
+          "source_url": "docs/lessons/06_generalization.md",
+          "relevance_score": 0.5065103384511338
+        },
+        {
+          "id": "K9",
+          "document_id": "K9",
+          "heading": "同域、同城跨区域与跨城市的实验边界",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.4604688894536737
+        },
+        {
+          "id": "D07-1d47f10f250a",
+          "document_id": "D07",
+          "heading": "固定规则成绩相同的原因",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.27826932574023233
+        },
+        {
+          "id": "D07-198838d931ca",
+          "document_id": "D07",
+          "heading": "同城区域留出是否构成有用的泛化测试？",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.22982156326616515
+        },
+        {
+          "id": "D08-9f66b9996727",
+          "document_id": "D08",
+          "heading": "本次运行结果",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.21461906464092223
+        }
+      ]
+    },
+    {
+      "id": "R06",
+      "split": "development",
+      "question": "Transformeru 跨区域是不是就一定比随机森林好？",
+      "expected": [
+        {
+          "document_id": "K11"
+        },
+        {
+          "document_id": "D08",
+          "heading": "本次运行结果"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K11",
+          "document_id": "K11",
+          "heading": "模型排名与公平比较",
+          "source_url": "docs/MODEL_CARD.md",
+          "relevance_score": 0.5576267845727958
+        },
+        {
+          "id": "K9",
+          "document_id": "K9",
+          "heading": "同域、同城跨区域与跨城市的实验边界",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.4915206593489395
+        },
+        {
+          "id": "D08-214005ef706a",
+          "document_id": "D08",
+          "heading": "本次运行结果",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.31921201156908263
+        },
+        {
+          "id": "D04-001d64f5ed88",
+          "document_id": "D04",
+          "heading": "相同测试段上的固定规则为何不变",
+          "source_url": "docs/lessons/06_generalization.md",
+          "relevance_score": 0.2923037638893959
+        },
+        {
+          "id": "D08-9f66b9996727",
+          "document_id": "D08",
+          "heading": "本次运行结果",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.2922914022302714
+        }
+      ]
+    },
+    {
+      "id": "R07",
+      "split": "development",
+      "question": "Precision 和 NLOS 检出率应该怎样一起看？",
+      "expected": [
+        {
+          "document_id": "K5"
+        },
+        {
+          "document_id": "D03",
+          "heading": "怎样读 Precision、Recall 和 Accuracy"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "D03-1dff852a341f",
+          "document_id": "D03",
+          "heading": "怎样读 Precision、Recall 和 Accuracy",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.5547884438651178
+        },
+        {
+          "id": "D03-3a79883e4f70",
+          "document_id": "D03",
+          "heading": "标签怎样获得",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.30319065935492745
+        },
+        {
+          "id": "K5",
+          "document_id": "K5",
+          "heading": "风险评分、阈值与分类指标",
+          "source_url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+          "relevance_score": 0.2925118122528797
+        },
+        {
+          "id": "D08-9f66b9996727",
+          "document_id": "D08",
+          "heading": "本次运行结果",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.13223755388195052
+        },
+        {
+          "id": "D02-4803d3de3622",
+          "document_id": "D02",
+          "heading": "Evaluation and limitations",
+          "source_url": "docs/MODEL_CARD.md",
+          "relevance_score": 0.1300504918092725
+        }
+      ]
+    },
+    {
+      "id": "R08",
+      "split": "development",
+      "question": "地图标签是否都是人工标注的真值？",
+      "expected": [
+        {
+          "document_id": "K10"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K10",
+          "document_id": "K10",
+          "heading": "UrbanNav 静态建筑参考标签与 unknown",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.685257404672423
+        },
+        {
+          "id": "D09-3a9dc1eb82f0",
+          "document_id": "D09",
+          "heading": "标签和特征分开",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.2707263808540871
+        },
+        {
+          "id": "D09-b776ac5cf66f",
+          "document_id": "D09",
+          "heading": "UrbanNav 未见城区泛化实验",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.24806541084620853
+        },
+        {
+          "id": "D01-4f67019fc0c9",
+          "document_id": "D01",
+          "heading": "遮挡、信号接收与定位失准标签",
+          "source_url": "docs/OBSTRUCTION_LABELS.md",
+          "relevance_score": 0.16708516136967683
+        },
+        {
+          "id": "D06-9b1f4b21038a",
+          "document_id": "D06",
+          "heading": "开源参考与复用记录",
+          "source_url": "docs/OPEN_SOURCE_REFERENCES.md",
+          "relevance_score": 0.16524665120406257
+        }
+      ]
+    },
+    {
+      "id": "R09",
+      "split": "development",
+      "question": "可以用测试集选分类阈值吗？",
+      "expected": [
+        {
+          "document_id": "K5"
+        },
+        {
+          "document_id": "K4"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K4",
+          "document_id": "K4",
+          "heading": "独立行程划分与数据泄漏",
+          "source_url": "https://scikit-learn.org/stable/modules/cross_validation.html",
+          "relevance_score": 0.5286371341109647
+        },
+        {
+          "id": "K5",
+          "document_id": "K5",
+          "heading": "风险评分、阈值与分类指标",
+          "source_url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+          "relevance_score": 0.340786421372124
+        },
+        {
+          "id": "D01-fa6ede833faa",
+          "document_id": "D01",
+          "heading": "分组和评估",
+          "source_url": "docs/OBSTRUCTION_LABELS.md",
+          "relevance_score": 0.33639463793245494
+        },
+        {
+          "id": "D08-269dd601ea9a",
+          "document_id": "D08",
+          "heading": "同域与跨区域 NLOS 实验",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.3271968163664228
+        },
+        {
+          "id": "K11",
+          "document_id": "K11",
+          "heading": "模型排名与公平比较",
+          "source_url": "docs/MODEL_CARD.md",
+          "relevance_score": 0.3260958569926712
+        }
+      ]
+    },
+    {
+      "id": "R10",
+      "split": "development",
+      "question": "同一次采集的历元随机打散会不会泄漏？",
+      "expected": [
+        {
+          "document_id": "K4"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K4",
+          "document_id": "K4",
+          "heading": "独立行程划分与数据泄漏",
+          "source_url": "https://scikit-learn.org/stable/modules/cross_validation.html",
+          "relevance_score": 0.5372883556812679
+        },
+        {
+          "id": "D08-967b5e1b89aa",
+          "document_id": "D08",
+          "heading": "两种实验与比例",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.4316466408397539
+        },
+        {
+          "id": "D09-6cfae2799c6d",
+          "document_id": "D09",
+          "heading": "新采集记录与评分覆盖",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.23177540988996384
+        },
+        {
+          "id": "K11",
+          "document_id": "K11",
+          "heading": "模型排名与公平比较",
+          "source_url": "docs/MODEL_CARD.md",
+          "relevance_score": 0.19671437876196132
+        },
+        {
+          "id": "D01-fa6ede833faa",
+          "document_id": "D01",
+          "heading": "分组和评估",
+          "source_url": "docs/OBSTRUCTION_LABELS.md",
+          "relevance_score": 0.14473757333372875
+        }
+      ]
+    },
+    {
+      "id": "R11",
+      "split": "development",
+      "question": "残差 RSS 与 RMS 是否一样？",
+      "expected": [
+        {
+          "document_id": "D03",
+          "heading": "为什么是这些特征"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "D03-ac8c69aa170e",
+          "document_id": "D03",
+          "heading": "为什么是这些特征",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.5146846159164231
+        },
+        {
+          "id": "D05-dde593f1c346",
+          "document_id": "D05",
+          "heading": "预处理与标签",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.2720328050614131
+        },
+        {
+          "id": "D05-dfadc59aa2f4",
+          "document_id": "D05",
+          "heading": "方法解释检查（11/11）",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.19714462900637095
+        },
+        {
+          "id": "D02-88fa5c3b3c4d",
+          "document_id": "D02",
+          "heading": "Observations and labels",
+          "source_url": "docs/MODEL_CARD.md",
+          "relevance_score": 0.19419336083082936
+        },
+        {
+          "id": "D09-41b7f73f3683",
+          "document_id": "D09",
+          "heading": "实际结果",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.1555211649001589
+        }
+      ]
+    },
+    {
+      "id": "R12",
+      "split": "development",
+      "question": "我们已经完整复现 Zhang 2023 吗？",
+      "expected": [
+        {
+          "document_id": "D05"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 0.5,
+      "hits": [
+        {
+          "id": "D03-9ba501702615",
+          "document_id": "D03",
+          "heading": "第五课：从 Zhang 2023 理解 NLOS",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.5010298841464499
+        },
+        {
+          "id": "D05-e177286f7bef",
+          "document_id": "D05",
+          "heading": "当前可执行边界与下一步",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.48771080788619503
+        },
+        {
+          "id": "D05-68d1aa63ba45",
+          "document_id": "D05",
+          "heading": "Zhang 2023：方法核对与复现条件",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.44436890200369594
+        },
+        {
+          "id": "D09-5ffb0626706f",
+          "document_id": "D09",
+          "heading": "两个实验回答不同问题",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.389705814547821
+        },
+        {
+          "id": "D09-75f5f1c5866a",
+          "document_id": "D09",
+          "heading": "复现与检查",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.2978515155410432
+        }
+      ]
+    },
+    {
+      "id": "R13",
+      "split": "holdout",
+      "question": "新城区只改变了建筑环境吗，天线和日期会不会也影响结论？",
+      "expected": [
+        {
+          "document_id": "K9"
+        },
+        {
+          "document_id": "D04",
+          "heading": "C/N0 并不只由城市决定"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 0.3333333333333333,
+      "hits": [
+        {
+          "id": "D04-9611e6ba315b",
+          "document_id": "D04",
+          "heading": "先明确自己要回答的问题",
+          "source_url": "docs/lessons/06_generalization.md",
+          "relevance_score": 0.48672818987572464
+        },
+        {
+          "id": "D09-06f275539d07",
+          "document_id": "D09",
+          "heading": "实际结果",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.35100278540101737
+        },
+        {
+          "id": "K9",
+          "document_id": "K9",
+          "heading": "同域、同城跨区域与跨城市的实验边界",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.2896695384668791
+        },
+        {
+          "id": "D07-1d47f10f250a",
+          "document_id": "D07",
+          "heading": "固定规则成绩相同的原因",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.2523780930908869
+        },
+        {
+          "id": "D07-029a6f18d2f4",
+          "document_id": "D07",
+          "heading": "对项目的重新定位",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.24297206582219671
+        }
+      ]
+    },
+    {
+      "id": "R14",
+      "split": "holdout",
+      "question": "BiLSTM 双向遍历历史就意味着偷看未来吗？",
+      "expected": [
+        {
+          "document_id": "D03",
+          "heading": "论文网络为什么同时看时间和其他卫星"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "D03-d1429e5ef63f",
+          "document_id": "D03",
+          "heading": "论文网络为什么同时看时间和其他卫星",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.5056978168674288
+        },
+        {
+          "id": "D05-9369ab97905c",
+          "document_id": "D05",
+          "heading": "论文实际做了什么",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.2995249201375321
+        },
+        {
+          "id": "K8",
+          "document_id": "K8",
+          "heading": "GRU 的因果时间窗口",
+          "source_url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.GRU.html",
+          "relevance_score": 0.2874762111503166
+        },
+        {
+          "id": "K11",
+          "document_id": "K11",
+          "heading": "模型排名与公平比较",
+          "source_url": "docs/MODEL_CARD.md",
+          "relevance_score": 0.15772216510860773
+        },
+        {
+          "id": "D05-dde593f1c346",
+          "document_id": "D05",
+          "heading": "预处理与标签",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.15530579534766184
+        }
+      ]
+    },
+    {
+      "id": "R15",
+      "split": "holdout",
+      "question": "unknown 占比高的地区，能直接比较分数吗？",
+      "expected": [
+        {
+          "document_id": "K10"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K10",
+          "document_id": "K10",
+          "heading": "UrbanNav 静态建筑参考标签与 unknown",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.7077165094899573
+        },
+        {
+          "id": "D09-3a9dc1eb82f0",
+          "document_id": "D09",
+          "heading": "标签和特征分开",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.2877472708179185
+        },
+        {
+          "id": "D09-6cfae2799c6d",
+          "document_id": "D09",
+          "heading": "新采集记录与评分覆盖",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.2631682696976364
+        },
+        {
+          "id": "D06-9b1f4b21038a",
+          "document_id": "D06",
+          "heading": "开源参考与复用记录",
+          "source_url": "docs/OPEN_SOURCE_REFERENCES.md",
+          "relevance_score": 0.16171348031938343
+        },
+        {
+          "id": "D07-029a6f18d2f4",
+          "document_id": "D07",
+          "heading": "对项目的重新定位",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.1466552878240611
+        }
+      ]
+    },
+    {
+      "id": "R16",
+      "split": "holdout",
+      "question": "为什么跨区域成绩接近也不能说不存在域偏移？",
+      "expected": [
+        {
+          "document_id": "K9"
+        },
+        {
+          "document_id": "D04",
+          "heading": "先明确自己要回答的问题"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K9",
+          "document_id": "K9",
+          "heading": "同域、同城跨区域与跨城市的实验边界",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.5931457150696547
+        },
+        {
+          "id": "D04-001d64f5ed88",
+          "document_id": "D04",
+          "heading": "相同测试段上的固定规则为何不变",
+          "source_url": "docs/lessons/06_generalization.md",
+          "relevance_score": 0.3488040135134456
+        },
+        {
+          "id": "D08-214005ef706a",
+          "document_id": "D08",
+          "heading": "本次运行结果",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.29155490364579084
+        },
+        {
+          "id": "D07-198838d931ca",
+          "document_id": "D07",
+          "heading": "同城区域留出是否构成有用的泛化测试？",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.26261388003671965
+        },
+        {
+          "id": "D08-269dd601ea9a",
+          "document_id": "D08",
+          "heading": "同域与跨区域 NLOS 实验",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.262155507064677
+        }
+      ]
+    },
+    {
+      "id": "R17",
+      "split": "holdout",
+      "question": "随机森林只看当前值，而时序网络看历史，这样能证明结构更强吗？",
+      "expected": [
+        {
+          "document_id": "K11"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K11",
+          "document_id": "K11",
+          "heading": "模型排名与公平比较",
+          "source_url": "docs/MODEL_CARD.md",
+          "relevance_score": 0.5521672765732578
+        },
+        {
+          "id": "D03-d1429e5ef63f",
+          "document_id": "D03",
+          "heading": "论文网络为什么同时看时间和其他卫星",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.19392213941603242
+        },
+        {
+          "id": "K8",
+          "document_id": "K8",
+          "heading": "GRU 的因果时间窗口",
+          "source_url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.GRU.html",
+          "relevance_score": 0.1532407559211993
+        },
+        {
+          "id": "D08-86bb09be23bb",
+          "document_id": "D08",
+          "heading": "模型与比较方法",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.14904031040317736
+        },
+        {
+          "id": "D01-fa6ede833faa",
+          "document_id": "D01",
+          "heading": "分组和评估",
+          "source_url": "docs/OBSTRUCTION_LABELS.md",
+          "relevance_score": 0.11689025069707672
+        }
+      ]
+    },
+    {
+      "id": "R18",
+      "split": "holdout",
+      "question": "误报好卫星会影响定位几何和冗余吗？",
+      "expected": [
+        {
+          "document_id": "D03",
+          "heading": "怎样读 Precision、Recall 和 Accuracy"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "D03-1dff852a341f",
+          "document_id": "D03",
+          "heading": "怎样读 Precision、Recall 和 Accuracy",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.4818097408434108
+        },
+        {
+          "id": "K1",
+          "document_id": "K1",
+          "heading": "载噪比 C/N0 与定位质量",
+          "source_url": "https://gssc.esa.int/navipedia/index.php/Receiver_noise",
+          "relevance_score": 0.30894107803187054
+        },
+        {
+          "id": "D08-86bb09be23bb",
+          "document_id": "D08",
+          "heading": "模型与比较方法",
+          "source_url": "docs/experiments/nlos_protocols.md",
+          "relevance_score": 0.24459836581223438
+        },
+        {
+          "id": "D05-e177286f7bef",
+          "document_id": "D05",
+          "heading": "当前可执行边界与下一步",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.241274140847197
+        },
+        {
+          "id": "K2",
+          "document_id": "K2",
+          "heading": "HDOP 和卫星几何",
+          "source_url": "https://gssc.esa.int/navipedia/index.php/Positioning_Error",
+          "relevance_score": 0.22632538952278616
+        }
+      ]
+    },
+    {
+      "id": "R19",
+      "split": "holdout",
+      "question": "发现遮挡就证明位置误差超过十米了吗？",
+      "expected": [
+        {
+          "document_id": "K3"
+        },
+        {
+          "document_id": "D01"
+        }
+      ],
+      "passed": true,
+      "reciprocal_rank": 1.0,
+      "hits": [
+        {
+          "id": "K3",
+          "document_id": "K3",
+          "heading": "多路径与 NLOS 诊断的证据边界",
+          "source_url": "https://github.com/ebhrz/KLTDataset",
+          "relevance_score": 0.5258045397043456
+        },
+        {
+          "id": "D05-c08b199fe2d3",
+          "document_id": "D05",
+          "heading": "数值核对与解释",
+          "source_url": "docs/research/zhang2023_reproduction.md",
+          "relevance_score": 0.25236566313107794
+        },
+        {
+          "id": "D03-ac8c69aa170e",
+          "document_id": "D03",
+          "heading": "为什么是这些特征",
+          "source_url": "docs/lessons/05_nlos_zhang2023.md",
+          "relevance_score": 0.23212793731936204
+        },
+        {
+          "id": "D01-6b7cae8e2f20",
+          "document_id": "D01",
+          "heading": "下一步",
+          "source_url": "docs/OBSTRUCTION_LABELS.md",
+          "relevance_score": 0.21908096592319865
+        },
+        {
+          "id": "D09-3a9dc1eb82f0",
+          "document_id": "D09",
+          "heading": "标签和特征分开",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.20223802448814976
+        }
+      ]
+    },
+    {
+      "id": "R20",
+      "split": "holdout",
+      "question": "香港几个城区的结果可以代表另一个城市吗？",
+      "expected": [
+        {
+          "document_id": "K9"
+        },
+        {
+          "document_id": "D04",
+          "heading": "先明确自己要回答的问题"
+        }
+      ],
+      "passed": false,
+      "reciprocal_rank": 0,
+      "hits": [
+        {
+          "id": "D09-5ffb0626706f",
+          "document_id": "D09",
+          "heading": "两个实验回答不同问题",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.4988866614812585
+        },
+        {
+          "id": "K7",
+          "document_id": "K7",
+          "heading": "真实数据与模拟实验",
+          "source_url": "https://gnss-lib-py.readthedocs.io/en/stable/tutorials/parsers/tutorials_google_decimeter_notebook.html",
+          "relevance_score": 0.3315268709944925
+        },
+        {
+          "id": "D09-41b7f73f3683",
+          "document_id": "D09",
+          "heading": "实际结果",
+          "source_url": "docs/experiments/urbannav_generalization.md",
+          "relevance_score": 0.3150631632864738
+        },
+        {
+          "id": "D07-198838d931ca",
+          "document_id": "D07",
+          "heading": "同城区域留出是否构成有用的泛化测试？",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.25587599060235194
+        },
+        {
+          "id": "D07-9c6becd4ab4c",
+          "document_id": "D07",
+          "heading": "文献能够支持什么",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.25335965974345964
+        }
+      ]
+    },
+    {
+      "id": "R21",
+      "split": "holdout",
+      "question": "苹果派怎么烤？",
+      "expect_no_results": true,
+      "passed": true,
+      "reciprocal_rank": 0,
+      "hits": []
+    },
+    {
+      "id": "R22",
+      "split": "holdout",
+      "question": "Explain quantum chromodynamics hadronization",
+      "expect_no_results": true,
+      "passed": true,
+      "reciprocal_rank": 0,
+      "hits": []
+    },
+    {
+      "id": "R23",
+      "split": "holdout",
+      "question": "宜家沙发什么颜色适合客厅？",
+      "expect_no_results": true,
+      "passed": false,
+      "reciprocal_rank": 0,
+      "hits": [
+        {
+          "id": "K7",
+          "document_id": "K7",
+          "heading": "真实数据与模拟实验",
+          "source_url": "https://gnss-lib-py.readthedocs.io/en/stable/tutorials/parsers/tutorials_google_decimeter_notebook.html",
+          "relevance_score": 0.46641965445562583
+        },
+        {
+          "id": "K8",
+          "document_id": "K8",
+          "heading": "GRU 的因果时间窗口",
+          "source_url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.GRU.html",
+          "relevance_score": 0.46159706690681723
+        },
+        {
+          "id": "D07-1d47f10f250a",
+          "document_id": "D07",
+          "heading": "固定规则成绩相同的原因",
+          "source_url": "docs/experiments/nlos_domain_audit.md",
+          "relevance_score": 0.36021158313411666
+        }
+      ]
+    }
+  ]
+}

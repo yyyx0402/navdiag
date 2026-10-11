@@ -2,11 +2,27 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "NavDiag: satellite LOS/NLOS experiment",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "navdiag",
+      "args": ["train-nlos"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
       "name": "NavDiag: demo experiment",
       "type": "debugpy",
       "request": "launch",
       "module": "navdiag",
-      "args": ["demo", "--navigation", "--with-gru", "--out", "artifacts/navigation_demo"],
+      "args": [
+        "demo",
+        "--navigation",
+        "--with-gru",
+        "--out",
+        "artifacts/navigation_demo"
+      ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "justMyCode": true
@@ -16,7 +32,15 @@
       "type": "debugpy",
       "request": "launch",
       "module": "navdiag",
-      "args": ["serve", "--artifacts", "artifacts/navigation_demo"],
+      "args": [
+        "serve",
+        "--artifacts",
+        "artifacts/navigation_demo",
+        "--nlos-artifacts",
+        "artifacts/klt_protocols",
+        "--generalization-artifacts",
+        "artifacts/urbannav_generalization"
+      ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "justMyCode": true

@@ -11,6 +11,8 @@ from navdiag.positioning import align_reference, ecef_to_enu, ecef_to_lla, lla_t
 
 GPS_EPOCH_UNIX_MS = 315964800000
 GPS_MINUS_UTC_MS = 18000  # Applicable to the 2020-2024 GSDC collections, not future leap seconds.
+LEGACY_CORRECTION_SOURCE = ('https://github.com/Stanford-NavLab/gnss_lib_py/blob/'
+                            '3a5c43cdf9121b68414ec87cd3666b761f0faf8d/gnss_lib_py/parsers/google_decimeter.py')
 
 
 def _column(frame: pd.DataFrame, names: list[str], default: float | None = None) -> np.ndarray:
@@ -24,8 +26,26 @@ def _column(frame: pd.DataFrame, names: list[str], default: float | None = None)
 
 def read_observations(path: Path) -> pd.DataFrame:
     frame = pd.read_csv(path)
+    time_details = {'format': 'modern', 'policy': 'Use supplied UTC Unix milliseconds unchanged'}
     if "millisSinceGpsEpoch" in frame:
-        times = _column(frame, ["millisSinceGpsEpoch"]) + GPS_EPOCH_UNIX_MS - GPS_MINUS_UTC_MS
+        # GSDC 2021 host correction: derived measurements belong to the previous
+        # recorded epoch, which need not be exactly 1000 ms earlier. This mapping
+        # uses observation timestamps only, never a reference-error minimization.
+        original = _column(frame, ['millisSinceGpsEpoch'])
+        epochs = np.unique(original[np.isfinite(original)])
+        previous = pd.Series(epochs[:-1], index=epochs[1:])
+        mapped = pd.Series(original).map(previous).to_numpy(dtype=float)
+        tx = _column(frame, ['receivedSvTimeInGpsNanos']) / 1e6
+        delta_ms = mapped - tx
+        valid = np.isfinite(mapped) & (delta_ms > 0) & (delta_ms < 300)
+        time_details = {
+            'format': 'gsdc2021', 'policy': 'Map derived epochs to previous recorded observation epoch, then GPS to UTC',
+            'first_or_invalid_epoch_rows_removed': int((~np.isfinite(mapped)).sum()),
+            'timing_outlier_rows_removed': int((np.isfinite(mapped) & ~valid).sum()),
+            'transmission_to_reception_ms': '0 < delta < 300', 'source': LEGACY_CORRECTION_SOURCE,
+        }
+        frame = frame.loc[valid].reset_index(drop=True)
+        times = mapped[valid] + GPS_EPOCH_UNIX_MS - GPS_MINUS_UTC_MS
     else:
         times = _column(frame, ["utcTimeMillis", "UnixTimeMillis"])
     raw = _column(frame, ["rawPrM", "RawPseudorangeMeters"])
@@ -49,7 +69,9 @@ def read_observations(path: Path) -> pd.DataFrame:
     observations = observations[(observations.pseudorange_m.between(1e7, 5e7)) & (observations.sigma_m > 0)]
     # One independent code observation per satellite: do not count frequencies as extra satellites.
     observations = observations.sort_values("sigma_m").drop_duplicates(["timestamp_ms", "system", "sv_id"])
-    return observations.sort_values(["timestamp_ms", "system", "sv_id"]).reset_index(drop=True)
+    observations = observations.sort_values(["timestamp_ms", "system", "sv_id"]).reset_index(drop=True)
+    observations.attrs['time_corrections'] = time_details
+    return observations
 
 
 def read_reference(path: Path) -> tuple[np.ndarray, np.ndarray]:
@@ -62,7 +84,10 @@ def read_reference(path: Path) -> tuple[np.ndarray, np.ndarray]:
         _column(frame, ["latDeg", "LatitudeDegrees"]),
         _column(frame, ["lngDeg", "LongitudeDegrees"]),
         _column(frame, ["heightAboveWgs84EllipsoidM", "AltitudeMeters"]),
-    ])
+    ]).astype(float)
+    if 'millisSinceGpsEpoch' in frame:
+        # Separate host correction for the legacy 2021 reference height field.
+        lla[:, 2] -= 61.0
     valid = np.isfinite(times) & np.isfinite(lla).all(axis=1)
     return times[valid], lla_to_ecef(lla[valid])
 
@@ -123,7 +148,9 @@ def preprocess_device(observation_path: Path, reference_path: Path, trip_id: str
         "trip_id": trip_id, "device_id": device_id, "epochs": len(result), "dropped": dict(failures),
         "unavailable_features": [name for name in ["cn0_mean_dbhz", "cn0_min_dbhz"] if result[name].isna().all()],
         "source_files": [{"name": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()} for path in [observation_path, reference_path]],
-        "time_policy": "2021 GPS epoch milliseconds converted with 18s GPS-UTC; 2022/2023 provided Unix milliseconds; no extrapolation",
+        "time_policy": "2021 derived epochs mapped to previous recorded epoch before GPS/UTC conversion; modern UTC unchanged; no extrapolation",
+        'observation_time_corrections': observations.attrs['time_corrections'],
+        'reference_policy': '2021 height field corrected by -61m; modern height used as supplied',
     }
     return result, details
 
@@ -150,6 +177,7 @@ def preprocess_root(root: Path, output: Path, max_reference_gap_ms: float = 2000
     all_epochs = pd.concat(frames, ignore_index=True)
     all_epochs.to_csv(output / "epochs.csv", index=False)
     report = {"data_kind": "real", "epochs": len(all_epochs), "trips": all_epochs.trip_id.nunique(),
+              'preprocessing_revision': '2026-10-11-gsdc2021-time-and-height-corrections',
               "devices": devices, "failed_files": failed, "max_reference_gap_ms": max_reference_gap_ms,
               "warning": "Check collection independence and source licensing. Published tiny parser samples are not a representative benchmark."}
     (output / "preprocess_report.json").write_text(json.dumps(report, indent=2, allow_nan=False), encoding="utf-8")

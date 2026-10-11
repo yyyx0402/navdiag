@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "source_url": "https://github.com/IPNL-POLYU/UrbanNavDataset",
+  "files": [
+    {
+      "area": "TST",
+      "path": "data/raw/urbannav/TST/UrbanNav-HK-Medium-Urban-1.ublox.f9p.splitter.obs",
+      "url": "https://www.dropbox.com/scl/fo/6t0q4e9ewpdsy8285z8o7/AFWXBVS8DKkFDIw8_IMpuv0/UrbanNav-HK-Medium-Urban-1.ublox.f9p.splitter.obs?rlkey=wdoovls8uftjh0wfobscvq08x&dl=1",
+      "bytes": 3156481,
+      "sha256": "919e7bbf582ab999a956855e886f829a5833d5d39183dec3a70d04d60d9da40f"
+    },
+    {
+      "area": "TST",
+      "path": "data/raw/urbannav/TST/sky_mask.csv",
+      "url": "https://www.dropbox.com/scl/fi/0w5wsytkmqvun700liew2/UrbanNav-HK-Medium-Urban-TSTE.csv?rlkey=cwts5217v2x8te67gak5e0vm7&dl=1",
+      "bytes": 256671559,
+      "sha256": "1359de0d742ca928fe28445c1cb70f6d6e14e2acedfea92245cf2d78cfabf6d5"
+    },
+    {
+      "area": "WP",
+      "path": "data/raw/urbannav/WP/UrbanNav-HK-Deep-Urban-1.ublox.f9p.splitter.obs",
+      "url": "https://www.dropbox.com/scl/fo/5xxw4wk5l03bcxkv5n3o3/AG81ipvscDF4FHYKgPdYM-U/UrbanNav-HK-Deep-Urban-1.ublox.f9p.splitter.obs?rlkey=oxa8fnolgye0dyrsdopfmkkv3&dl=1",
+      "bytes": 6024474,
+      "sha256": "5194e5ac5a80fa77bc0105f38635f279a35808ae2a1b5099baea1c0767c5f328"
+    },
+    {
+      "area": "WP",
+      "path": "data/raw/urbannav/WP/sky_mask.csv",
+      "url": "https://www.dropbox.com/scl/fi/piukkbmaj0s5ftx3lq0vg/UrbanNav-HK-Deep-Urban-WP.csv?rlkey=f8f6yyo08x4rb5a65onxlj00x&dl=1",
+      "bytes": 343531967,
+      "sha256": "872ae7528e3fe9a68c2b12de5a56eb9e28e1f82634199c6c55d1cff0a0f14403"
+    },
+    {
+      "area": "MK",
+      "path": "data/raw/urbannav/MK/UrbanNav-HK-Harsh-Urban-1.ublox.f9p.splitter.obs",
+      "url": "https://www.dropbox.com/scl/fo/s0ghj8r7tldcl4td07q7p/AOcM5La7B587yhZRvtUlB4o/UrbanNav-HK-Harsh-Urban-1.ublox.f9p.splitter.obs?rlkey=yj3219nxgj1t9wlel859tgxk3&dl=1",
+      "bytes": 13101857,
+      "sha256": "50be1c5bdcc1db6d227457cc398ba147226cda42685956111035638c3b147b20"
+    },
+    {
+      "area": "MK",
+      "path": "data/raw/urbannav/MK/sky_mask.csv",
+      "url": "https://www.dropbox.com/scl/fi/3hbsnby262gbad13o43eo/UrbanNav-HK-Harsh-Urban-MK.csv?rlkey=z26dzoihzkr9ateq0ust7ghwz&dl=1",
+      "bytes": 298723900,
+      "sha256": "472fad7dc4155f511ac245f4afed4578ae1a826c1397a0750b0e533c3d562dfb"
+    },
+    {
+      "path": "data/raw/urbannav/TST/groundtruth.txt",
+      "url": "https://www.dropbox.com/scl/fi/9osse97q6wn2brnz44gjl/UrbanNav_TST_GT_raw.txt?rlkey=wb3x0g86hpjpjus9uggh3jtl8&dl=1",
+      "bytes": 140442,
+      "sha256": "9d48bb497878aafbd17290789560394c72ecafec20c9e0eaff448418695d92bf"
+    },
+    {
+      "path": "data/raw/urbannav/WP/groundtruth.txt",
+      "url": "https://www.dropbox.com/scl/fi/rin8r89w6anpxkncojm8i/UrbanNav_whampoa_raw.txt?rlkey=hcvbd25dboxdetsiixe85ycpm&dl=1",
+      "bytes": 274298,
+      "sha256": "cb35bc9ebfb171147d290672a46b9d7426475501c922d84ae81edde92c3ba272"
+    },
+    {
+      "path": "data/raw/urbannav/MK/groundtruth.txt",
+      "url": "https://www.dropbox.com/scl/fi/e2av3j86i2z47rhsb1m4f/UrbanNav_mongkok_GT_part_raw.txt?rlkey=amf746fv5a8wdyepzen1qo8fg&dl=1",
+      "bytes": 411890,
+      "sha256": "a05edc4641623a3ddf5d04fe9f36262bf7ae76ce9c87953d5c7840790324a317"
+    },
+    {
+      "path": "data/raw/urbannav/nav/brdc1370.21n.gz",
+      "url": "https://noaa-cors-pds.s3.amazonaws.com/rinex/2021/137/brdc1370.21n.gz",
+      "bytes": 65404,
+      "sha256": "6213ec4c5016cc1b6d00a1718c44ceda9a33ac8191d803e1f0eecc7d5fb247d5",
+      "decompressed_sha256": "3fd629fbdef224b39c606237cf637f7d2fd0f183f3a28b126499e85fcc130f9a"
+    },
+    {
+      "path": "data/raw/urbannav/nav/brdc1380.21n.gz",
+      "url": "https://noaa-cors-pds.s3.amazonaws.com/rinex/2021/138/brdc1380.21n.gz",
+      "bytes": 65112,
+      "sha256": "761e5780f3b291b30b3c8b27f62d488b6f58ffc0d4ba6b36893ea43ab224a43b",
+      "decompressed_sha256": "64a8a4f970a12ab20d0745627b862343c260b71d5777b9eb638dba0641eb5292"
+    },
+    {
+      "path": "data/raw/urbannav/nav/brdc1410.21n.gz",
+      "url": "https://noaa-cors-pds.s3.amazonaws.com/rinex/2021/141/brdc1410.21n.gz",
+      "bytes": 65733,
+      "sha256": "573a654bf243f54295f93362a2475745d7c5870de7d3ed2969f86bf1ca25137a",
+      "decompressed_sha256": "e55271506c04bcfe271dd8cd150495ae86270c6b73d5ba6ca22147b41f5616f2"
+    },
+    {
+      "path": "data/raw/urbannav/nav/HKSC00HKG_R_20211370000_01D_CN.rnx.gz",
+      "url": "https://rinex.geodetic.gov.hk/rinex3/2021/137/hksc/HKSC00HKG_R_20211370000_01D_CN.rnx.gz",
+      "bytes": 62717,
+      "sha256": "a78a404fe0036ba6264de8b9951e2c13a836e8a739aef0218a5235b720f8a024",
+      "decompressed_sha256": "45de8d077ea87bc2c675779def17c3910d5c870cf92f52855a4e989de57d4436"
+    },
+    {
+      "path": "data/raw/urbannav/nav/HKSC00HKG_R_20211380000_01D_CN.rnx.gz",
+      "url": "https://rinex.geodetic.gov.hk/rinex3/2021/138/hksc/HKSC00HKG_R_20211380000_01D_CN.rnx.gz",
+      "bytes": 62144,
+      "sha256": "3fe545aff4651259850e8dd1da68f05f8c210a9afe750acb6d0529b297bc5f8a",
+      "decompressed_sha256": "96c1456aa3d1b0240839ace5595c71da6c50e9c0ee42abea3289f83db803fe08"
+    },
+    {
+      "path": "data/raw/urbannav/nav/HKSC00HKG_R_20211410000_01D_CN.rnx.gz",
+      "url": "https://rinex.geodetic.gov.hk/rinex3/2021/141/hksc/HKSC00HKG_R_20211410000_01D_CN.rnx.gz",
+      "bytes": 63248,
+      "sha256": "9e260d38f50ac455066fbf782e3ec12af901a952ca42a91d29ae2c28c12b72c8",
+      "decompressed_sha256": "b868a2f11f8cf7c8f31c2c7e5073f4acea4a13af8590002a2aafd3d4487a7e4e"
+    },
+    {
+      "path": ".cache/klt_reference/extract_features.py",
+      "url": "https://raw.githubusercontent.com/fossettlab/gnss-nlos-notebook/b13aa856f723a472bd35d45171017580642054cf/extract_features.py",
+      "bytes": 15083,
+      "sha256": "7f9368986fbc9f96a0e7004194135e3f94dde851721ecc27c533859c4d905472"
+    },
+    {
+      "path": ".cache/klt_reference/LICENSE",
+      "url": "https://raw.githubusercontent.com/fossettlab/gnss-nlos-notebook/b13aa856f723a472bd35d45171017580642054cf/LICENSE",
+      "bytes": 35150,
+      "sha256": "e57f1c320b8cf8798a7d2ff83a6f9e06a33a03585f6e065fea97f1d86db84052"
+    }
+  ]
+}

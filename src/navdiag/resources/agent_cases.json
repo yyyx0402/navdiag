@@ -163,5 +163,54 @@
     "question": "IMU 融合和完整惯导系统有什么区别？",
     "required_tool": "search_knowledge",
     "knowledge_id": "K6"
+  },
+  {
+    "id": "N01",
+    "question": "遮挡识别模型效果如何？",
+    "required_tool": "compare_nlos"
+  },
+  {
+    "id": "N02",
+    "question": "NLOS识别的 Precision 和 Recall 是多少？",
+    "required_tool": "compare_nlos"
+  },
+  {
+    "id": "N03",
+    "question": "Compare NLOS classifier performance",
+    "required_tool": "compare_nlos"
+  },
+  {
+    "id": "N04",
+    "question": "比较模型的 F1",
+    "task_context": "satellite_nlos",
+    "required_tool": "compare_nlos"
+  },
+  {
+    "id": "N05",
+    "question": "当前数据如何划分？",
+    "task_context": "satellite_nlos",
+    "required_tool": "compare_nlos"
+  },
+  {
+    "id": "N06",
+    "question": "同域与跨区域实验中，哪些模型更占优势？",
+    "required_tool": "compare_nlos"
+  },
+  {
+    "id": "N07",
+    "question": "新城区泛化中，随机森林与 Transformer 的表现如何？",
+    "required_tool": "compare_nlos"
+  },
+  {
+    "id": "K11",
+    "question": "跨城市和同城跨区域泛化有什么区别？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K9"
+  },
+  {
+    "id": "K12",
+    "question": "UrbanNav 的 unknown 标签为什么不参与评分？",
+    "required_tool": "search_knowledge",
+    "knowledge_id": "K10"
   }
 ]

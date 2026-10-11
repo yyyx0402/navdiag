@@ -1,0 +1,19 @@
+[
+  {
+    "path": "data/raw/klt_features/nlos_features.csv.gz",
+    "url": "https://raw.githubusercontent.com/fossettlab/gnss-nlos-notebook/b13aa856f723a472bd35d45171017580642054cf/nlos_features.csv.gz",
+    "sha256": "4955326b4e25ffd9be6f86bc3111c2fecd6e5db1aa33e975d15b83aa4304434f",
+    "bytes": 1231068,
+    "source_commit": "b13aa856f723a472bd35d45171017580642054cf",
+    "license": "GPL-3.0",
+    "original_dataset": "https://github.com/ebhrz/KLTDataset",
+    "feature_table_author": "Fossett Laboratory, Washington University in St. Louis"
+  },
+  {
+    "path": "data/raw/klt_features/LICENSE",
+    "url": "https://raw.githubusercontent.com/fossettlab/gnss-nlos-notebook/b13aa856f723a472bd35d45171017580642054cf/LICENSE",
+    "sha256": "e57f1c320b8cf8798a7d2ff83a6f9e06a33a03585f6e065fea97f1d86db84052",
+    "bytes": 35150,
+    "source_commit": "b13aa856f723a472bd35d45171017580642054cf"
+  }
+]

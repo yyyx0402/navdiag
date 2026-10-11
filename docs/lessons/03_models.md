@@ -25,4 +25,12 @@ Pipeline 把填充、标准化和 LR 放在一起。对验证/测试调用预测
 1. 手算一个 `TP=8, FP=2, FN=4, TN=6` 的 Precision / Recall / F1。
 2. 用验证集比较 0.3 与 0.7 阈值，解释误报和漏报变化。
 3. 画出第 1、2、3 个历元的历史窗口，验证未读取第 4 个历元。
-4. 说明为什么当前真实 GRU 验证 F1 约 0.991 不能作为最终泛化成绩。
+4. 阅读 [GSDC 修正记录](../experiments/gsdc2021_correction.md)，说明为什么旧 F1 0.991 必须撤回，以及只有五个正样本的验证集为何不稳定。
+
+## 卫星级 Transformer
+
+`nlos_transformer.py` 对同一卫星最近 32 次观测做注意力计算，分类最后一项的 LOS/NLOS。先读 `satellite_windows` 的分组和间隙处理，再读 `encode` 中屏蔽未来的三角形掩膜，最后看训练、早停和保存。模型推理不需要相机标签。32 次观测不保证持续 32 秒；调用方需提供历史，否则单行输入只能使用重复的当前观测。
+
+本次测试 F1 0.712，未超过 LR/RF。新增网络成功运行与算法效果提升是两件事。查看[实验记录](../experiments/transformer_nlos.md)中的训练/验证差距，并练习解释为什么不能按测试结果重新选阈值。
+
+后续已新增[五网络对比](../experiments/five_neural_nlos.md)。`nlos_neural.py` 是共同的训练入口：MLP 展开历史，CNN 做局部卷积，LSTM/GRU 顺序更新状态，Transformer 做注意力组合。比较它们时先核对输入、预处理与早停是否相同，再看 Precision/Recall；当前 CNN 和 RF 分数接近，单次试验不证明哪类模型稳定更好。

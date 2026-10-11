@@ -18,9 +18,10 @@
   {
     "id": "K3",
     "title": "多路径与 NLOS 诊断的证据边界",
-    "keywords": ["NLOS", "多路径", "multipath", "原因", "漂移"],
-    "content": "反射、遮挡与非视距接收可能带来带偏伪距。载噪比、残差和轨迹跳变是风险线索，不能单独证明具体原因。没有专门的 NLOS 标签、环境观测或实验验证时，应将原因描述为候选解释，而非已证实结论。",
-    "source_url": "https://www.polyu.edu.hk/aae/ipn-lab/us/en/resources/urbannav-dataset/",
+    "keywords": ["NLOS", "遮挡", "高楼", "多路径", "multipath", "原因", "漂移"],
+    "content": "NLOS 表示直达路径被遮挡，LOS 表示直达路径可见但仍可能含多径。载噪比、残差和跳变只能提供线索；强反射也可能有较高载噪比。应分别记录场景标签、逐卫星 LOS/NLOS 标签和整机定位失准标签。KLT 的相机天空掩膜可以提供 LOS/NLOS 参考标签，但不区分高楼、树木等具体物体。定位误差超过 10 米不等于发生了 NLOS；识别 NLOS 也不自动证明定位改善。",
+    "source_url": "https://github.com/ebhrz/KLTDataset",
+    "additional_source_url": "https://arxiv.org/abs/2309.00480",
     "source_type": "technical_background"
   },
   {
@@ -35,7 +36,7 @@
     "id": "K5",
     "title": "风险评分、阈值与分类指标",
     "keywords": ["Precision", "Recall", "F1", "阈值", "召回", "误报", "概率"],
-    "content": "Precision 是被报为失准的历元中真实失准的比例；Recall 是真实失准历元中被找出的比例。F1 是两者的调和平均。降低分类阈值通常会增加告警，需要检查误报和漏报变化。未经校准的风险评分不能直接解释为真实失准概率。",
+    "content": "Precision 是被预测为正类的样本中真正为正类的比例；Recall 是实际正类中被检出的比例。卫星识别任务的正类为 NLOS，单位是卫星观测；定位告警任务的正类为水平误差超限，单位是历元。两种任务的指标不能混用。F1 是 Precision 与 Recall 的调和平均。阈值用验证集选择；降低阈值通常增加告警，要同时检查误报和漏报。未经校准的模型评分不能直接解释为实际概率。",
     "source_url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
     "source_type": "technical_background"
   },
@@ -61,6 +62,56 @@
     "keywords": ["GRU", "时间", "时序", "future", "窗口"],
     "content": "本项目 GRU 在每个时刻使用截至该时刻的历史观测窗口。跨行程、跨设备或过大的时间间隙会重置窗口；训练集拟合的填充和标准化参数用于验证、测试与推理。双向时序输入、中心平滑或使用未来坐标不适合声称实时预测的实验。",
     "source_url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.GRU.html",
+    "source_type": "project_method"
+  },
+  {
+    "id": "K9",
+    "title": "同域、同城跨区域与跨城市的实验边界",
+    "keywords": [
+      "泛化",
+      "同域",
+      "跨区域",
+      "跨城区",
+      "跨城市",
+      "域偏移",
+      "C/N0",
+      "信噪比"
+    ],
+    "content": "本项目同域实验按完整采集段留出，训练可以包含测试区域的其他采集。跨区域实验排除目标区域的训练段；UrbanNav 再比较冻结 KLT 模型外部迁移和三城区互斥划分。现有目标区域全部在香港，不能据此声称跨城市能力。区域、日期、天线和标签方法存在混杂。固定 C/N0 规则不训练，当两种协议共享测试观测和标签时，它的成绩必然相同；应直接检查特征分布判断观测到的域差异。",
+    "source_url": "docs/experiments/nlos_domain_audit.md",
+    "source_type": "project_method"
+  },
+  {
+    "id": "K10",
+    "title": "UrbanNav 静态建筑参考标签与 unknown",
+    "keywords": [
+      "UrbanNav",
+      "地图",
+      "标签",
+      "unknown",
+      "覆盖率",
+      "建筑",
+      "真值"
+    ],
+    "content": "UrbanNav 的参考标签由独立 SPAN 位置、卫星轨道和静态建筑天空掩膜生成，不能称为人工核验的卫星接收真值。位置、地图和质量字段只用于参考标签与审计，不作为模型输入。边界、位置质量、缺少轨道或地图覆盖不满足条件时保留 unknown。unknown 可以提供已观测历史，但不参与监督和计分。评分只代表通过参考检查的样本，必须同时查看标签覆盖率；动态树木、车辆与 LOS 多径未被该标签方法验证。",
+    "source_url": "docs/experiments/urbannav_generalization.md",
+    "source_type": "project_method"
+  },
+  {
+    "id": "K11",
+    "title": "模型排名与公平比较",
+    "keywords": [
+      "Transformer",
+      "随机森林",
+      "RF",
+      "神经网络",
+      "模型",
+      "排名",
+      "baseline",
+      "阈值"
+    ],
+    "content": "当前五种神经网络使用同一卫星截至当前的历史窗口，LR 和 RF 使用当前观测特征，因此比较的是完整处理流程，不能把差异全部归因于网络结构。全部预处理只拟合训练集，检查点和分类阈值使用验证集；测试排名只是观察结果，不替换验证选中的模型。区域平均指标可能掩盖各区域的上升与下降。一个随机种子和少量独立采集不足以证明某个模型稳定更优，Transformer 也不必然优于随机森林。",
+    "source_url": "docs/MODEL_CARD.md",
     "source_type": "project_method"
   }
 ]

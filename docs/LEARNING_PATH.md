@@ -14,6 +14,8 @@
 | 8 | 工具调用、检索、证据引用 | [第四课](lessons/04_agent.md)、`agent.py` | 跟踪一个问题的 request → tool → evidence → answer |
 | 9 | 单元与集成测试、可复现报告 | `tests/`、`agent_eval.py` | 阅读一个因果测试，写出它能证明和不能证明的事情 |
 | 10 | 面试表达、项目边界 | `docs/experiments/v0_2.md` | 用五分钟讲清问题、实现、划分、结果与失败点 |
+| 11 | NLOS、多径、跨卫星上下文与论文复现 | [第五课](lessons/05_nlos_zhang2023.md)、[复现核对](research/zhang2023_reproduction.md) | 对照原论文和 KLT 字段，找出不能互换的三个特征 |
+| 12 | 域偏移、区域留出、标签覆盖 | [第六课](lessons/06_generalization.md)、[实际分布审计](experiments/nlos_domain_audit.md) | 解释固定规则为什么必然相同，区分同城验证与跨城市证据 |
 
 建议在 `docs/notes/` 写自己的笔记：我理解的三个概念、改动与预期、验证结果、仍不理解的一段代码。参数练习观察验证集，不把当前最终测试反复用于调参。完整真实基准和实际 LLM 评测属于后续扩展，不应把未做的部分写成自己的成绩。
 

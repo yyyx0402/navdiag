@@ -1,7 +1,14 @@
 import numpy as np
 import pytest
 
-from navdiag.fusion import filter_positions
+from navdiag.fusion import filter_positions, position_metrics
+
+
+def test_position_accuracy_limits_are_inclusive_and_missing_errors_are_not_zero():
+    result = position_metrics(np.array([0.5, 1., 2., 5., 10., np.nan]))
+    assert result['epochs'] == 5
+    assert result['within_error_limits_m'] == {'1': 0.4, '2': 0.6, '5': 0.8, '10': 1.0}
+    assert position_metrics(np.array([np.nan]))['within_error_limits_m']['2'] is None
 
 
 def test_planar_filter_tracks_motion_and_handles_missing_gnss():

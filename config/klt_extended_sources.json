@@ -1,0 +1,488 @@
+{
+  "original_dataset": "https://github.com/ebhrz/KLTDataset",
+  "license": "GPL-3.0",
+  "config_commit": "83fb4fded272f350d132fa16e155dd3b0f1174f2",
+  "excluded_unreliable_runs": [
+    "1116_KLT3_649"
+  ],
+  "manifest": [
+    {
+      "path": "data/raw/klt_extended/label/1109_KLT2_294/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAEGQCL1eceQqwIrwC2Q0wo/label/1109_KLT2_294/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 29400,
+      "sha256": "bb41d5e6e9773da565fa6133ece142561045fc1aac05b6ae3bbb8b64d154c014"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1116_KLT1_184/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AIl8adr72j3cXL-Wz3HV79w/label/1116_KLT1_184/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 18400,
+      "sha256": "3312866c42e7b82db64a994501276305de0bb5caff2db0003a5b169ad054a3bd"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1116_KLT1_184/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AMUBAgy5X_ycVRZxNm6SZ8M/label/1116_KLT1_184/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 507749717,
+      "sha256": "a79b346291dc348bd06500b8ea009dfdbaa1203443bb11413f31e4e6a9423885"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1109_KLT3_666/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AG1pqJVG2y_8o7o4VLTO8wg/label/1109_KLT3_666/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 66600,
+      "sha256": "1c5629958ace198742e4be271f7f707a211cfc35e84efbf538288a8a1135d9c2"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1109_KLT1_421/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAjenp_WQG-4Sqm2EB5BHtE/label/1109_KLT1_421/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 42100,
+      "sha256": "6f4b2ab357dd778b40a39988a781d6a8c099f2f64fa31280b578e0903dda3f33"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1116_KLT2_169/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AMzY98KDHCRNd1p6xyj0ITc/label/1116_KLT2_169/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 475042593,
+      "sha256": "2780a2c2e23350431de80bed2c870bb3cfbf8d238ee3033d2d7d7dd24064c726"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1116_KLT2_169/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AOsxsvF3i-OwS7ioKCPvoeI/label/1116_KLT2_169/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 16900,
+      "sha256": "b53142886bb5747e4b0dbc7dec5f987ba3fc3f318579db0198cbc162b737a7ca"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT1_203/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AHu-Gdc9yp5bU5ivboecYYw/label/0610_KLT1_203/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 20300,
+      "sha256": "6e4004f08ec327277b9c7e61b6f7252c087a43b4cb13102adc52b7beaefe8bfc"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT1_203/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ANa32pO1M-z6t3P1ykZBulU/label/0610_KLT1_203/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 576059746,
+      "sha256": "6e2db1678bcfec504b109ee35f6b23e4cb26ba3849d2ec6817b858d1cfae78f5"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT2_209/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AEs1XMk4boELC5b-V3R6RzU/label/0610_KLT2_209/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 608986702,
+      "sha256": "72276a5e5a2d22ef28a5979342b93abbe0d8f5473cac3a97646bddf973b18ea8"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT2_209/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AOQji2bXdO6K2v62dd752Sg/label/0610_KLT2_209/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 20900,
+      "sha256": "b375244b7c1644db3c92d5d065b792abc2b0c5a295db80128fc0557f793589c6"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1109_KLT2_301/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AKlfbKRV9TEwX6nC2Yu54t4/label/1109_KLT2_301/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 30100,
+      "sha256": "f27641e9cb3edb24d63bc7be1be95d5bc25ec40a1d69012ee000aeb49a5a5b20"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT3_404/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAJTzaZ5jTn_wO0Cl7sgXjg/label/0610_KLT3_404/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 1109020257,
+      "sha256": "f47aa90e7714b31924e8c9d3eaea28d7c81172324547bd6da891d2338b0dafa5"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT3_404/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AMJCDzPgZKxYdkwp6LlBlF8/label/0610_KLT3_404/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 40400,
+      "sha256": "36d734ec25e180e19f9fd4ae336fa3ad634ea3639e78d2957e8b46c6a18cd75a"
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/COM4___9600_231109_062114.obs",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AI3J7qZA8CgnTIRI6jWtKrQ/data/GNSS/20231109/COM4___9600_231109_062114.obs?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 11175615,
+      "sha256": "1abd92b69c934351fbf2929fca5da4cdfdf2bd1ff654dd4d364feb4ec88ab7d7"
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/COM18___9600_231116_082929.obs",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AOVByDyDA1Sr2WR1pKSJ4MA/data/GNSS/20231116/COM18___9600_231116_082929.obs?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 27041655,
+      "sha256": "b3624cced814140bfbb6859ffbddf2432507f70936a87f5c887d3683d0044cad"
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/COM38_210610_025603.obs",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AA2T7C-gYDT7bsNCi0nxGNE/data/GNSS/20210610/COM38_210610_025603.obs?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 43298475,
+      "sha256": "f722557326d1d32c42e023d4e78515e885d21c8ae824e79460bef61c67b9b5c4"
+    }
+  ],
+  "nav_manifest": [
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21f",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ABB4-KSD9nUgELlXd8WFjdY/data/GNSS/20210610/sta/hksc161d.21f?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "64e8e3ec2f4a9eeb17379a499e5779d378978b834a1a1441240e487e7ce23768",
+      "bytes": 30066
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21m",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AExMCrli6eu3OYHimj4ravA/data/GNSS/20210610/sta/hksc161d.21m?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "9583d5e061d46f3de29b6f783332dda9e7ff61d62041f2c8a031f6b45628e376",
+      "bytes": 3593
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21n",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AKDKlLbDF2BtkRebu1WIOao/data/GNSS/20210610/sta/hksc161d.21n?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "a5bc8ab35fe0c80f91d0e57517b495be6563385d235835fd6aa063d73bb7072c",
+      "bytes": 21558
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21g",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AKszJPvSwyl0jKvXQQgsgI8/data/GNSS/20210610/sta/hksc161d.21g?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "0bddf6292d39f00845e9038f7f87dcecc403ec9944ca144b7345bcb233d8e660",
+      "bytes": 12854
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21l",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AL-WVVQMxJXOGiKIHmo2B80/data/GNSS/20210610/sta/hksc161d.21l?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "795de82407d394097628a7a2595e284d666df3dc62c4ad5a34896d6de05b84e3",
+      "bytes": 66436
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/sta/hksc313j.23l",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAFSC9pH7HpZKF5C0aIRi7c/data/GNSS/20231109/sta/hksc313j.23l?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "df28b22e3f383e16d8f844d4999c0b280aa8e6acf0b94c5a71e546b65dfed25d",
+      "bytes": 80213
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/sta/hksc313j.23g",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AEZz38tvlXCvTFY--HnDLVI/data/GNSS/20231109/sta/hksc313j.23g?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "3742a54b93af4efad4199425f0ff91976f27ae01d6107de5604ee2c301938904",
+      "bytes": 14494
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/sta/hksc313j.23f",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AFhp6erQm4sd_6_Tl78vwSw/data/GNSS/20231109/sta/hksc313j.23f?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "e5f1ef7851c865cd9f2ce2079dc8b808f97e0db2dc9bff83996837ede311b3f8",
+      "bytes": 97634
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/sta/hksc313j.23n",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AO9Ma5DECM0IGf4D9mYzBfo/data/GNSS/20231109/sta/hksc313j.23n?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "7d1fdd2904c234f2ad8572ca985bdc16f495fa6c76187c41bb584661144980b5",
+      "bytes": 22176
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320k.23f",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAhCK5O020zuFEb0rFw-tmE/data/GNSS/20231116/sta/hksc320k.23f?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "e0c0fe18df7a223c34d9a57472434dfb75d4231b40e4fadea134748a25ac1b5e",
+      "bytes": 89106
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320k.23l",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ABMo55xQbIoeJHmXHfZ5wLg/data/GNSS/20231116/sta/hksc320k.23l?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "221e86203fe8a3c9ab3ec4bdc53566dab4145c75cb172839fe9298c6e43527b5",
+      "bytes": 78416
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320k.23n",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ACHNmjWE0c5VpAN4OHXUTdM/data/GNSS/20231116/sta/hksc320k.23n?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "f4aa8df19a8222012a2d4faf78af9058fca29167f4b88d6dcc85bb8d742d0fec",
+      "bytes": 27738
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320j.23l",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AEnbO8SjkaBrWmNdrsffSBg/data/GNSS/20231116/sta/hksc320j.23l?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "dc9c58e0218c16b17babfaccfc14efb0e9a1e5b250ff1713068ced88f443ade0",
+      "bytes": 81411
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320j.23n",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AEwMI2nV5kOFnRyL9OWFLDs/data/GNSS/20231116/sta/hksc320j.23n?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "469fc6aef82beff58cd2eef9964d4b8c9801582158b6446f1b6d4710d9753eb1",
+      "bytes": 22176
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320j.23g",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AJHmR-gnaylwo3zz-gAY_nU/data/GNSS/20231116/sta/hksc320j.23g?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "ec95d0d5ec2af44368c855c570352f76aede8f02dd926fa8ae9c616807f9bb98",
+      "bytes": 14494
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320k.23g",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ALFsS57Ih6Gi20eejxV8qHI/data/GNSS/20231116/sta/hksc320k.23g?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "eb37402330fb70950923433b059a6176a7194285eeae83ce3e9b2d6c889ce196",
+      "bytes": 14494
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320j.23f",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ANyjhrthbZyWITVfc77NcYI/data/GNSS/20231116/sta/hksc320j.23f?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "26bce2a5629915a915fdf2edbd4163f626960e7215066e56e3e6aff8818dd6fa",
+      "bytes": 89762
+    }
+  ],
+  "files": [
+    {
+      "path": "data/raw/klt_extended/label/1109_KLT2_294/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAEGQCL1eceQqwIrwC2Q0wo/label/1109_KLT2_294/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 29400,
+      "sha256": "bb41d5e6e9773da565fa6133ece142561045fc1aac05b6ae3bbb8b64d154c014"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1116_KLT1_184/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AIl8adr72j3cXL-Wz3HV79w/label/1116_KLT1_184/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 18400,
+      "sha256": "3312866c42e7b82db64a994501276305de0bb5caff2db0003a5b169ad054a3bd"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1116_KLT1_184/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AMUBAgy5X_ycVRZxNm6SZ8M/label/1116_KLT1_184/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 507749717,
+      "sha256": "a79b346291dc348bd06500b8ea009dfdbaa1203443bb11413f31e4e6a9423885"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1109_KLT3_666/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AG1pqJVG2y_8o7o4VLTO8wg/label/1109_KLT3_666/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 66600,
+      "sha256": "1c5629958ace198742e4be271f7f707a211cfc35e84efbf538288a8a1135d9c2"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1109_KLT1_421/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAjenp_WQG-4Sqm2EB5BHtE/label/1109_KLT1_421/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 42100,
+      "sha256": "6f4b2ab357dd778b40a39988a781d6a8c099f2f64fa31280b578e0903dda3f33"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1116_KLT2_169/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AMzY98KDHCRNd1p6xyj0ITc/label/1116_KLT2_169/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 475042593,
+      "sha256": "2780a2c2e23350431de80bed2c870bb3cfbf8d238ee3033d2d7d7dd24064c726"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1116_KLT2_169/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AOsxsvF3i-OwS7ioKCPvoeI/label/1116_KLT2_169/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 16900,
+      "sha256": "b53142886bb5747e4b0dbc7dec5f987ba3fc3f318579db0198cbc162b737a7ca"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT1_203/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AHu-Gdc9yp5bU5ivboecYYw/label/0610_KLT1_203/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 20300,
+      "sha256": "6e4004f08ec327277b9c7e61b6f7252c087a43b4cb13102adc52b7beaefe8bfc"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT1_203/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ANa32pO1M-z6t3P1ykZBulU/label/0610_KLT1_203/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 576059746,
+      "sha256": "6e2db1678bcfec504b109ee35f6b23e4cb26ba3849d2ec6817b858d1cfae78f5"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT2_209/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AEs1XMk4boELC5b-V3R6RzU/label/0610_KLT2_209/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 608986702,
+      "sha256": "72276a5e5a2d22ef28a5979342b93abbe0d8f5473cac3a97646bddf973b18ea8"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT2_209/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AOQji2bXdO6K2v62dd752Sg/label/0610_KLT2_209/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 20900,
+      "sha256": "b375244b7c1644db3c92d5d065b792abc2b0c5a295db80128fc0557f793589c6"
+    },
+    {
+      "path": "data/raw/klt_extended/label/1109_KLT2_301/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AKlfbKRV9TEwX6nC2Yu54t4/label/1109_KLT2_301/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 30100,
+      "sha256": "f27641e9cb3edb24d63bc7be1be95d5bc25ec40a1d69012ee000aeb49a5a5b20"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT3_404/nlos.pkl",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAJTzaZ5jTn_wO0Cl7sgXjg/label/0610_KLT3_404/nlos.pkl?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 1109020257,
+      "sha256": "f47aa90e7714b31924e8c9d3eaea28d7c81172324547bd6da891d2338b0dafa5"
+    },
+    {
+      "path": "data/raw/klt_extended/label/0610_KLT3_404/gt.csv",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AMJCDzPgZKxYdkwp6LlBlF8/label/0610_KLT3_404/gt.csv?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 40400,
+      "sha256": "36d734ec25e180e19f9fd4ae336fa3ad634ea3639e78d2957e8b46c6a18cd75a"
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/COM4___9600_231109_062114.obs",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AI3J7qZA8CgnTIRI6jWtKrQ/data/GNSS/20231109/COM4___9600_231109_062114.obs?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 11175615,
+      "sha256": "1abd92b69c934351fbf2929fca5da4cdfdf2bd1ff654dd4d364feb4ec88ab7d7"
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/COM18___9600_231116_082929.obs",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AOVByDyDA1Sr2WR1pKSJ4MA/data/GNSS/20231116/COM18___9600_231116_082929.obs?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 27041655,
+      "sha256": "b3624cced814140bfbb6859ffbddf2432507f70936a87f5c887d3683d0044cad"
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/COM38_210610_025603.obs",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AA2T7C-gYDT7bsNCi0nxGNE/data/GNSS/20210610/COM38_210610_025603.obs?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "bytes": 43298475,
+      "sha256": "f722557326d1d32c42e023d4e78515e885d21c8ae824e79460bef61c67b9b5c4"
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21f",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ABB4-KSD9nUgELlXd8WFjdY/data/GNSS/20210610/sta/hksc161d.21f?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "64e8e3ec2f4a9eeb17379a499e5779d378978b834a1a1441240e487e7ce23768",
+      "bytes": 30066
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21m",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AExMCrli6eu3OYHimj4ravA/data/GNSS/20210610/sta/hksc161d.21m?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "9583d5e061d46f3de29b6f783332dda9e7ff61d62041f2c8a031f6b45628e376",
+      "bytes": 3593
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21n",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AKDKlLbDF2BtkRebu1WIOao/data/GNSS/20210610/sta/hksc161d.21n?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "a5bc8ab35fe0c80f91d0e57517b495be6563385d235835fd6aa063d73bb7072c",
+      "bytes": 21558
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21g",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AKszJPvSwyl0jKvXQQgsgI8/data/GNSS/20210610/sta/hksc161d.21g?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "0bddf6292d39f00845e9038f7f87dcecc403ec9944ca144b7345bcb233d8e660",
+      "bytes": 12854
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20210610/sta/hksc161d.21l",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AL-WVVQMxJXOGiKIHmo2B80/data/GNSS/20210610/sta/hksc161d.21l?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "795de82407d394097628a7a2595e284d666df3dc62c4ad5a34896d6de05b84e3",
+      "bytes": 66436
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/sta/hksc313j.23l",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAFSC9pH7HpZKF5C0aIRi7c/data/GNSS/20231109/sta/hksc313j.23l?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "df28b22e3f383e16d8f844d4999c0b280aa8e6acf0b94c5a71e546b65dfed25d",
+      "bytes": 80213
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/sta/hksc313j.23g",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AEZz38tvlXCvTFY--HnDLVI/data/GNSS/20231109/sta/hksc313j.23g?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "3742a54b93af4efad4199425f0ff91976f27ae01d6107de5604ee2c301938904",
+      "bytes": 14494
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/sta/hksc313j.23f",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AFhp6erQm4sd_6_Tl78vwSw/data/GNSS/20231109/sta/hksc313j.23f?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "e5f1ef7851c865cd9f2ce2079dc8b808f97e0db2dc9bff83996837ede311b3f8",
+      "bytes": 97634
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231109/sta/hksc313j.23n",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AO9Ma5DECM0IGf4D9mYzBfo/data/GNSS/20231109/sta/hksc313j.23n?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "7d1fdd2904c234f2ad8572ca985bdc16f495fa6c76187c41bb584661144980b5",
+      "bytes": 22176
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320k.23f",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AAhCK5O020zuFEb0rFw-tmE/data/GNSS/20231116/sta/hksc320k.23f?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "e0c0fe18df7a223c34d9a57472434dfb75d4231b40e4fadea134748a25ac1b5e",
+      "bytes": 89106
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320k.23l",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ABMo55xQbIoeJHmXHfZ5wLg/data/GNSS/20231116/sta/hksc320k.23l?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "221e86203fe8a3c9ab3ec4bdc53566dab4145c75cb172839fe9298c6e43527b5",
+      "bytes": 78416
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320k.23n",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ACHNmjWE0c5VpAN4OHXUTdM/data/GNSS/20231116/sta/hksc320k.23n?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "f4aa8df19a8222012a2d4faf78af9058fca29167f4b88d6dcc85bb8d742d0fec",
+      "bytes": 27738
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320j.23l",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AEnbO8SjkaBrWmNdrsffSBg/data/GNSS/20231116/sta/hksc320j.23l?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "dc9c58e0218c16b17babfaccfc14efb0e9a1e5b250ff1713068ced88f443ade0",
+      "bytes": 81411
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320j.23n",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AEwMI2nV5kOFnRyL9OWFLDs/data/GNSS/20231116/sta/hksc320j.23n?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "469fc6aef82beff58cd2eef9964d4b8c9801582158b6446f1b6d4710d9753eb1",
+      "bytes": 22176
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320j.23g",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/AJHmR-gnaylwo3zz-gAY_nU/data/GNSS/20231116/sta/hksc320j.23g?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "ec95d0d5ec2af44368c855c570352f76aede8f02dd926fa8ae9c616807f9bb98",
+      "bytes": 14494
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320k.23g",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ALFsS57Ih6Gi20eejxV8qHI/data/GNSS/20231116/sta/hksc320k.23g?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "eb37402330fb70950923433b059a6176a7194285eeae83ce3e9b2d6c889ce196",
+      "bytes": 14494
+    },
+    {
+      "path": "data/raw/klt_extended/data/GNSS/20231116/sta/hksc320j.23f",
+      "url": "https://www.dropbox.com/scl/fo/gz7olnsojd3qyjjjbzoso/ANyjhrthbZyWITVfc77NcYI/data/GNSS/20231116/sta/hksc320j.23f?rlkey=2d2fext0lekvsp7t1g2qr97rq&dl=1",
+      "sha256": "26bce2a5629915a915fdf2edbd4163f626960e7215066e56e3e6aff8818dd6fa",
+      "bytes": 89762
+    },
+    {
+      "path": "data/raw/klt_extended/config/0610_KLT1_203.json",
+      "url": "https://raw.githubusercontent.com/ebhrz/KLTDataset/83fb4fded272f350d132fa16e155dd3b0f1174f2/config/0610_klt1_203.json",
+      "bytes": 481,
+      "sha256": "19fff43755c7e2103b44ef639ccdd58d58f21021bee39828a2134f03dbc292e3"
+    },
+    {
+      "path": "data/raw/klt_extended/config/0610_KLT2_209.json",
+      "url": "https://raw.githubusercontent.com/ebhrz/KLTDataset/83fb4fded272f350d132fa16e155dd3b0f1174f2/config/0610_klt2_209.json",
+      "bytes": 481,
+      "sha256": "8191bdf092088f2d9e5e58a66a2a3104c19ea21669949b4990d916034163ecba"
+    },
+    {
+      "path": "data/raw/klt_extended/config/0610_KLT3_404.json",
+      "url": "https://raw.githubusercontent.com/ebhrz/KLTDataset/83fb4fded272f350d132fa16e155dd3b0f1174f2/config/0610_klt3_404.json",
+      "bytes": 481,
+      "sha256": "afd700304b453e5b1b804d6f009cf9fd8827307a59afb13a6706f74767420690"
+    },
+    {
+      "path": "data/raw/klt_extended/config/1109_KLT1_421.json",
+      "url": "https://raw.githubusercontent.com/ebhrz/KLTDataset/83fb4fded272f350d132fa16e155dd3b0f1174f2/config/1109_klt1_421.json",
+      "bytes": 489,
+      "sha256": "a1c02efc69c2d1eadc3c4c49e77b82d5bae7933da74fdbf86b583df20bb4d5fe"
+    },
+    {
+      "path": "data/raw/klt_extended/config/1109_KLT2_294.json",
+      "url": "https://raw.githubusercontent.com/ebhrz/KLTDataset/83fb4fded272f350d132fa16e155dd3b0f1174f2/config/1109_klt2_294.json",
+      "bytes": 489,
+      "sha256": "dad84f6bead6da51c4392d0404117602340657cc4be19c3b4764b4d01cb071c4"
+    },
+    {
+      "path": "data/raw/klt_extended/config/1109_KLT2_301.json",
+      "url": "https://raw.githubusercontent.com/ebhrz/KLTDataset/83fb4fded272f350d132fa16e155dd3b0f1174f2/config/1109_klt2_301.json",
+      "bytes": 489,
+      "sha256": "eaab4348715f9ad76baba39025ecc3bf94053c88761d31da3ef043f9ce575861"
+    },
+    {
+      "path": "data/raw/klt_extended/config/1109_KLT3_666.json",
+      "url": "https://raw.githubusercontent.com/ebhrz/KLTDataset/83fb4fded272f350d132fa16e155dd3b0f1174f2/config/1109_klt3_666.json",
+      "bytes": 489,
+      "sha256": "26d6426bc5a328994a207235ff76394fc2203302e49430d62b52275e75a4cd48"
+    },
+    {
+      "path": "data/raw/klt_extended/config/1116_KLT1_184.json",
+      "url": "https://raw.githubusercontent.com/ebhrz/KLTDataset/83fb4fded272f350d132fa16e155dd3b0f1174f2/config/1116_klt1_184.json",
+      "bytes": 486,
+      "sha256": "29b0614a64121738499aa367c3a2694fb219a20f6b884f9ecdd8ec869e46e3e5"
+    },
+    {
+      "path": "data/raw/klt_extended/config/1116_KLT2_169.json",
+      "url": "https://raw.githubusercontent.com/ebhrz/KLTDataset/83fb4fded272f350d132fa16e155dd3b0f1174f2/config/1116_klt2_169.json",
+      "bytes": 486,
+      "sha256": "f4186b965d7cf0480587fd2d0374bfee4974c7455893e92f8be008568502f806"
+    },
+    {
+      "path": ".cache/klt_reference/extract_features.py",
+      "url": "https://raw.githubusercontent.com/fossettlab/gnss-nlos-notebook/b13aa856f723a472bd35d45171017580642054cf/extract_features.py",
+      "bytes": 15083,
+      "sha256": "7f9368986fbc9f96a0e7004194135e3f94dde851721ecc27c533859c4d905472"
+    },
+    {
+      "path": ".cache/klt_reference/LICENSE",
+      "url": "https://raw.githubusercontent.com/fossettlab/gnss-nlos-notebook/b13aa856f723a472bd35d45171017580642054cf/LICENSE",
+      "bytes": 35150,
+      "sha256": "e57f1c320b8cf8798a7d2ff83a6f9e06a33a03585f6e065fea97f1d86db84052"
+    }
+  ]
+}
