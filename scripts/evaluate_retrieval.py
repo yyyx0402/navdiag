@@ -16,8 +16,9 @@ def baseline_retrievers():
     notes = json.loads(resources.joinpath('knowledge.json').read_text(encoding='utf-8'))
     notes = [{**item, 'document_id': item['id'], 'heading': item['title']} for item in notes]
     documents = json.loads(resources.joinpath('rag_documents.json').read_text(encoding='utf-8'))['chunks']
+    literature = json.loads(resources.joinpath('literature.json').read_text(encoding='utf-8'))['records']
     methods = {}
-    for name, records in [('notes_only_char_tfidf', notes), ('same_corpus_char_tfidf', notes + documents)]:
+    for name, records in [('notes_only_char_tfidf', notes), ('same_corpus_char_tfidf', notes + documents + literature)]:
         texts = [record['title'] + ' ' + record['content'] + ' ' + ' '.join(record['keywords']) for record in records]
         vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(2, 4), sublinear_tf=True)
         matrix = vectorizer.fit_transform(texts)

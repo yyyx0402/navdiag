@@ -1498,6 +1498,20 @@ el("ask-button").addEventListener("click", async () => {
           const source = document.createElement("p");
           source.className = "chart-footnote";
           source.textContent = `${note.source_url}${note.start_line ? ` · 第 ${note.start_line} 行` : ""}`;
+          if (note.source_type === "research_summary") {
+            const reference = document.createElement("p");
+            reference.className = "chart-footnote";
+            reference.textContent = `${note.authors?.join(", ") || ""} · ${note.year} · ${note.venue || ""} · 核对范围：${note.verification?.locator || "摘要"}`;
+            content.append(reference);
+            if (note.source_url.startsWith("https://")) {
+              const link = document.createElement("a");
+              link.href = note.source_url;
+              link.textContent = "查看论文原始来源";
+              link.target = "_blank";
+              link.rel = "noopener noreferrer";
+              content.append(link);
+            }
+          }
           const score = document.createElement("p");
           score.className = "chart-footnote";
           score.textContent = `排序分数 ${number(note.relevance_score, 3)}${note.retrieval_scores?.semantic_cosine != null ? ` · 语义相似度 ${number(note.retrieval_scores.semantic_cosine, 3)}` : ""} · 分数不代表回答正确率`;

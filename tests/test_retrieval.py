@@ -73,6 +73,25 @@ def test_exact_technical_term_keeps_lexical_channel_when_encoder_under_ranks_it(
     assert any(note['id'] == 'K2' for note in result['notes'])
 
 
+def test_published_research_is_retrievable_with_scope_and_primary_source():
+    result = search_knowledge('多频特征缺失 分支逻辑回归 开放天空预归一化', limit=5, mode='sparse')
+    paper = next(note for note in result if note['id'] == 'L04')
+    assert paper['source_type'] == 'research_summary'
+    assert paper['doi'] == '10.3389/frobt.2023.1171255'
+    assert paper['verification']['full_text_read_this_update'] is False
+    assert paper['source_url'].startswith('https://www.frontiersin.org/')
+    assert '不能替代' in paper['content']
+
+
+def test_literature_registry_separates_publication_year_and_reading_scope():
+    registry = json.loads(files('navdiag').joinpath('resources/literature.json').read_text(encoding='utf-8'))
+    assert len({item['id'] for item in registry['records']}) == len(registry['records']) == 7
+    for record in registry['records']:
+        assert record['authors'] and record['year'] <= 2026 and record['doi']
+        assert record['verification']['read_scope'] and record['verification']['checked_at']
+        assert record['source_type'] == 'research_summary' and len(record['content']) <= 480
+
+
 def test_semantic_paraphrase_can_retrieve_without_lexical_overlap(monkeypatch):
     def scores(query, records):
         return np.array([0.9 if item['id'] == 'K2' else 0.3 for item in records])

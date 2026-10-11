@@ -16,7 +16,8 @@ def evaluate(output, split=None):
     regression = [{**item, 'split': 'regression'} for item in json.loads(
         resources.joinpath('retrieval_cases.json').read_text(encoding='utf-8'))]
     new = json.loads(resources.joinpath('retrieval_cases_v2.json').read_text(encoding='utf-8'))
-    cases = [item for item in regression + new if split is None or item['split'] == split]
+    literature = json.loads(resources.joinpath('literature_cases.json').read_text(encoding='utf-8'))
+    cases = [item for item in regression + new + literature if split is None or item['split'] == split]
     retrievers = baseline_retrievers()
     actual_methods = {}
     for mode in ('sparse', 'hybrid'):
@@ -55,7 +56,9 @@ def evaluate(output, split=None):
                                  'sparse_min_char': 0.065, 'sparse_min_bm25_raw': 2.0,
                                  'technical_anchor_min_char': 0.035, 'technical_anchor_min_bm25_raw': 2.0},
               'corpus_sha256': hashlib.sha256(resources.joinpath('rag_documents.json').read_bytes()).hexdigest(),
+              'literature_sha256': hashlib.sha256(resources.joinpath('literature.json').read_bytes()).hexdigest(),
               'queries_v2_sha256': hashlib.sha256(resources.joinpath('retrieval_cases_v2.json').read_bytes()).hexdigest(),
+              'literature_queries_sha256': hashlib.sha256(resources.joinpath('literature_cases.json').read_bytes()).hexdigest(),
               'scope': 'Local source/heading retrieval only; no model API or remote embedding calls.',
               'limitations': ['Small project-authored queries, not representative user traffic.',
                               'Old 23 queries are regression cases, including their formerly reserved cases.',
@@ -73,6 +76,6 @@ def evaluate(output, split=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, default=Path('artifacts/rag_retrieval_v2_eval.json'))
-    parser.add_argument('--split', choices=('development', 'regression', 'reserved'))
+    parser.add_argument('--split', choices=('development', 'regression', 'reserved', 'literature_smoke'))
     args = parser.parse_args()
     evaluate(args.output, args.split)

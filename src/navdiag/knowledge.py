@@ -70,7 +70,9 @@ def _index():
     notes = json.loads(resources.joinpath('knowledge.json').read_text(encoding='utf-8'))
     document_path = resources.joinpath('rag_documents.json')
     documents = json.loads(document_path.read_text(encoding='utf-8'))['chunks'] if document_path.is_file() else []
-    records = [{**note, 'document_id': note['id'], 'heading': note['title']} for note in notes] + documents
+    literature_path = resources.joinpath('literature.json')
+    literature = json.loads(literature_path.read_text(encoding='utf-8'))['records'] if literature_path.is_file() else []
+    records = [{**note, 'document_id': note['id'], 'heading': note['title']} for note in notes] + documents + literature
     texts = [record['title'] + ' ' + record.get('heading', '') + ' ' + record['content'] + ' ' +
              ' '.join(record['keywords']) for record in records]
     vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(2, 4), sublinear_tf=True)

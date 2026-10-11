@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "policy": "Original bounded research summaries with primary-source metadata; no full articles or PDFs. Author findings are not NavDiag measurements.",
+  "verification_scope": "Primary metadata and the explicitly listed abstract/sections; not a systematic review, retraction audit or independent replication.",
+  "records": [
+    {
+      "id": "L01",
+      "document_id": "L01",
+      "title": "Learning-based NLOS Detection and Uncertainty Prediction of GNSS Observations with Transformer-Enhanced LSTM Network",
+      "heading": "Zhang 2023：时空上下文、NLOS 与伪距误差联合学习",
+      "authors": ["Haoming Zhang", "Zhanxin Wang", "Heike Vallery"],
+      "year": 2023,
+      "venue": "IEEE ITSC 2023",
+      "doi": "10.1109/ITSC57777.2023.10422672",
+      "source_url": "https://arxiv.org/abs/2309.00480v2",
+      "source_type": "research_summary",
+      "keywords": [
+        "Zhang",
+        "Transformer",
+        "LSTM",
+        "NLOS",
+        "香港",
+        "Aachen",
+        "跨城市",
+        "伪距误差",
+        "联合学习",
+        "论文"
+      ],
+      "content": "文献方法：Zhang 等将 GNSS 观测作为时空问题处理，用注意力增强 LSTM，同时检测 NLOS 和预测伪距误差；作者在香港及 Aachen 标注数据上评估，并介绍 LiDAR 地图标注与状态估计应用。项目对照：当前 NavDiag 是单卫星历史分类，没有该论文的完整联合任务，不能称为精确复现。作者的实验结论也不是我们项目的测试结果；理解具体结构请结合项目的论文核对文档。",
+      "verification": {
+        "checked_at": "2026-10-11",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "arXiv v2 metadata and Abstract",
+        "locator": "Abstract",
+        "full_text_read_this_update": false
+      }
+    },
+    {
+      "id": "L02",
+      "document_id": "L02",
+      "title": "NLOS Multipath Classification of GNSS Signal Correlation Output Using Machine Learning",
+      "heading": "Suzuki 与 Amano 2021：相关器波形输入与 NLOS 分类",
+      "authors": ["Taro Suzuki", "Yoshiharu Amano"],
+      "year": 2021,
+      "venue": "Sensors, 21(7), 2503",
+      "doi": "10.3390/s21072503",
+      "source_url": "https://doi.org/10.3390/s21072503",
+      "source_type": "research_summary",
+      "keywords": [
+        "Suzuki",
+        "Amano",
+        "相关器",
+        "correlator",
+        "SDR",
+        "SVM",
+        "NN",
+        "归一化",
+        "NLOS",
+        "鱼眼相机",
+        "论文"
+      ],
+      "content": "文献方法：Suzuki 与 Amano 用软件接收机的多相关器输出形状区分 LOS/NLOS，对比 SVM 与神经网络，并用自动采集方式获得标签。预处理会考虑仰角与信号幅度关系，输入比普通 C/N0 特征保留更多波形信息。项目边界：我们的五项 GNSS 特征不包含原始相关器波形，因此不能直接照搬其网络或把论文分数作为当前模型的应达成绩。本文是原文摘要和指定章节的研究摘要，不是代码复现。",
+      "verification": {
+        "checked_at": "2026-10-11",
+        "status": "primary_indexed_excerpts_checked",
+        "read_scope": "Indexed primary article excerpts; live PMC CAPTCHA and publisher HTTP 429 prevented whole-page reading",
+        "locator": "Abstract; sections 2, 4 and 5 excerpts",
+        "full_text_read_this_update": false
+      }
+    },
+    {
+      "id": "L03",
+      "document_id": "L03",
+      "title": "GNSS NLOS Signal Classification Based on Machine Learning and Pseudorange Residual Check",
+      "heading": "Ozeki 与 Kubo 2022：SVM、残差检查与静态动态特征差异",
+      "authors": ["Tomohiro Ozeki", "Nobuaki Kubo"],
+      "year": 2022,
+      "venue": "Frontiers in Robotics and AI, 9, 868608",
+      "doi": "10.3389/frobt.2022.868608",
+      "source_url": "https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2022.868608/full",
+      "source_type": "research_summary",
+      "keywords": [
+        "Ozeki",
+        "Kubo",
+        "SVM",
+        "SFM",
+        "RINEX",
+        "残差",
+        "静态",
+        "动态",
+        "信号波动",
+        "NLOS",
+        "定位",
+        "论文"
+      ],
+      "content": "文献方法：Ozeki 与 Kubo 使用 RINEX 可计算特征训练 SVM，再结合伪距残差检查评估 DGNSS 定位。论文讨论 SNR 波动特征 SFM：在静态实验有帮助，车辆运动时较长窗口可能混入环境变化，效果不同。其数据集中在东京站附近，作者要求其他地点进一步检验。项目启示：历史窗口、残差和特征定义需要按场景核对；NLOS 分类指标与定位误差必须分别验证，不能推定分类更好就必然定位更准。",
+      "verification": {
+        "checked_at": "2026-10-11",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Publisher metadata, Abstract, sections 2.1 and 4",
+        "locator": "2.1 SVM Classifier; 4 Discussion",
+        "full_text_read_this_update": false
+      }
+    },
+    {
+      "id": "L04",
+      "document_id": "L04",
+      "title": "Robust design of a machine learning-based GNSS NLOS detector with multi-frequency features",
+      "heading": "García Crespillo 等 2023：开放天空预归一化与多频分支",
+      "authors": [
+        "Omar García Crespillo",
+        "Juan Carlos Ruiz-Sicilia",
+        "Ana Kliman",
+        "Juliette Marais"
+      ],
+      "year": 2023,
+      "venue": "Frontiers in Robotics and AI, 10, 1171255",
+      "doi": "10.3389/frobt.2023.1171255",
+      "source_url": "https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1171255/full",
+      "source_type": "research_summary",
+      "keywords": [
+        "Crespillo",
+        "多频",
+        "预归一化",
+        "开放天空",
+        "open-sky",
+        "分支",
+        "Logistic Regression",
+        "逻辑回归",
+        "接收机",
+        "天线",
+        "泛化",
+        "NLOS",
+        "论文"
+      ],
+      "content": "文献方法：García Crespillo 等用开放天空数据建立名义特征模型，预归一化以降低接收机和天线安装差异；用并行分支处理不同频率特征间歇缺失，分类器采用逻辑回归。论文在指定静态场景报告检测结果。项目边界：这说明物理预处理、硬件差异和多频信息可能比网络复杂度更重要，不说明本项目现有逻辑回归已经充分。当前五特征与该多频方案不同，其验证结果不能替代我们未完成的跨城市实验。",
+      "verification": {
+        "checked_at": "2026-10-11",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Publisher metadata, Abstract and Introduction",
+        "locator": "Abstract; 1 Introduction",
+        "full_text_read_this_update": false
+      }
+    },
+    {
+      "id": "L05",
+      "document_id": "L05",
+      "title": "Why do tree-based models still outperform deep learning on typical tabular data?",
+      "heading": "Grinsztajn 等 2022：表格数据的树模型与神经网络归纳偏置",
+      "authors": ["Léo Grinsztajn", "Edouard Oyallon", "Gaël Varoquaux"],
+      "year": 2022,
+      "venue": "NeurIPS 2022 Datasets and Benchmarks",
+      "doi": "10.48550/arXiv.2207.08815",
+      "source_url": "https://arxiv.org/abs/2207.08815v1",
+      "source_type": "research_summary",
+      "keywords": [
+        "Grinsztajn",
+        "Random Forest",
+        "随机森林",
+        "树模型",
+        "表格",
+        "tabular",
+        "无关特征",
+        "归纳偏置",
+        "神经网络",
+        "论文"
+      ],
+      "content": "文献观察：Grinsztajn 等在多个标准表格数据集上比较树模型和深度模型，发现树模型在其设定下仍很有竞争力，并分析无关特征、数据坐标方向与不规则函数等归纳偏置。项目边界：它为 RF 强于部分简单网络提供通用背景，不是 GNSS NLOS 实验，也没有证明随机森林永远优于 Transformer。当前卫星时序、标签、区域划分与该基准不同，具体排名仍应读取项目报告。",
+      "verification": {
+        "checked_at": "2026-10-11",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "arXiv metadata and Abstract; conference PDF Abstract",
+        "locator": "Abstract; conference PDF page 1",
+        "full_text_read_this_update": false
+      }
+    },
+    {
+      "id": "L06",
+      "document_id": "L06",
+      "title": "Revisiting Deep Learning Models for Tabular Data",
+      "heading": "Gorishniy 等 2021：公平协议、ResNet 与 FT-Transformer",
+      "authors": [
+        "Yury Gorishniy",
+        "Ivan Rubachev",
+        "Valentin Khrulkov",
+        "Artem Babenko"
+      ],
+      "year": 2021,
+      "venue": "NeurIPS 2021",
+      "doi": "10.48550/arXiv.2106.11959",
+      "source_url": "https://arxiv.org/abs/2106.11959v5",
+      "source_type": "research_summary",
+      "keywords": [
+        "Gorishniy",
+        "RTDL",
+        "FT-Transformer",
+        "ResNet",
+        "表格",
+        "tabular",
+        "统一协议",
+        "baseline",
+        "神经网络",
+        "论文"
+      ],
+      "content": "文献观察：Gorishniy 等在统一训练与调参协议下比较表格深度模型，提出 ResNet 风格和表格 Transformer 的强基线，与梯度提升树比较后仍未得到普遍最优的单一方案。项目启示：应该先确保预算、输入、预处理和划分公平，再讨论网络复杂度。FT-Transformer 是面向表格特征的架构，本项目 Transformer 处理同一卫星的历史时间窗口，二者不能只因名字相同就认定等价。",
+      "verification": {
+        "checked_at": "2026-10-11",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "arXiv v5 metadata and Abstract",
+        "locator": "Abstract",
+        "full_text_read_this_update": false
+      }
+    },
+    {
+      "id": "L07",
+      "document_id": "L07",
+      "title": "When Do Neural Nets Outperform Boosted Trees on Tabular Data?",
+      "heading": "McElfresh 等 2023：数据性质、调参预算与模型选择",
+      "authors": [
+        "Duncan McElfresh",
+        "Sujay Khandagale",
+        "Jonathan Valverde",
+        "Vishak Prasad C",
+        "Benjamin Feuer",
+        "Chinmay Hegde",
+        "Ganesh Ramakrishnan",
+        "Micah Goldblum",
+        "Colin White"
+      ],
+      "year": 2023,
+      "venue": "NeurIPS 2023 Datasets and Benchmarks",
+      "doi": "10.48550/arXiv.2305.02997",
+      "source_url": "https://arxiv.org/abs/2305.02997v4",
+      "source_type": "research_summary",
+      "keywords": [
+        "McElfresh",
+        "TabZilla",
+        "GBDT",
+        "梯度提升树",
+        "神经网络",
+        "偏态",
+        "重尾",
+        "调参",
+        "表格",
+        "论文"
+      ],
+      "content": "文献观察：McElfresh 等广泛比较神经网络与梯度提升树，指出很多数据集的差距很小，数据性质与调参预算也会影响选择；偏态、重尾及其他不规则特征分布值得检查。项目边界：GBDT 并不是 RF，通用表格结论也不是 GNSS 跨区域结论。本文用于解释为什么不能只按模型名字选算法；它不构成本项目恢复超参数搜索或按测试集选模的依据。",
+      "verification": {
+        "checked_at": "2026-10-11",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "arXiv v4 metadata and Abstract",
+        "locator": "Abstract",
+        "full_text_read_this_update": false
+      }
+    }
+  ]
+}

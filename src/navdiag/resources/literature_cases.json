@@ -1,0 +1,9 @@
+[
+  {"id":"LQ01","split":"literature_smoke","question":"哪篇文献用 LiDAR 地图标签，同时做 NLOS 判别和伪距误差预测？","expected":[{"document_id":"L01"}]},
+  {"id":"LQ02","split":"literature_smoke","question":"相关器输出波形和普通 C/N0 输入的 NLOS 神经网络有什么区别？","expected":[{"document_id":"L02"}]},
+  {"id":"LQ03","split":"literature_smoke","question":"SFM 信号波动特征在静态和车辆运动实验中效果相同吗？","expected":[{"document_id":"L03"}]},
+  {"id":"LQ04","split":"literature_smoke","question":"怎样用开放天空预归一化降低接收机和天线差异，并处理多频缺失？","expected":[{"document_id":"L04"}]},
+  {"id":"LQ05","split":"literature_smoke","question":"表格树模型为什么可能对无关特征和不规则函数更鲁棒？","expected":[{"document_id":"L05"}]},
+  {"id":"LQ06","split":"literature_smoke","question":"FT-Transformer 与 ResNet 作为表格强基线，为什么要在统一协议下比较？","expected":[{"document_id":"L06"}]},
+  {"id":"LQ07","split":"literature_smoke","question":"偏态和重尾特征如何影响 GBDT 与神经网络的模型选择？","expected":[{"document_id":"L07"}]}
+]

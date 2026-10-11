@@ -37,6 +37,9 @@ SYSTEM_PROMPT = (
     'take precedence. Cite the enclosing evidence ID and identify the document heading when helpful.'
     ' An empty search is not proof that a question is irrelevant. In tool mode, try concise equivalent '
     'technical terms or the relevant experiment tool; if evidence is still missing, say so without guessing.'
+    ' Research summaries report cited authors\' methods/findings, not NavDiag results. Respect their '
+    'recorded reading scope; never claim that an entire paper was read when only an abstract/sections '
+    'were checked. You have no live internet search tool in this application; do not claim a web search.'
 )
 
 
