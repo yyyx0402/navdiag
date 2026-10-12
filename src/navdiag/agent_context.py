@@ -116,6 +116,13 @@ def evidence_context(question, evidence, task_context=None, trip_id=None):
     projected_size = len(json.dumps(projected, ensure_ascii=False, separators=(',', ':')))
     context = {'question': question, 'retrieval_query': normalize_query(question),
                'selected_task': task_context, 'selected_trip': trip_id, 'evidence': projected,
+               'evidence_catalog': [{'evidence_id': item['evidence_id'], 'tool': item['tool'],
+                                     'document_ids': sorted({note.get('document_id', note['id'])
+                                         for note in item['payload'].get('notes', [])})}
+                                    for item in projected],
+               'task_definitions': ({'positive_class': 'NLOS', 'negative_class': 'LOS',
+                                     'unknown': 'Excluded from supervision and scoring; not a negative label.'}
+                                    if task_context == 'satellite_nlos' else {}),
                'context_scope': {'models': sorted(focus) if focus else 'all recorded models',
                                  'omitted': ['full threshold scans', 'full training histories',
                                              'duplicate per-run metrics', 'unrelated experiment sections'],

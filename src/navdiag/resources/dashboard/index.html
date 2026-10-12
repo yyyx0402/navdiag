@@ -3,40 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>NavDiag · GNSS 遮挡识别实验</title>
+    <title>NavDiag · GNSS 信号诊断</title>
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
     <aside class="sidebar">
       <a class="brand" href="#overview"
         ><span class="brand-icon">⌖</span
-        ><span>NavDiag<small>GNSS EXPERIMENT LAB</small></span></a
+        ><span>NavDiag<small>GNSS SIGNAL DIAGNOSTICS</small></span></a
       >
-      <div class="nav-label">实验工作台</div>
-      <a href="#overview" class="nav-item active">◈ 项目概览</a>
-      <a href="#obstruction" class="nav-item">◉ 新城区泛化</a>
-      <a href="#nlos-protocol-panel" class="nav-item">⇄ 同域与跨区域</a>
-      <a href="#nlos-fold-panel" class="nav-item">⌁ 逐卫星检查</a>
+      <div class="nav-label">诊断工作台</div>
+      <a href="#overview" class="nav-item active">◈ 总览</a>
+      <a href="#obstruction" class="nav-item">◉ 城区模型表现</a>
+      <a href="#nlos-protocol-panel" class="nav-item">⇄ 区域适应性</a>
+      <a href="#nlos-fold-panel" class="nav-item">⌁ 卫星信号</a>
       <a href="#diagnostics" class="nav-item">✧ 诊断助手</a>
-      <a href="#trajectories" class="nav-item">▧ 定位辅助实验</a>
-      <a href="#method" class="nav-item">☷ 方法与证据</a>
+      <a href="#trajectories" class="nav-item">▧ 定位与告警</a>
+      <a href="#method" class="nav-item">☷ 数据与说明</a>
       <div class="sidebar-note">
         <span class="dot"></span>本地运行<br /><small
-          >公开观测 · 可复现实验</small
+          >公开数据 · 结果可追溯</small
         >
       </div>
     </aside>
     <main>
       <header class="topbar">
         <span>WORKSPACE <b>/</b> GNSS 遮挡识别</span
-        ><span class="version">NavDiag · 本地开发版</span>
+        ><span class="version">NavDiag · 本地运行</span>
       </header>
       <section id="overview">
         <div class="eyebrow">SATELLITE LOS / NLOS · REAL OBSERVATIONS</div>
         <div class="title-row">
           <div>
-            <h1>真实场景下的遮挡识别。</h1>
-            <p class="lead">比较模型、检查区域差异，让每个实验结论都有依据。</p>
+            <h1>GNSS 信号诊断</h1>
+            <p class="lead">
+              查看遮挡识别结果，比较城区表现，结合资料理解定位风险。
+            </p>
           </div>
           <span id="project-badge" class="badge real">正在加载</span>
         </div>
@@ -51,7 +53,7 @@
             <div class="metric-grid">
               <article class="metric">
                 <span>新城区观测历元</span><strong id="project-epochs">—</strong
-                ><small id="project-drives">按完整采集段评估</small>
+                ><small id="project-drives">完整采集记录</small>
               </article>
               <article class="metric">
                 <span>卫星观测</span><strong id="project-rows">—</strong
@@ -62,22 +64,25 @@
                 ><small id="project-coverage">同时报告未确定标签</small>
               </article>
               <article class="metric">
-                <span>神经网络 / 传统参照</span
+                <span>神经网络 / 传统模型</span
                 ><strong id="project-models">5 / 3</strong
                 ><small>MLP · CNN · LSTM · GRU · Transformer</small>
               </article>
             </div>
-            <p class="chart-footnote" id="project-scope">
-              只展示已完成的本地实验，跨城市能力仍未验证。
-            </p>
+            <details class="data-detail">
+              <summary>数据来源与适用范围</summary>
+              <p class="chart-footnote" id="project-scope">
+                当前结果来自本地已保存的记录，跨城市能力尚未验证。
+              </p>
+            </details>
           </div>
         </details>
       </section>
       <section id="obstruction">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">EXPERIMENT COMPARISON</div>
-            <h2>模型优势，随测试场景怎样变化？</h2>
+            <div class="eyebrow">MODEL PERFORMANCE</div>
+            <h2>城区模型表现</h2>
           </div>
           <div class="section-actions">
             <button class="subtle-button" id="expand-sections">全部展开</button
@@ -87,7 +92,7 @@
           </div>
         </div>
         <div id="nlos-load-status" class="muted" role="status">
-          正在加载识别实验…
+          正在加载识别结果…
         </div>
         <div id="nlos-content" hidden>
           <details
@@ -98,20 +103,20 @@
           >
             <summary>
               <span class="summary-number">01</span
-              ><span class="summary-title">新城区泛化 · UrbanNav</span
+              ><span class="summary-title">新城区识别结果 · UrbanNav</span
               ><span class="summary-meta">尖沙咀 / 黄埔 / 旺角</span>
             </summary>
             <div class="panel-body">
               <p id="nlos-generalization-note" class="section-description"></p>
               <div class="protocol-flow">
                 <div>
-                  <span>冻结外部迁移</span
+                  <span>源模型直接应用</span
                   ><strong>KLT 源模型 → 三个新城区</strong
                   ><small>权重与阈值保持源验证集取值</small>
                 </div>
                 <div>
-                  <span>城区互斥实验</span
-                  ><strong>训练区 → 验证区 → 测试区</strong
+                  <span>城区独立留出</span
+                  ><strong>在其他城区学习，在新城区识别</strong
                   ><small>三城区互斥 · 交换训练与验证，共六折</small>
                 </div>
               </div>
@@ -136,7 +141,7 @@
                       </div>
                     </div>
                     <div class="legend">
-                      <span class="legend-dot external">冻结外部迁移</span
+                      <span class="legend-dot external">源模型直接应用</span
                       ><span class="legend-dot district">城区互斥</span>
                     </div>
                     <div
@@ -158,8 +163,8 @@
                   </summary>
                   <div class="chart-card-body">
                     <label
-                      >实验<select id="generalization-heatmap-protocol">
-                        <option value="external">冻结外部迁移</option>
+                      >对比方式<select id="generalization-heatmap-protocol">
+                        <option value="external">源模型直接应用</option>
                         <option value="district">城区互斥</option>
                       </select></label
                     >
@@ -194,7 +199,7 @@
               <details class="chart-card" open>
                 <summary>
                   逐城区比较<span class="summary-meta"
-                    >同一模型 · 两种实验</span
+                    >同一模型 · 两种比较方式</span
                   >
                 </summary>
                 <div class="chart-card-body">
@@ -219,20 +224,23 @@
                   class="table-scroll"
                 ></div>
               </details>
-              <p class="chart-footnote">
-                每折模型、阈值与检查点只用该折验证区选择。六折重复使用三个测试采集段，不是六份独立测试数据。外部迁移同时改变了天线、日期和标签方法；全部区域均在香港，跨城市泛化尚未验证。
-              </p>
+              <details class="data-detail">
+                <summary>如何解读城区结果</summary>
+                <p class="chart-footnote">
+                  每折模型、阈值与检查点只用该折验证区选择。六折重复使用三个测试采集段，不是六份独立测试数据。外部迁移同时改变了天线、日期和标签方法；全部区域均在香港，跨城市泛化尚未验证。
+                </p>
+              </details>
             </div>
           </details>
           <details class="panel section-panel" id="nlos-protocol-panel" hidden>
             <summary>
               <span class="summary-number">02</span
-              ><span class="summary-title">同域与跨区域 · KLT</span
+              ><span class="summary-title">区域适应性 · KLT</span
               ><span class="summary-meta">三个相邻区域 · 成对测试</span>
             </summary>
             <div class="panel-body">
               <div class="chart-toolbar">
-                <h3>同一测试集，两种训练范围</h3>
+                <h3>熟悉区域与未见区域的表现</h3>
                 <div
                   class="metric-switch"
                   id="protocol-metric"
@@ -251,7 +259,10 @@
                 ><span class="legend-dot district">跨区域</span>
               </div>
               <div id="protocol-comparison" class="comparison-chart"></div>
-              <p id="nlos-protocol-note" class="chart-footnote"></p>
+              <details class="data-detail">
+                <summary>对比条件与数据说明</summary>
+                <p id="nlos-protocol-note" class="chart-footnote"></p>
+              </details>
               <details class="chart-card" open>
                 <summary>
                   各区域的变化<span class="summary-meta">同域与跨区域 F1</span>
@@ -278,16 +289,19 @@
           <details class="panel section-panel" id="nlos-fold-panel">
             <summary>
               <span class="summary-number">03</span
-              ><span class="summary-title">单次实验与逐卫星检查 · KLT</span
+              ><span class="summary-title">卫星信号与识别详情 · KLT</span
               ><span class="summary-meta" id="nlos-fold-label">验证集选模</span>
             </summary>
             <div class="panel-body">
               <div class="chart-toolbar">
                 <label id="nlos-experiment-label"
-                  >具体实验<select id="nlos-experiment"></select></label
-                ><span id="nlos-badge" class="badge">实验待加载</span>
+                  >查看记录<select id="nlos-experiment"></select></label
+                ><span id="nlos-badge" class="badge">等待数据</span>
               </div>
-              <div id="nlos-notice" class="notice"></div>
+              <details class="data-detail">
+                <summary>记录来源与适用范围</summary>
+                <div id="nlos-notice" class="notice"></div>
+              </details>
               <div class="metric-grid">
                 <article class="metric">
                   <span>NLOS Precision</span
@@ -457,22 +471,22 @@
           <summary>
             <span class="summary-number">04</span
             ><span class="summary-title">诊断助手</span
-            ><span class="summary-meta">工具调用与证据</span>
+            ><span class="summary-meta">回答附带来源</span>
           </summary>
           <div class="panel-body">
             <div class="chart-toolbar">
               <p class="section-description">
-                从实验记录中回答问题，检查模型结论对应的证据。
+                询问模型表现、遮挡原因或定位概念，回答会附上可核对的资料。
               </p>
               <label
-                >问答任务<select id="diagnostic-task">
+                >分析内容<select id="diagnostic-task">
                   <option value="satellite_nlos">卫星遮挡识别</option>
-                  <option value="position_error">定位辅助实验</option>
+                  <option value="position_error">定位与告警</option>
                 </select></label
               >
               <label
-                >后端<select id="provider">
-                  <option value="offline">离线工具基线</option>
+                >回答方式<select id="provider">
+                  <option value="offline">本地资料速查</option>
                   <option value="connection">自定义模型 API</option>
                   <option value="compatible">本地 .env 兼容配置</option>
                 </select></label
@@ -644,24 +658,26 @@
             </details>
             <div class="agent-grid">
               <div class="chart-card ask-panel">
-                <p>选择已保存的模型连接进行问答，或使用离线工具查看实验。</p>
+                <p>
+                  输入你的问题；连接模型获得解释，或使用本地资料速查查看已有结果。
+                </p>
                 <textarea
                   id="question"
-                  placeholder="例如：新城区泛化中，哪些模型更占优势？"
+                  placeholder="例如：随机森林与 Transformer 在不同城区表现如何？"
                 ></textarea>
                 <div class="example-questions">
                   <button>
                     新城区泛化中，随机森林与 Transformer 的表现如何？</button
-                  ><button>同域与跨区域实验中，哪些模型更占优势？</button
+                  ><button>同域与跨区域中，哪些模型更占优势？</button
                   ><button>遮挡识别模型效果如何？</button
                   ><button>HDOP 能否证明发生了 NLOS？</button
                   ><button>自适应滤波是否改善位置误差？</button>
                 </div>
                 <button class="primary" id="ask-button">
-                  分析实验<span>↗</span>
+                  获取回答<span>↗</span>
                 </button>
                 <div id="agent-status" class="muted" role="status">
-                  离线模式采用确定性工具流程，不是大语言模型。
+                  本地资料速查直接展示已有记录；连接模型后可获得解释。
                 </div>
               </div>
               <div class="chart-card answer-panel">
@@ -670,7 +686,7 @@
                   <span id="answer-backend">等待提问</span>
                 </div>
                 <div id="answer" class="answer">
-                  先选择一个问题。结果会在这里显示，证据记录保留在下方。
+                  回答将显示在这里，下方可展开查看所用资料。
                 </div>
                 <div id="evidence-list"></div>
               </div>
@@ -682,12 +698,12 @@
         <details class="panel section-panel" id="positioning-panel">
           <summary>
             <span class="summary-number">05</span
-            ><span class="summary-title">定位与失准告警 · 辅助实验</span
+            ><span class="summary-title">定位与失准告警</span
             ><span id="data-badge" class="summary-meta">正在加载</span>
           </summary>
           <div class="panel-body">
             <p class="section-description">
-              这部分用于检查定位与告警流程，任务和数据与上述卫星 NLOS 识别分开。
+              查看轨迹、水平误差与告警记录。此处使用独立的定位数据，数据来源见下方标记。
             </p>
             <div id="provenance-warning" class="notice"></div>
             <details class="chart-card">
@@ -701,7 +717,7 @@
                     ><small>预测位置误差超限</small>
                   </article>
                   <article class="metric">
-                    <span>留出集历元</span><strong id="epoch-count">—</strong
+                    <span>评估历元</span><strong id="epoch-count">—</strong
                     ><small id="trip-count">—</small>
                   </article>
                   <article class="metric">
@@ -774,7 +790,7 @@
         <details class="panel section-panel" id="method-panel">
           <summary>
             <span class="summary-number">06</span
-            ><span class="summary-title">方法与证据</span
+            ><span class="summary-title">数据与使用说明</span
             ><span class="summary-meta">结论的适用范围</span>
           </summary>
           <div class="panel-body method-cards">
@@ -787,14 +803,14 @@
               </p>
             </article>
             <article>
-              <h3>模型与划分</h3>
+              <h3>模型表现如何计算</h3>
               <p>
                 五种神经网络与逻辑回归、随机森林、C/N0
                 固定规则对比。完整采集段隔离；预处理拟合训练集，模型与阈值使用验证集。
               </p>
             </article>
             <article>
-              <h3>证据边界</h3>
+              <h3>当前支持的范围</h3>
               <p>
                 目前完成同域、香港同城区域留出和跨数据集迁移。区域与日期、设备或标签方法存在混杂；跨城市、遮挡物类型和定位收益仍未验证。
               </p>
@@ -803,9 +819,7 @@
         </details>
       </section>
       <footer>
-        NavDiag · GNSS LOS / NLOS experiments<span
-          >实验结果来自当前本地产物</span
-        >
+        NavDiag · GNSS Signal Diagnostics<span>结果来自本地已保存的记录</span>
       </footer>
     </main>
     <script src="/app.js"></script>

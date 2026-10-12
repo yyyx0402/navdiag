@@ -387,15 +387,14 @@ async function initializeGeneralization() {
   const r = data.report;
   generalizationReport = r;
   el("nlos-content").hidden = false;
-  el("nlos-load-status").textContent =
-    "真实观测实验已加载 · 点击标题可展开或收起";
+  el("nlos-load-status").textContent = "识别结果已加载 · 点击标题查看详情";
   const external = r.external_transfer.models;
   const district = r.district_holdout.models;
   updateProjectOverview(r.dataset, r.external_transfer.rows, "REAL · UrbanNav");
   renderCoverage(r);
   el("nlos-generalization-panel").hidden = false;
   el("nlos-generalization-note").textContent =
-    `新增 ${r.dataset.epochs.toLocaleString()} 个历元、${r.dataset.rows.toLocaleString()} 条卫星观测，${r.external_transfer.rows.toLocaleString()} 条具有可评分的建筑几何参考。冻结源模型由 KLT 验证集选择：${names[r.external_transfer.selected_model]}。以下均为同一城市的跨城区测试。`;
+    `已载入 ${r.dataset.epochs.toLocaleString()} 个历元、${r.dataset.rows.toLocaleString()} 条卫星观测，其中 ${r.external_transfer.rows.toLocaleString()} 条有可评分的建筑几何参考标签。查看尖沙咀、黄埔和旺角的模型表现。`;
   const coverage = external.random_forest.per_area;
   table(
     el("nlos-generalization-coverage"),
@@ -555,9 +554,9 @@ async function initializeNlos(experiment = "") {
   if (request !== nlosRequest) return;
   if (!data.available) {
     el("nlos-fold-panel").hidden = true;
-    el("nlos-badge").textContent = "尚无实验产物";
+    el("nlos-badge").textContent = "暂无识别数据";
     el("nlos-load-status").textContent =
-      "尚未加载卫星级遮挡实验。现有定位失准分数不能替代 LOS/NLOS 标签。";
+      "暂无卫星遮挡识别结果。定位告警与 LOS/NLOS 是不同任务。";
     return;
   }
   const r = data.report,
@@ -565,12 +564,11 @@ async function initializeNlos(experiment = "") {
   activeNlosExperiment = data.experiment_id || "";
   currentNlosReport = r;
   el("nlos-fold-panel").hidden = false;
-  el("nlos-load-status").textContent =
-    "真实观测实验已加载 · 点击标题可展开或收起";
+  el("nlos-load-status").textContent = "识别结果已加载 · 点击标题查看详情";
   el("nlos-experiment-label").hidden = !data.suite;
   el("nlos-fold-label").textContent = data.suite
     ? `${r.protocol === "in_domain" ? "同域" : "跨区域"} · 测试 ${r.experiment.test_area}`
-    : "区域隔离开发实验";
+    : "区域独立留出记录";
   if (data.suite) {
     if (!generalizationReport)
       updateProjectOverview(
@@ -715,19 +713,19 @@ async function initializeNlos(experiment = "") {
           .map((trip) => [trip, {}]),
       ),
     };
-    updateProjectOverview(dataset, dataset.rows, "REAL · KLT 历史实验");
+    updateProjectOverview(dataset, dataset.rows, "REAL · KLT 已保存记录");
   }
   el("nlos-badge").textContent = "REAL · KLT 相机参考";
   el("nlos-badge").classList.add("real");
   el("nlos-content").hidden = false;
   el("nlos-notice").textContent = data.suite
     ? `${r.protocol === "in_domain" ? "同域实验：训练中包含测试区域的其他完整采集段。" : "跨区域实验：测试区域完全未进入训练和验证。"}参考标签来自 KLT 鱼眼相机，模型只读取信号与几何特征。下方显示当前实验的结果。`
-    : "独立任务：逐卫星预测 LOS/NLOS。参考标签来自 KLT 鱼眼相机，模型只读取信号与几何特征。当前为此前的四段区域隔离开发实验。";
+    : "独立任务：逐卫星预测 LOS/NLOS。参考标签来自 KLT 鱼眼相机，模型只读取信号与几何特征。当前为此前的四段区域独立留出记录。";
   el("nlos-precision").textContent = number(selected.precision);
   el("nlos-recall").textContent = number(selected.recall);
   el("nlos-f1").textContent = number(selected.f1, 4);
   el("nlos-model").textContent =
-    `${names[r.selected_model] || r.selected_model} · 遮挡实验选中`;
+    `${names[r.selected_model] || r.selected_model} · 模型选择结果`;
   el("nlos-count").textContent = r.splits.test.rows.toLocaleString();
   renderFoldCharts(r);
   const splitNames = { train: "训练", validation: "验证", test: "测试" };
@@ -919,7 +917,7 @@ function plot(
   container.replaceChildren();
   const valid = series.filter((s) => s.points.length > 1);
   if (!valid.length) {
-    container.textContent = "当前实验没有可用绘图数据。";
+    container.textContent = "当前记录没有可用绘图数据。";
     return;
   }
   const all = valid.flatMap((s) => s.points);
@@ -1136,7 +1134,7 @@ async function initializePositioning() {
   const selected = report.models[report.selected_model].test;
   el("data-badge").textContent =
     report.data_kind === "synthetic"
-      ? "SYNTHETIC · 模拟实验"
+      ? "SYNTHETIC · 模拟数据"
       : "REAL DATA · 公开数据";
   if (report.data_kind === "real") el("data-badge").classList.add("real");
   el("provenance-warning").textContent =
@@ -1178,7 +1176,7 @@ async function initializePositioning() {
       ]),
     );
   } else
-    el("position-table").textContent = "当前实验仅包含分类特征，没有位置轨迹。";
+    el("position-table").textContent = "当前记录包含分类特征，未提供位置轨迹。";
   trips.forEach((t) => {
     const option = document.createElement("option");
     option.value = t.trip_id;
@@ -1219,10 +1217,10 @@ function updateConnectionState() {
   if (!askingModel)
     el("agent-status").textContent = custom
       ? saved && !connectionDirty
-        ? "已选择自定义服务，点击分析实验后才会发起模型请求。"
+        ? "已选择自定义服务，点击获取回答后才会发起模型请求。"
         : "请先保存要使用的模型连接。"
       : el("provider").value === "offline"
-        ? "离线模式采用确定性工具流程，不是大语言模型。"
+        ? "本地资料速查直接展示已有记录；连接模型后可获得解释。"
         : "将读取本机 .env 中的 compatible 配置。";
 }
 function editConnection(identifier = "") {
@@ -1424,9 +1422,9 @@ el("ask-button").addEventListener("click", async () => {
   }
   askingModel = true;
   updateConnectionState();
-  el("agent-status").textContent = "正在调用分析工具…";
+  el("agent-status").textContent = "正在准备回答…";
   el("evidence-list").replaceChildren();
-  el("answer").textContent = "正在检索实验指标和技术文档…";
+  el("answer").textContent = "正在查找相关结果和资料…";
   el("answer-backend").textContent = "处理中";
   try {
     const response = await fetch("/api/ask", {
@@ -1450,18 +1448,11 @@ el("ask-button").addEventListener("click", async () => {
     el("answer-backend").textContent = result.generation_skipped
       ? "本地证据检查"
       : result.backend === "offline"
-        ? "离线工具基线"
+        ? "本地资料速查"
         : result.model;
     el("agent-status").textContent = result.generation_skipped
       ? `未找到相关项目依据 · ${number(result.elapsed_s, 2)} 秒 · 未调用模型 API`
-      : `${result.evidence.length} 条证据 · ${number(result.elapsed_s, 2)} 秒 · ${result.backend === "offline" ? "离线工具基线" : result.answer_mode === "evidence" ? "证据问答" : "工具 Agent"} · 引用编号已检查，事实仍需核对`;
-    const stats = result.context_stats;
-    if (stats?.original_evidence_characters) {
-      const saved =
-        1 - stats.sent_evidence_characters / stats.original_evidence_characters;
-      el("agent-status").textContent +=
-        ` · 发送依据减少 ${number(saved * 100, 0)}%`;
-    }
+      : `回答完成 · ${number(result.elapsed_s, 2)} 秒 · ${result.evidence.length} 条来源 · ${result.backend === "offline" ? "本地资料速查" : result.model}`;
     if (result.warnings?.length)
       el("agent-status").textContent += ` · ${result.warnings.join(" ")}`;
     result.evidence.forEach((item) => {
@@ -1473,7 +1464,16 @@ el("ask-button").addEventListener("click", async () => {
         synthetic: "模拟观测",
         knowledge: "技术笔记",
       };
-      summary.textContent = `[${item.evidence_id}] ${item.tool} · ${provenance[item.data_kind] || item.data_kind}`;
+      const sourceLabels = {
+        list_trips: "采集记录",
+        trip_summary: "行程概览",
+        compare_models: "告警模型表现",
+        compare_nlos: "遮挡识别结果",
+        compare_positioning: "定位方法表现",
+        segment_summary: "片段概览",
+        search_knowledge: "参考资料",
+      };
+      summary.textContent = `[${item.evidence_id}] ${sourceLabels[item.tool] || "诊断资料"} · ${provenance[item.data_kind] || item.data_kind}`;
       detail.append(summary);
       if (item.tool === "search_knowledge") {
         const method = item.payload.embedding_model
@@ -1621,19 +1621,19 @@ async function initialize() {
   ]);
   if (results[0].status === "rejected")
     el("provenance-warning").textContent =
-      `定位辅助实验未载入：${results[0].reason.message}`;
+      `定位记录未载入：${results[0].reason.message}`;
   const errors = results
     .slice(1)
     .filter((result) => result.status === "rejected");
   if (errors.length)
     el("nlos-load-status").textContent =
-      `部分识别实验未载入：${errors.map((result) => result.reason.message).join("；")}`;
+      `部分识别结果未载入：${errors.map((result) => result.reason.message).join("；")}`;
   if (!generalizationReport && !currentNlosReport) {
     el("project-badge").textContent = "尚无识别产物";
-    el("project-data-source").textContent = "先生成公开观测实验";
+    el("project-data-source").textContent = "暂无识别数据";
     el("project-models").textContent = "—";
     el("project-scope").textContent =
-      "尚未加载真实卫星识别报告。定位辅助实验可以单独运行，其成绩不作为 NLOS 结果。";
+      "暂无真实卫星识别结果。可以单独查看定位记录；其指标不作为 NLOS 识别成绩。";
   }
 }
 initialize();

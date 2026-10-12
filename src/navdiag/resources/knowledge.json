@@ -11,7 +11,7 @@
     "id": "K2",
     "title": "HDOP 和卫星几何",
     "keywords": ["HDOP", "DOP", "几何", "satellite", "卫星"],
-    "content": "HDOP 描述卫星观测几何对水平位置精度的放大作用。它由定位设计矩阵的几何项计算，不是观测误差本身。较小 HDOP 不保证定位误差小，因为多路径、系统偏差和异常观测仍可能存在。",
+    "content": "HDOP 描述卫星观测几何对水平位置精度的放大作用。它由定位设计矩阵的几何项计算，不是观测误差本身，也不是逐卫星 LOS/NLOS 标签。较小 HDOP 不保证定位误差小，因为多路径、系统偏差和异常观测仍可能存在。小 HDOP 也不是每次实际误差小的必要条件：还需考虑观测误差大小。载噪比和残差可提供分类线索，不能独自保证所有卫星为 LOS。没有联合测量 HDOP 与误差的实验不能证明二者的实际关系。",
     "source_url": "https://gssc.esa.int/navipedia/index.php/Positioning_Error",
     "source_type": "technical_background"
   },
@@ -93,7 +93,7 @@
       "建筑",
       "真值"
     ],
-    "content": "UrbanNav 的参考标签由独立 SPAN 位置、卫星轨道和静态建筑天空掩膜生成，不能称为人工核验的卫星接收真值。位置、地图和质量字段只用于参考标签与审计，不作为模型输入。边界、位置质量、缺少轨道或地图覆盖不满足条件时保留 unknown。unknown 可以提供已观测历史，但不参与监督和计分。评分只代表通过参考检查的样本，必须同时查看标签覆盖率；动态树木、车辆与 LOS 多径未被该标签方法验证。",
+    "content": "UrbanNav 的参考标签由独立 SPAN 位置、卫星轨道和静态建筑天空掩膜生成，不能称为人工核验的卫星接收真值。位置、地图和质量字段只用于参考标签与审计，不作为模型输入。边界、位置质量、缺少轨道或地图覆盖不满足条件时保留 unknown。unknown 可以提供已观测历史，但不参与监督和计分。将 unknown 当成 LOS 会加入未经确认的负标签，改变指标含义；不能无条件断言 Precision 会升高或 Recall 会下降，必须检查标签和预测如何改变。评分只代表通过参考检查的样本，必须同时查看标签覆盖率；动态树木、车辆与 LOS 多径未被该标签方法验证。",
     "source_url": "docs/experiments/urbannav_generalization.md",
     "source_type": "project_method"
   },

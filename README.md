@@ -12,7 +12,7 @@ v0.3 已完成 KLT 九段采集的双协议对比，以及 UrbanNav 三个新城
 
 ![真实遮挡识别与可折叠可视化工作台](docs/images/nlos-workbench.png)
 
-工程检查和研究边界见[项目检查记录](docs/PROJECT_REVIEW.md)。RAG 包含 11 条短笔记、9 份原创文档的 114 段资料和[七篇论文研究摘要](docs/research/reading_list.md)，采用本地 BGE 中文向量与关键词检索，保留来源行号和实验证据。新增相关查询命中 6/8，无关查询返回空结果 5/6；这些是小型手写查询集的检索检查，不代表回答正确率。工具 Agent 可由 LLM 选择工具和改写查询；当前未接联网搜索，真实 GLM 问答质量尚未评测，详见 [RAG 实施记录](docs/RAG_RETRIEVAL.md)。
+工程检查和研究边界见[项目检查记录](docs/PROJECT_REVIEW.md)。RAG 包含 11 条短笔记、9 份原创文档的 114 段资料和[七篇论文研究摘要](docs/research/reading_list.md)，采用本地 BGE 中文向量与关键词检索，保留来源行号和实验证据。新增相关查询命中 6/8，无关查询返回空结果 5/6；这些是小型手写查询集的检索检查，不代表回答正确率。工具 Agent 可由 LLM 选择工具和改写查询；当前未接联网搜索。已完成用户配置的 GLM-5.3 真实问答回归验证，保留失败与修订记录，详见[回答质量检查](docs/experiments/glm_quality.md)和 [RAG 实施记录](docs/RAG_RETRIEVAL.md)。
 
 ## 本地新增：真实遮挡识别
 

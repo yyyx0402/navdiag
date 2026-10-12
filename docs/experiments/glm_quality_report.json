@@ -1,0 +1,3447 @@
+{
+  "model": "glm-5.3",
+  "answer_mode": "evidence",
+  "reviewer_kind": "assistant",
+  "reviewed_at": "2026-10-12T02:22:22.659721+00:00",
+  "scope": "Developer-authored project regression questions; not a blind, representative or independent evaluation.",
+  "rubric": "A case passes when all three criteria are satisfied and no material unsupported extra claim is identified. Core criteria and extra issues are recorded separately.",
+  "limitations": [
+    "One answer per case per recorded revision; no sampling stability estimate.",
+    "Follow-ups used known failure cases and changed prompts/context; they are regression checks, not held-out accuracy.",
+    "Most recent per-case answers are from different revisions, not one complete final run.",
+    "API response transport and citations alone do not establish factual correctness.",
+    "Initial send-time evidence hash was not instrumented; follow-up hashes were checked before every request.",
+    "Only evidence mode was tested, not the multi-round tool Agent or browser flow.",
+    "Test used 8192 output tokens, low reasoning effort and a 120-second timeout in memory; saved profile remains unchanged.",
+    "No vendor price table was applied; cost is not inferred from token counts."
+  ],
+  "rounds": [
+    {
+      "name": "initial",
+      "created_at": "2026-10-12T01:57:48.728756+00:00",
+      "settings": {
+        "output_limit": 8192,
+        "timeout_s": 120,
+        "reasoning_effort": "low"
+      },
+      "system_prompt_sha256": null,
+      "model_requests_attempted": 8,
+      "results": [
+        {
+          "id": "G01",
+          "question": "比较新城区泛化中 RF 和 Transformer：请分别列出冻结 KLT 模型外部测试、UrbanNav 城区互斥的平均 Precision、Recall、F1，并说明这些结果是否证明跨城市泛化。",
+          "answer": "**冻结 KLT 模型外部测试（external_transfer，MK/TST/WP 三区宏平均）**[E1]\n- RF：Precision 0.8107，Recall 0.7995，F1 0.7884\n- Transformer：Precision 0.7567，Recall 0.8409，F1 0.7852\n\n**UrbanNav 城区互斥（district_holdout，六折宏平均）**[E1]\n- RF：Precision 0.7471，Recall 0.8784，F1 0.7852\n- Transformer：Precision 0.6811，Recall 0.8942，F1 0.7489\n\n（Transformer 互斥值亦见项目文档 D09「实际结果」表，与工具数值一致方向 [E2]。）\n\n**是否证明跨城市泛化：不能。** 项目文档明确声明该实验验证的是\"同一城市（香港）中的未见城区，不声称跨城市泛化\" [E2, D09]。工具记录的局限也指出：仅一条驱动/城区、单城市、单种子、无独立驱动置信区间；KLT→UrbanNav 迁移同时改变了地理、采集日期、天线（F9P 分体天线）和参考标签方法（静态建筑图 vs 相机标注），这些因素相互混杂，无法归因 [E1]。\n\n补充观察（非因果结论）：两种协议中 RF 平均 Precision 均更高、Transformer Recall 更高，F1 差异很小（外部测试差约 0.003），不能据此认定稳定赢家；如需检验跨城市能力，需要其他城市的独立采集数据。",
+          "answer_sha256": "f294348dcf101148d0c93e7f65651078526ffad84a76b8360ba48d7a8cf6b958",
+          "context_sha256": "dfb82bcfb2e1e16e106001e12232d3914e44456ad64eb0b50a4e65f60ce1730b",
+          "elapsed_s": 35.28200000000652,
+          "usage": [
+            {
+              "completion_tokens": 376,
+              "prompt_tokens": 17889,
+              "total_tokens": 18265,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "四组模型/协议的数值与当前报告对应，保留指标和平均方式",
+                "verdict": "pass",
+                "reason": "四组共十二个指标均匹配 E1 的 test_macro，保留两种协议的宏平均。"
+              },
+              {
+                "criterion": "指出目标区域都在香港，不能声称跨城市验证",
+                "verdict": "pass",
+                "reason": "明确香港同城，未宣称跨城市。"
+              },
+              {
+                "criterion": "引用真实实验工具，不能引用历史论文分数代替当前数值",
+                "verdict": "pass",
+                "reason": "数值引用 E1，文档解释引用 E2。"
+              }
+            ],
+            "additional_issues": [
+              "末段将两协议的 F1 差异笼统称为很小；实际外部差 0.0032，城区互斥差 0.0363。属于表述不精确，首要数值已正确。"
+            ]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E2",
+              "id": "D09-b776ac5cf66f",
+              "document_id": "D09",
+              "heading": "UrbanNav 未见城区泛化实验",
+              "content": "已实际下载和处理尖沙咀 TST、黄埔 WP、旺角 MK 的公开记录，并完成冻结 KLT 模型外部测试和六个 UrbanNav 城区互斥实验。这里验证的是**同一城市中的未见城区**，不声称跨城市泛化，也不把静态建筑图参考标签称为人工逐卫星真值。代码、数据清单和汇总报告已在本地准备；尚未上传 GitHub。\n\n[结果 JSON](urbannav_generalization_report.json)记录全部模型的 Precision、NLOS Recall、F1、混淆矩阵、阈值和逐区成绩。训练日志、模型与逐卫星预测保存在忽略的 `artifacts/urbannav_generalization`。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 3,
+              "end_line": 6
+            },
+            {
+              "evidence_id": "E2",
+              "id": "K9",
+              "document_id": "K9",
+              "heading": "同域、同城跨区域与跨城市的实验边界",
+              "content": "本项目同域实验按完整采集段留出，训练可以包含测试区域的其他采集。跨区域实验排除目标区域的训练段；UrbanNav 再比较冻结 KLT 模型外部迁移和三城区互斥划分。现有目标区域全部在香港，不能据此声称跨城市能力。区域、日期、天线和标签方法存在混杂。固定 C/N0 规则不训练，当两种协议共享测试观测和标签时，它的成绩必然相同；应直接检查特征分布判断观测到的域差异。",
+              "source_url": "docs/experiments/nlos_domain_audit.md"
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-d2a7c197fc44",
+              "document_id": "D08",
+              "heading": "本次运行结果",
+              "content": "同域测试均值中 MLP F1 最高（0.7612），跨区域 Transformer 最高（0.7557）。两个协议中 RF 的平均 Precision 最高，CNN 的平均 NLOS Recall 最高。按平均验证 F1 选择的模型族分别为 GRU 和 Transformer；同域测试最高的 MLP 没有因测试成绩被重新选中。模型差距较小，尚不足以认定稳定优势。\n\n跨区域没有出现全模型的大幅下降，LR 的平均 F1 甚至略升；KLT3 的多种模型也略升。这里三处区域相邻、接收机相同、输入是同源的信号与几何特征，移除目标区域训练段还改变了日期分布和训练量，验证早停与阈值也随训练模型改变。因此这个结果不能证明跨城市 NLOS 容易泛化，也不能将每个差值都解释为纯区域效应。\n\n各区域的测试 F1 领先者如下（同样仅为观察排名）：\n\n| 目标区域 | 同域 | 跨区域 |\n|---|---|---|\n| KLT1 | GRU 0.7728 | RF 0.7695 |\n| KLT2 | RF 0.7759 | Transformer 0.7654 |",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 64,
+              "end_line": 73
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D09-b577c266f6bf",
+              "document_id": "D09",
+              "heading": "实际结果",
+              "content": "| 模型 | 冻结外部 Precision | 外部 NLOS Recall | 外部 F1 | 城区互斥 Precision | 互斥 NLOS Recall | 互斥 F1 |\n|---|---:|---:|---:|---:|---:|---:|\n| LR | 0.8148 | 0.7235 | 0.7535 | 0.7377 | 0.8017 | 0.7284 |\n| RF | 0.8107 | 0.7995 | 0.7884 | 0.7471 | 0.8784 | 0.7852 |\n| MLP | 0.7506 | 0.8375 | 0.7779 | 0.6867 | 0.8209 | 0.7095 |\n| CNN | 0.7819 | 0.7953 | 0.7771 | 0.6855 | 0.8269 | 0.7152 |\n| LSTM | 0.7695 | 0.7951 | 0.7721 | 0.7043 | 0.8770 | 0.7539 |",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 47,
+              "end_line": 53
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D07-198838d931ca",
+              "document_id": "D07",
+              "heading": "同城区域留出是否构成有用的泛化测试？",
+              "content": "判断：同城未见区域留出是有效但范围有限的实验；旧 KLT 数据对强 C/N0 域偏移的检验偏弱，不能据此推出跨城市可用。新 UrbanNav 三城区体现更明显的经验信号分布差异，仍全部在香港，尚未完成跨城市独立检验。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 3,
+              "end_line": 4
+            }
+          ],
+          "numerical_references": [
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "random_forest",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7253029747,
+                "recall": 0.8195020747,
+                "f1": 0.769530489
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "transformer",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6788959946,
+                "recall": 0.8369294606,
+                "f1": 0.7496747816
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "cn0_rule",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6627956989,
+                "recall": 0.6394190871,
+                "f1": 0.6508975713
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "gru",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7166666667,
+                "recall": 0.8385892116,
+                "f1": 0.7728489484
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7725484091,
+                "recall": 0.7481017204,
+                "f1": 0.7557821744
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7184464036,
+                "recall": 0.8068994993,
+                "f1": 0.7574381315
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7360698808,
+                "recall": 0.7896447578,
+                "f1": 0.7599538313
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7755822439,
+                "recall": 0.7319912255,
+                "f1": 0.7494031724
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.720011194,
+                "recall": 0.7964892452,
+                "f1": 0.7557341292
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7106893032,
+                "recall": 0.8080790249,
+                "f1": 0.7542119902
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8106538579,
+                "recall": 0.7995114413,
+                "f1": 0.7884139465
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7567208259,
+                "recall": 0.8409162149,
+                "f1": 0.7851815799
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7761084,
+                "recall": 0.8183094027,
+                "f1": 0.7856340427
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7470766476,
+                "recall": 0.8784376179,
+                "f1": 0.7851955415
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.681135704,
+                "recall": 0.8942136041,
+                "f1": 0.7489042112
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6956703959,
+                "recall": 0.8860452719,
+                "f1": 0.7512632752
+              }
+            }
+          ]
+        },
+        {
+          "id": "G02",
+          "question": "你能解释为什么 Transformeru 跨区域效果更好吗？",
+          "answer": "先核对前提：跨区域协议下 Transformer 的区域宏平均 F1 确实最高（0.7557，排序第一），但与第二名的差距很小——比 random_forest（0.7494）仅高约 0.006 [E1]。而且这个优势不是均匀的：在 KLT1 上 Transformer 的 F1 低于 RF（0.7510 vs 0.7695），领先主要来自 KLT2 和 KLT3 的召回率优势（+0.100、+0.098），代价是三个区域的 precision 均更低 [E1]。项目文档也明确“模型差距较小，尚不足以认定稳定优势” [E2, D08「本次运行结果」]。\n\n关于“为什么”，现有证据没有因果性解释（`causal_explanation_available: false`）[E1]。只能给几个**假设性**解释，均未经消融验证：\n\n1. **序列建模假设**：Transformer 使用 32 个历史观测的上下文 [E1]，跨区域时目标区域的 C/N0 分布可能有偏移，而依赖时序一致性（如 pr_rate_consistency）的模式可能比纯当前特征更跨区域稳定，从而维持高召回。检验方法：对比只用当前特征的模型（RF）在各区域的错误类型分布，或做去掉历史窗口的消融。\n2. **混杂因素假设**：跨区域协议同时移除了目标区域的训练段，改变了训练量、日期分布和阈值选择 [E2, D08「两种实验与比例」]，Transformer 的排名变化可能部分来自这些协议性因素而非区域泛化能力本身。\n3. **随机性假设**：单一种子、三个相关区域折、无独立置信区间 [E1]，小差距可能不稳定。\n\n重要限制：三处 KLT 区域相邻、同一接收机，跨区域不等于跨城市泛化 [E2, K9]；这也不是统计显著的架构优势结论。若要验证假设 1，需要新的实验（历史窗口消融＋多种子），现有工具数据中没有此类结果。",
+          "answer_sha256": "f63a3520d26b78469589380e3ce0b90d436ae26724a55f4d7fd88de9547b1f2d",
+          "context_sha256": "b42596c8fde8b3e9f544458a892b94e71d8539e8877466aed328405a3c2ccc5c",
+          "elapsed_s": 10.328999999997905,
+          "usage": [
+            {
+              "completion_tokens": 485,
+              "prompt_tokens": 17460,
+              "total_tokens": 17945,
+              "reasoning_tokens": 42
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "先核对更好这一前提，区分协议、平均成绩和单个城区",
+                "verdict": "pass",
+                "reason": "正确识别 KLT cross_region 宏 F1 0.7557/0.7494，区分 KLT1 与其他区域。"
+              },
+              {
+                "criterion": "不把注意力或时间窗口作为已证明的获胜原因",
+                "verdict": "pass",
+                "reason": "明确没有因果解释，序列优势是假设。"
+              },
+              {
+                "criterion": "提出的原因明确属于假设，并说明需要怎样验证",
+                "verdict": "pass",
+                "reason": "提出历史窗口、多种子等未来验证，未声称做过。"
+              }
+            ],
+            "additional_issues": []
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E2",
+              "id": "K9",
+              "document_id": "K9",
+              "heading": "同域、同城跨区域与跨城市的实验边界",
+              "content": "本项目同域实验按完整采集段留出，训练可以包含测试区域的其他采集。跨区域实验排除目标区域的训练段；UrbanNav 再比较冻结 KLT 模型外部迁移和三城区互斥划分。现有目标区域全部在香港，不能据此声称跨城市能力。区域、日期、天线和标签方法存在混杂。固定 C/N0 规则不训练，当两种协议共享测试观测和标签时，它的成绩必然相同；应直接检查特征分布判断观测到的域差异。",
+              "source_url": "docs/experiments/nlos_domain_audit.md"
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-d2a7c197fc44",
+              "document_id": "D08",
+              "heading": "本次运行结果",
+              "content": "同域测试均值中 MLP F1 最高（0.7612），跨区域 Transformer 最高（0.7557）。两个协议中 RF 的平均 Precision 最高，CNN 的平均 NLOS Recall 最高。按平均验证 F1 选择的模型族分别为 GRU 和 Transformer；同域测试最高的 MLP 没有因测试成绩被重新选中。模型差距较小，尚不足以认定稳定优势。\n\n跨区域没有出现全模型的大幅下降，LR 的平均 F1 甚至略升；KLT3 的多种模型也略升。这里三处区域相邻、接收机相同、输入是同源的信号与几何特征，移除目标区域训练段还改变了日期分布和训练量，验证早停与阈值也随训练模型改变。因此这个结果不能证明跨城市 NLOS 容易泛化，也不能将每个差值都解释为纯区域效应。\n\n各区域的测试 F1 领先者如下（同样仅为观察排名）：\n\n| 目标区域 | 同域 | 跨区域 |\n|---|---|---|\n| KLT1 | GRU 0.7728 | RF 0.7695 |\n| KLT2 | RF 0.7759 | Transformer 0.7654 |",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 64,
+              "end_line": 73
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-f83cf72a89a3",
+              "document_id": "D08",
+              "heading": "两种实验与比例",
+              "content": "同域训练覆盖三处区域，包含测试区域的其他完整采集段；跨区域训练和验证仅覆盖另外两处区域，目标区域的非测试采集段也全部排除。每对实验的验证段、测试段、网络参数、种子和训练规则相同。移除目标区域训练段后，跨区域训练样本也减少，因此差值包含区域经验与训练量的共同影响，不能解释为单一因素的因果效应。\n\n| 目标区域 | 同域 train/val/test 历元 | 同域比例 | 跨区域 train/val/test 历元 | 跨区域比例 |\n|---|---|---|---|---|\n| KLT1 | 1,857 / 573 / 421 | 65.1 / 20.1 / 14.8% | 1,470 / 573 / 421 | 59.7 / 23.3 / 17.1% |\n| KLT2 | 1,793 / 588 / 470 | 62.9 / 20.6 / 16.5% | 1,290 / 588 / 470 | 54.9 / 25.0 / 20.0% |",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 27,
+              "end_line": 32
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D07-198838d931ca",
+              "document_id": "D07",
+              "heading": "同城区域留出是否构成有用的泛化测试？",
+              "content": "判断：同城未见区域留出是有效但范围有限的实验；旧 KLT 数据对强 C/N0 域偏移的检验偏弱，不能据此推出跨城市可用。新 UrbanNav 三城区体现更明显的经验信号分布差异，仍全部在香港，尚未完成跨城市独立检验。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 3,
+              "end_line": 4
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D04-001d64f5ed88",
+              "document_id": "D04",
+              "heading": "相同测试段上的固定规则为何不变",
+              "content": "固定规则 `score = (C/N0 < 30)` 不读取训练数据。输入测试观测与参考标签不变，Precision/Recall/F1 就不会变化。因此它能作为简单参照，却不能通过“同域列－跨区域列”判断训练域偏移。训练过的 RF/神经网络会随训练集合变化；不同测试区域的规则成绩也可以不同。",
+              "source_url": "docs/lessons/06_generalization.md",
+              "start_line": 7,
+              "end_line": 8
+            }
+          ],
+          "numerical_references": [
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "random_forest",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7253029747,
+                "recall": 0.8195020747,
+                "f1": 0.769530489
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "transformer",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6788959946,
+                "recall": 0.8369294606,
+                "f1": 0.7496747816
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "cn0_rule",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6627956989,
+                "recall": 0.6394190871,
+                "f1": 0.6508975713
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "gru",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7166666667,
+                "recall": 0.8385892116,
+                "f1": 0.7728489484
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7725484091,
+                "recall": 0.7481017204,
+                "f1": 0.7557821744
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7184464036,
+                "recall": 0.8068994993,
+                "f1": 0.7574381315
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7360698808,
+                "recall": 0.7896447578,
+                "f1": 0.7599538313
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7755822439,
+                "recall": 0.7319912255,
+                "f1": 0.7494031724
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.720011194,
+                "recall": 0.7964892452,
+                "f1": 0.7557341292
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7106893032,
+                "recall": 0.8080790249,
+                "f1": 0.7542119902
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8106538579,
+                "recall": 0.7995114413,
+                "f1": 0.7884139465
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7567208259,
+                "recall": 0.8409162149,
+                "f1": 0.7851815799
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7761084,
+                "recall": 0.8183094027,
+                "f1": 0.7856340427
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7470766476,
+                "recall": 0.8784376179,
+                "f1": 0.7851955415
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.681135704,
+                "recall": 0.8942136041,
+                "f1": 0.7489042112
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6956703959,
+                "recall": 0.8860452719,
+                "f1": 0.7512632752
+              }
+            }
+          ]
+        },
+        {
+          "id": "G03",
+          "question": "HDOP 很小，是否足以证明所有卫星都是 LOS，且位置误差很小？",
+          "answer": "不足以。HDOP 只刻画卫星几何对水平精度的放大作用，由定位设计矩阵的几何项计算，本身不包含观测误差信息；即使 HDOP 很小，多路径、系统偏差和异常观测仍可能造成较大误差 [E2: K2, \"HDOP 和卫星几何\"]。\n\nHDOP 也完全不能证明所有卫星都是 LOS。NLOS 指直达路径被遮挡，接收机仍可能收到较强的反射/绕射信号，因此信号统计（如 C/N0）或几何指标都无法区分 LOS/NLOS；单靠这些统计不能断言 NLOS 根因或 LOS 状态 [E2: D03-8d32ce7b09f8; E2: K3]。\n\n合成数据中定位误差的实际分布也说明了“几何好 ≠ 误差小”：360 个 epoch 下，即使是表现最好的 fixed_filter，中位误差约 2.60 m，但 p95 达 9.87 m；WLS 中位约 4.87 m、p95 约 19.91 m [E1]。误差大于 10 m 也不能反推为 NLOS，定位失准还可能来自几何、时钟、噪声或参考对齐 [E2: D01-e413e4a33edd]。\n\n结论：小 HDOP 只说明几何条件好，是必要但非充分条件；要判断 LOS/NLOS 需逐卫星标签（如 KLT 相机天空掩膜参考）并结合载噪比、残差等线索，且识别 NLOS 也不自动意味着定位改善 [E2: K3]。注意 [E1] 为合成数据的经验基线结果，不代表真实基准。",
+          "answer_sha256": "35bd0f329ffa8f37f1a569b554ce4f1a2d0f4a775eaac0af1582047502c83a8e",
+          "context_sha256": "498e2d3698c993fe429968da21ee8cca0c21d3ba4f1e1ca7c160109fa0f22c56",
+          "elapsed_s": 6.937000000005355,
+          "usage": [
+            {
+              "completion_tokens": 357,
+              "prompt_tokens": 3078,
+              "total_tokens": 3435,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "needs_review",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "说明 HDOP 描述观测几何，而不是 NLOS 标签或观测偏差",
+                "verdict": "pass",
+                "reason": "正确解释几何指标。"
+              },
+              {
+                "criterion": "否定小 HDOP 能保证小误差或全部 LOS",
+                "verdict": "pass",
+                "reason": "否定两个保证。"
+              },
+              {
+                "criterion": "解释多径、NLOS 或系统偏差仍可能影响结果",
+                "verdict": "pass",
+                "reason": "明确多径和偏差仍可存在。"
+              }
+            ],
+            "additional_issues": [
+              "末段称小 HDOP 是误差小的必要条件，错误。",
+              "将可用于统计分类的 C/N0 泛称为无法区分 LOS/NLOS，表述过强。",
+              "引用未同时报告 HDOP 的合成定位数据，不能据此证明 HDOP 与误差的关系。"
+            ]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E2",
+              "id": "K2",
+              "document_id": "K2",
+              "heading": "HDOP 和卫星几何",
+              "content": "HDOP 描述卫星观测几何对水平位置精度的放大作用。它由定位设计矩阵的几何项计算，不是观测误差本身。较小 HDOP 不保证定位误差小，因为多路径、系统偏差和异常观测仍可能存在。",
+              "source_url": "https://gssc.esa.int/navipedia/index.php/Positioning_Error"
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D03-8d32ce7b09f8",
+              "document_id": "D03",
+              "heading": "直达、多径和 NLOS",
+              "content": "LOS 表示卫星到天线的直达路径可用。多径表示还有经建筑、地面等反射的路径；即使直达路径存在，也可能受到多径干扰。NLOS 表示直达路径被阻挡，接收机可能仍收到反射/绕射信号。完全没有跟踪到信号是另一种情况，现有 KLT 表没有相应标签。\n\n假设卫星直接到天线的距离为 r，经过楼面反射的路径比 r 长 30 m。传播时间多出约 100 ns，码伪距也可能带来约 30 m 额外偏差。定位器同时解算位置与接收机钟差，多颗卫星几何还会放大或相互影响误差，因此“伪距偏差 30 m”不等于“水平位置偏差 30 m”。\n\n强反射信号的 C/N0 可能很高；弱 LOS 信号可能很低。所以一个 C/N0 阈值无法稳定分开所有 LOS/NLOS。高楼是可能的遮挡来源，但一条 NLOS 标签本身不能确定是楼、树还是车辆。",
+              "source_url": "docs/lessons/05_nlos_zhang2023.md",
+              "start_line": 7,
+              "end_line": 12
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D01-e413e4a33edd",
+              "document_id": "D01",
+              "heading": "遮挡、信号接收与定位失准标签",
+              "content": "LOS 表示直达路径可见，仍可能收到反射而产生多径。NLOS 表示直达路径被遮挡；观测到的反射信号仍可能很强。完全丢失、未被跟踪的卫星不在观测表中，当前模型无法评估这类不可用事件。定位误差大还可能涉及几何、时钟、噪声或参考对齐，不能用“误差 > 10 m”充当 NLOS 真值。",
+              "source_url": "docs/OBSTRUCTION_LABELS.md",
+              "start_line": 14,
+              "end_line": 15
+            },
+            {
+              "evidence_id": "E2",
+              "id": "K11",
+              "document_id": "K11",
+              "heading": "模型排名与公平比较",
+              "content": "当前五种神经网络使用同一卫星截至当前的历史窗口，LR 和 RF 使用当前观测特征，因此比较的是完整处理流程，不能把差异全部归因于网络结构。全部预处理只拟合训练集，检查点和分类阈值使用验证集；测试排名只是观察结果，不替换验证选中的模型。区域平均指标可能掩盖各区域的上升与下降。一个随机种子和少量独立采集不足以证明某个模型稳定更优，Transformer 也不必然优于随机森林。",
+              "source_url": "docs/MODEL_CARD.md"
+            },
+            {
+              "evidence_id": "E2",
+              "id": "K3",
+              "document_id": "K3",
+              "heading": "多路径与 NLOS 诊断的证据边界",
+              "content": "NLOS 表示直达路径被遮挡，LOS 表示直达路径可见但仍可能含多径。载噪比、残差和跳变只能提供线索；强反射也可能有较高载噪比。应分别记录场景标签、逐卫星 LOS/NLOS 标签和整机定位失准标签。KLT 的相机天空掩膜可以提供 LOS/NLOS 参考标签，但不区分高楼、树木等具体物体。定位误差超过 10 米不等于发生了 NLOS；识别 NLOS 也不自动证明定位改善。",
+              "source_url": "https://github.com/ebhrz/KLTDataset"
+            }
+          ],
+          "numerical_references": []
+        },
+        {
+          "id": "G04",
+          "question": "我们当前的 Transformer 已经完整复现 Zhang 2023 了吗？请指出核心差别。",
+          "answer": "没有完整复现。结论很明确：**不能声称已复现 Zhang 2023**，无论是方法还是作者结果。\n\n**核心差别：**\n\n1. **架构不同**。Zhang 2023 是 Transformer-增强的 LSTM，联合学习 NLOS 检测与伪距误差预测（时空上下文建模）[E2: L01]。而我们当前的 transformer 是独立的 2 层、4 头、宽度 64 的纯 Transformer，仅做单卫星 NLOS 二分类（信号标签 == nlos），输入为同卫星过去/当前 32 次观测的 5 个特征 [E1]。项目文档也明确记录“当前 NavDiag 是单卫星历史分类，没有该论文的完整联合任务，不能称为精确复现” [E2: L01]。\n\n2. **任务范围不同**。论文还包含不确定性预测与状态估计应用，并用 LiDAR 地图标注，在香港与 Aachen 数据上做跨城市评估 [E2: L01]。我们的实验是 KLT 三个近域区域、单一接收机的 in_domain 协议，标签来自鱼眼天空掩膜，测试仅覆盖 1 个 run（1109_KLT1_421）；证据本身也标注“不能声称跨城市/设备泛化” [E1]。\n\n3. **数据集不同**。作者结果（香港 + Aachen）不是我们的测试结果；复现核对文档结论是“可以独立实现论文核心结构并在补齐输入后开展方法复现；当前不能声称完成作者结果复现”，并指出存在数据与代码缺口 [E2: D05]。\n\n**补充说明**：本实验中 transformer 在测试集 F1 为 0.7497，低于 random_forest 的 0.7695 [E1]，但这是我们自己协议下的对比，与 Zhang 2023 的复现程度无关。若要评估“结构复现”是否成立，需要补齐论文的输入特征与联合任务设置后再做对照实验；目前证据不支持任何复现性结论。",
+          "answer_sha256": "d1cfd50ce1f5fd3fac4dd73e01a5150c65a34e57d7978a59f670464520487c33",
+          "context_sha256": "59168a0913de352039033fb3ab6ecde80a377fc588fce04b7d5e3a7d293d72fd",
+          "elapsed_s": 8.562000000005355,
+          "usage": [
+            {
+              "completion_tokens": 441,
+              "prompt_tokens": 5598,
+              "total_tokens": 6039,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "明确没有完成论文模型或结果的精确复现",
+                "verdict": "pass",
+                "reason": "明确没有完整复现方法或作者结果。"
+              },
+              {
+                "criterion": "区分当前单卫星历史分类与论文时空/跨卫星及联合误差任务",
+                "verdict": "pass",
+                "reason": "区分当前单卫星时序分类与原文时空联合任务。"
+              },
+              {
+                "criterion": "不宣称实现了没有出现在项目中的训练头、输入或作者数据",
+                "verdict": "pass",
+                "reason": "未声称实现论文联合误差头或作者数据。"
+              }
+            ],
+            "additional_issues": []
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E2",
+              "id": "D05-106a54a1714c",
+              "document_id": "D05",
+              "heading": "Zhang 2023：方法核对与复现条件",
+              "content": "结论：可以独立实现论文的核心结构并在补齐输入后开展方法复现；当前不能声称完成作者结果复现。用户提供的八页 PDF 已阅读，特征公式、Fig. 3 结构图、Tables I–V 和实验讨论已视觉核对。PDF 结构预检 PASS（仅结构，不代表学术正确性），SHA-256 为 15cf6d88baf4d21e1e8cc9e40d2d52b684eeee60e62470f468209215c9ddbccd。",
+              "source_url": "docs/research/zhang2023_reproduction.md",
+              "start_line": 11,
+              "end_line": 12
+            },
+            {
+              "evidence_id": "E2",
+              "id": "L01",
+              "document_id": "L01",
+              "heading": "Zhang 2023：时空上下文、NLOS 与伪距误差联合学习",
+              "content": "文献方法：Zhang 等将 GNSS 观测作为时空问题处理，用注意力增强 LSTM，同时检测 NLOS 和预测伪距误差；作者在香港及 Aachen 标注数据上评估，并介绍 LiDAR 地图标注与状态估计应用。项目对照：当前 NavDiag 是单卫星历史分类，没有该论文的完整联合任务，不能称为精确复现。作者的实验结论也不是我们项目的测试结果；理解具体结构请结合项目的论文核对文档。",
+              "source_url": "https://arxiv.org/abs/2309.00480v2"
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D05-efdaf541cd98",
+              "document_id": "D05",
+              "heading": "Zhang 2023：方法核对与复现条件",
+              "content": "来源：[论文 arXiv v2](https://arxiv.org/abs/2309.00480v2)，Haoming Zhang、Zhanxin Wang、Heike Vallery，*Learning-based NLOS Detection and Uncertainty Prediction of GNSS Observations with Transformer-Enhanced LSTM Network*。学习解读见[第五课](../lessons/05_nlos_zhang2023.md)。原 PDF 与提取全文不复制到发布仓库。",
+              "source_url": "docs/research/zhang2023_reproduction.md",
+              "start_line": 13,
+              "end_line": 14
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D03-9ba501702615",
+              "document_id": "D03",
+              "heading": "第五课：从 Zhang 2023 理解 NLOS",
+              "content": "先读概念和图，再看公式。本文是对 [Zhang 等 2023 论文](https://arxiv.org/abs/2309.00480v2)的原创学习解读；[复现核对](../research/zhang2023_reproduction.md)说明数据与代码缺口。当前实现还不是该论文复现。",
+              "source_url": "docs/lessons/05_nlos_zhang2023.md",
+              "start_line": 3,
+              "end_line": 4
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-8afa596769ee",
+              "document_id": "D08",
+              "heading": "模型与比较方法",
+              "content": "MLP、1D CNN、LSTM、GRU、Transformer 均使用同一卫星过去及当前的 32 次观测，网络宽度 64、两层、dropout 0.1，AdamW 学习率 0.0005、weight decay 0.01、batch 128；最多训练 30 轮，验证 BCE 早停 patience 6。Transformer 四头；CNN 卷积核 5。完整参数来自 [固定计划](../../config/nlos_protocols.json)和运行前冻结的 `experiment_plan.json`。\n\nLR、RF 和 C/N0 规则使用当前观测特征。RF 固定为 200 棵树、最大深度 12、叶子至少 8 个样本、类别均衡；LR 固定 C=1、类别均衡。这是完整分类器对比，神经网络与树模型的历史输入不同。此前 56 组搜索的获胜参数没有迁移到这次主实验，也没有继续搜索。",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 39,
+              "end_line": 42
+            }
+          ],
+          "numerical_references": [
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "random_forest",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7253029747,
+                "recall": 0.8195020747,
+                "f1": 0.769530489
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "transformer",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6788959946,
+                "recall": 0.8369294606,
+                "f1": 0.7496747816
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "cn0_rule",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6627956989,
+                "recall": 0.6394190871,
+                "f1": 0.6508975713
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "gru",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7166666667,
+                "recall": 0.8385892116,
+                "f1": 0.7728489484
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7725484091,
+                "recall": 0.7481017204,
+                "f1": 0.7557821744
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7184464036,
+                "recall": 0.8068994993,
+                "f1": 0.7574381315
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7360698808,
+                "recall": 0.7896447578,
+                "f1": 0.7599538313
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7755822439,
+                "recall": 0.7319912255,
+                "f1": 0.7494031724
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.720011194,
+                "recall": 0.7964892452,
+                "f1": 0.7557341292
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7106893032,
+                "recall": 0.8080790249,
+                "f1": 0.7542119902
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8106538579,
+                "recall": 0.7995114413,
+                "f1": 0.7884139465
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7567208259,
+                "recall": 0.8409162149,
+                "f1": 0.7851815799
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7761084,
+                "recall": 0.8183094027,
+                "f1": 0.7856340427
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7470766476,
+                "recall": 0.8784376179,
+                "f1": 0.7851955415
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.681135704,
+                "recall": 0.8942136041,
+                "f1": 0.7489042112
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6956703959,
+                "recall": 0.8860452719,
+                "f1": 0.7512632752
+              }
+            }
+          ]
+        },
+        {
+          "id": "G05",
+          "question": "请根据 García Crespillo 等的论文，解释开放天空预归一化和多频分支逻辑回归的作用。我们项目已经实现了吗？",
+          "answer": "根据证据（文献摘要，阅读范围：摘要与引言）[E1: L04]：\n\n**开放天空预归一化的作用**：García Crespillo 等用开放天空数据建立特征的名义（nominal）模型，对各特征做预归一化，以降低不同接收机和天线安装差异带来的偏移。项目文档 D07 也指出该方法需要独立、可靠的开阔场景校准数据，且不能根据目标测试城区的分布重新归一化再称为“未见城市泛化”[E2: D07]。\n\n**多频分支逻辑回归的作用**：论文采用并行分支处理不同频率特征的间歇缺失问题，分类器使用逻辑回归；这是为了在多频信息下保持稳健的分类。文献在指定静态场景报告了检测结果 [E1: L04]。\n\n**我们项目实现情况**：证据显示**没有实现**该方案。项目对照说明“当前五特征与该多频方案不同”，且“不能说明本项目现有逻辑回归已经充分”——即本项目虽有逻辑回归模型，但缺少开放天空预归一化和多频分支结构，其验证结果也不能替代未完成的跨城市实验 [E1: L04]。此外，文献还指出物理预处理、硬件差异处理和多频信息可能比网络复杂度更重要，这属于作者的观点，不是我们的实验结论 [E1: L04]。\n\n局限说明：以上文献信息来自摘要和引言（未读全文），具体实现细节（如归一化公式、分支结构）需查阅论文全文；我无法确认项目代码库中是否另有部分实现，当前工具证据未显示相关实现记录。",
+          "answer_sha256": "b8355e3037d63f6449811ff1734d2082f1ea61a3dbd024f2db4c417a333983a2",
+          "context_sha256": "0827619aeef2dc57ea14cd0e307a3f1553c80f6ed90272655ee8cf5e126cb863",
+          "elapsed_s": 7.844000000011874,
+          "usage": [
+            {
+              "completion_tokens": 346,
+              "prompt_tokens": 3027,
+              "total_tokens": 3373,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": false,
+            "expected_local_guard": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": ["E2"]
+          },
+          "semantic_review": {
+            "status": "needs_review",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "论文来源为 L04 或有同一原始文献支持的段落",
+                "verdict": "partial",
+                "reason": "识别 L04，但 D07 错引为不存在的 E2；本题只有 E1。"
+              },
+              {
+                "criterion": "区分名义特征预归一化、硬件差异与多频特征间歇缺失",
+                "verdict": "pass",
+                "reason": "正确区分名义特征、硬件差异与多频缺失。"
+              },
+              {
+                "criterion": "不把论文方案和验证成绩说成本项目已实现的成果",
+                "verdict": "pass",
+                "reason": "未把作者方案说成本项目已实现结果。"
+              }
+            ],
+            "additional_issues": [
+              "出现不存在的 E2。旧引用检查只匹配 [E1]，漏检 [E2: D07]；修复后的检查能发现。"
+            ]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E1",
+              "id": "L04",
+              "document_id": "L04",
+              "heading": "García Crespillo 等 2023：开放天空预归一化与多频分支",
+              "content": "文献方法：García Crespillo 等用开放天空数据建立名义特征模型，预归一化以降低接收机和天线安装差异；用并行分支处理不同频率特征间歇缺失，分类器采用逻辑回归。论文在指定静态场景报告检测结果。项目边界：这说明物理预处理、硬件差异和多频信息可能比网络复杂度更重要，不说明本项目现有逻辑回归已经充分。当前五特征与该多频方案不同，其验证结果不能替代我们未完成的跨城市实验。",
+              "source_url": "https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1171255/full"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D07-5d060598c3f1",
+              "document_id": "D07",
+              "heading": "文献能够支持什么",
+              "content": "用户提供的 [Zhang 等 2023 论文](https://arxiv.org/abs/2309.00480) Table V 记录 HK/AC 数据的平均 C/N0 为 34/49 dB-Hz，并将分布偏移讨论为域外表现下降的可能原因。文中还有 NLOS 比例、卫星数量和数据来源差异。这是跨数据集观察，不能独立证明“城市因素造成全部 C/N0 差异”，更不能推出“同城一定没有泛化难点”。本报告的中位数也不能与论文的均值直接作同一种统计量比较。\n\n[García Crespillo 等 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10416230/)讨论了卫星仰角、天线增益、安装和接收机跟踪配置对 C/N0 的影响，并提出以开阔场景名义分布预归一化。该方法需要独立、可靠的开阔场景校准数据；当前不能根据目标测试城区的标签或分布重新归一化，再把结果称为未见城市泛化。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 34,
+              "end_line": 37
+            },
+            {
+              "evidence_id": "E1",
+              "id": "L01",
+              "document_id": "L01",
+              "heading": "Zhang 2023：时空上下文、NLOS 与伪距误差联合学习",
+              "content": "文献方法：Zhang 等将 GNSS 观测作为时空问题处理，用注意力增强 LSTM，同时检测 NLOS 和预测伪距误差；作者在香港及 Aachen 标注数据上评估，并介绍 LiDAR 地图标注与状态估计应用。项目对照：当前 NavDiag 是单卫星历史分类，没有该论文的完整联合任务，不能称为精确复现。作者的实验结论也不是我们项目的测试结果；理解具体结构请结合项目的论文核对文档。",
+              "source_url": "https://arxiv.org/abs/2309.00480v2"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D08-30d20e577d28",
+              "document_id": "D08",
+              "heading": "复现",
+              "content": "计划、数据校验和、实现文件校验和和参数先冻结，再运行六个实验。两个独立进程只负责并行执行固定实验，彼此隔离随机种子；不是调参。已完成的同一计划可以续跑，发生数据、实现或配置变化时需要新的产物目录。数据、外部代码和模型文件继续留在本地，当前不上传 GitHub。",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 89,
+              "end_line": 89
+            },
+            {
+              "evidence_id": "E1",
+              "id": "L05",
+              "document_id": "L05",
+              "heading": "Grinsztajn 等 2022：表格数据的树模型与神经网络归纳偏置",
+              "content": "文献观察：Grinsztajn 等在多个标准表格数据集上比较树模型和深度模型，发现树模型在其设定下仍很有竞争力，并分析无关特征、数据坐标方向与不规则函数等归纳偏置。项目边界：它为 RF 强于部分简单网络提供通用背景，不是 GNSS NLOS 实验，也没有证明随机森林永远优于 Transformer。当前卫星时序、标签、区域划分与该基准不同，具体排名仍应读取项目报告。",
+              "source_url": "https://arxiv.org/abs/2207.08815v1"
+            }
+          ],
+          "numerical_references": []
+        },
+        {
+          "id": "G06",
+          "question": "请给出本项目在北京和上海进行跨城市测试的 F1，以及各自的 95% 置信区间。",
+          "answer": "问题前提不成立：本项目**没有在北京和上海进行跨城市测试**，因此不存在这两地的 F1 或 95% 置信区间。\n\n现有证据显示：\n\n1. 数据范围：所有目标区域均在香港。同域/跨区域实验使用的是相邻的 KLT1–KLT3 三城区，同接收机、同标签方法（鱼眼天空掩模），属于同城范围 [E1]。UrbanNav 泛化实验覆盖的也是香港城区（如 WHC/WP、Mong Kok/MK 等），项目文档明确指出“现有目标区域全部在香港，不能据此声称跨城市能力”，且“当前没有独立驾驶重复，也没有可支持跨城市或显著性结论的置信区间” [E2, K9 与 D09]。\n2. 关于置信区间：KLT 实验的评估局限中也明确记录“未估计独立驾驶的置信区间” [E1]。因此即使对于已有的香港实验，95% 置信区间也不可用，我不应自行编造。\n\n可供参考的实际记录值（香港，非北京/上海）：同域测试中按验证 F1 选择的 GRU 在 KLT1 测试 F1 为 0.7728 [E1]；UrbanNav 外部迁移中 MK 的 RF F1 为 0.7885、Transformer 0.8103 等 [E2, D09]——这些均不涉及北京或上海。\n\n若要真正回答跨城市问题，需要补充：北京与上海的原始观测、独立的 NLOS 参考标签、冻结的源模型/预处理/阈值，以及多趟独立驾驶以支持置信区间估计 [E2, D07]。当前证据无法支持该结论。",
+          "answer_sha256": "a07b9f4e070296e3364aa15b38a28624c425c170605e4c33e2dd2ff047af01e3",
+          "context_sha256": "f6b7b9ccdc9af9652c6db76d678c1f886ffdf78ba9f527f67326134cc8f48e19",
+          "elapsed_s": 9.171000000002095,
+          "usage": [
+            {
+              "completion_tokens": 364,
+              "prompt_tokens": 11005,
+              "total_tokens": 11369,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "明确没有北京和上海的项目测试依据",
+                "verdict": "pass",
+                "reason": "明确没有北京和上海项目测试。"
+              },
+              {
+                "criterion": "不编造 F1、置信区间、样本量或显著性",
+                "verdict": "pass",
+                "reason": "未编造这两城 F1 或置信区间。"
+              },
+              {
+                "criterion": "可以说明已有香港区域实验，但不能替换成要求的城市成绩",
+                "verdict": "pass",
+                "reason": "香港指标保留地域边界。"
+              }
+            ],
+            "additional_issues": [
+              "额外介绍香港区域时写了 WHC/WP，WHC 不是此项目的城区代号；应使用 WP（黄埔）。不影响拒绝编造两城数据的主要结论。"
+            ]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E2",
+              "id": "K9",
+              "document_id": "K9",
+              "heading": "同域、同城跨区域与跨城市的实验边界",
+              "content": "本项目同域实验按完整采集段留出，训练可以包含测试区域的其他采集。跨区域实验排除目标区域的训练段；UrbanNav 再比较冻结 KLT 模型外部迁移和三城区互斥划分。现有目标区域全部在香港，不能据此声称跨城市能力。区域、日期、天线和标签方法存在混杂。固定 C/N0 规则不训练，当两种协议共享测试观测和标签时，它的成绩必然相同；应直接检查特征分布判断观测到的域差异。",
+              "source_url": "docs/experiments/nlos_domain_audit.md"
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D07-198838d931ca",
+              "document_id": "D07",
+              "heading": "同城区域留出是否构成有用的泛化测试？",
+              "content": "判断：同城未见区域留出是有效但范围有限的实验；旧 KLT 数据对强 C/N0 域偏移的检验偏弱，不能据此推出跨城市可用。新 UrbanNav 三城区体现更明显的经验信号分布差异，仍全部在香港，尚未完成跨城市独立检验。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 3,
+              "end_line": 4
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-d2a7c197fc44",
+              "document_id": "D08",
+              "heading": "本次运行结果",
+              "content": "同域测试均值中 MLP F1 最高（0.7612），跨区域 Transformer 最高（0.7557）。两个协议中 RF 的平均 Precision 最高，CNN 的平均 NLOS Recall 最高。按平均验证 F1 选择的模型族分别为 GRU 和 Transformer；同域测试最高的 MLP 没有因测试成绩被重新选中。模型差距较小，尚不足以认定稳定优势。\n\n跨区域没有出现全模型的大幅下降，LR 的平均 F1 甚至略升；KLT3 的多种模型也略升。这里三处区域相邻、接收机相同、输入是同源的信号与几何特征，移除目标区域训练段还改变了日期分布和训练量，验证早停与阈值也随训练模型改变。因此这个结果不能证明跨城市 NLOS 容易泛化，也不能将每个差值都解释为纯区域效应。\n\n各区域的测试 F1 领先者如下（同样仅为观察排名）：\n\n| 目标区域 | 同域 | 跨区域 |\n|---|---|---|\n| KLT1 | GRU 0.7728 | RF 0.7695 |\n| KLT2 | RF 0.7759 | Transformer 0.7654 |",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 64,
+              "end_line": 73
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D07-029a6f18d2f4",
+              "document_id": "D07",
+              "heading": "对项目的重新定位",
+              "content": "1. KLT 配对实验保留为小尺度、较弱域偏移的开发比较；验证区域经验对同一固定测试段的影响，训练量变化也是混杂因素。\n2. UrbanNav 保留为真实未见城区测试：完整城区互斥、源验证阈值固定、逐城区成绩与标签覆盖率共同报告。它能检查同城迁移，而非跨城市结论。\n3. 真正跨城市验证仍未完成，需要不同城市的原始观测和独立 NLOS 参考，明确接收机/天线/频率及标签方法。应使用冻结的源模型、源预处理与源阈值，另报未知标签覆盖和 LOS/NLOS 条件分布；不能只凭来自不同城市的位置真值替代 NLOS 标注。\n\n实验有效性取决于划分和证据能否回答所声明的问题，性能下降不是有效泛化实验的必要条件。现有结果不支持“所有城市泛化良好”，也不支持“同城留出毫无意义”。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 42,
+              "end_line": 46
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D09-369f58ea053e",
+              "document_id": "D09",
+              "heading": "实际结果",
+              "content": "| WP | 0.8583 | 0.8397 | 0.8720 | 0.8103 |\n| MK | 0.7885 | 0.8495 | 0.8567 | 0.8786 |\n\n整体 F1 是 RF 领先；旺角则 Transformer 的 F1 更高。不能只看总平均认为各地区一样，也不能把一个地区的领先归纳为稳定的模型优势。旺角只评估约五分之一的原始卫星记录，筛选对评价对象有明显影响。\n\n**泛化测试不要求性能一定下降。**划分是否有效取决于目标区域是否留出、标签是否独立、模型和阈值是否没有使用目标测试信息，而不是能否观察到一个预期差值。跨数据集外部得分还受天线、标签方法、日期、NLOS 比例和未知标签排除影响，因此外部 F1 高于旧 KLT3 成绩不等于更好的普适泛化。UrbanNav 内部保持同接收机和同地图标签方法，仍无法分离城区与采集日期效应。当前没有独立驾驶重复，也没有可支持跨城市或显著性结论的置信区间。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 63,
+              "end_line": 69
+            }
+          ],
+          "numerical_references": [
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "random_forest",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7253029747,
+                "recall": 0.8195020747,
+                "f1": 0.769530489
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "transformer",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6788959946,
+                "recall": 0.8369294606,
+                "f1": 0.7496747816
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "cn0_rule",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6627956989,
+                "recall": 0.6394190871,
+                "f1": 0.6508975713
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "gru",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7166666667,
+                "recall": 0.8385892116,
+                "f1": 0.7728489484
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7725484091,
+                "recall": 0.7481017204,
+                "f1": 0.7557821744
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7184464036,
+                "recall": 0.8068994993,
+                "f1": 0.7574381315
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7360698808,
+                "recall": 0.7896447578,
+                "f1": 0.7599538313
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7755822439,
+                "recall": 0.7319912255,
+                "f1": 0.7494031724
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.720011194,
+                "recall": 0.7964892452,
+                "f1": 0.7557341292
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7106893032,
+                "recall": 0.8080790249,
+                "f1": 0.7542119902
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8106538579,
+                "recall": 0.7995114413,
+                "f1": 0.7884139465
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7567208259,
+                "recall": 0.8409162149,
+                "f1": 0.7851815799
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7761084,
+                "recall": 0.8183094027,
+                "f1": 0.7856340427
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7470766476,
+                "recall": 0.8784376179,
+                "f1": 0.7851955415
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.681135704,
+                "recall": 0.8942136041,
+                "f1": 0.7489042112
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6956703959,
+                "recall": 0.8860452719,
+                "f1": 0.7512632752
+              }
+            }
+          ]
+        },
+        {
+          "id": "G07",
+          "question": "UrbanNav 的 unknown 可以当作 LOS 计分吗？为什么还需要报告标签覆盖率，这些参考标签是否都是人工核验的接收真值？",
+          "answer": "不可以。unknown 标签不能当作 LOS 参与计分：文档明确说明 unknown 仅提供“已观测历史”，但不参与监督和计分；它在边界、位置质量、缺少轨道或地图覆盖不满足条件时被保留，并非被确认为 LOS [E1: K10]。把 unknown 计为 LOS 会人为抬高 Precision 并扭曲 NLOS Recall。\n\n报告标签覆盖率的原因是：所有评分指标只代表“通过参考检查的样本”，并非整条路线；标签覆盖率较低时，不能声称评估了全部路线上的 NLOS [E1: K10；D09 “标签和特征分开”]。因此实验规程要求逐城区成绩与标签覆盖率共同报告 [E1: D07]。\n\n这些参考标签不是人工核验的接收真值。它们由独立 SPAN 位置、卫星轨道和静态建筑天空掩膜自动生成，只能表达静态建筑几何可见性，未覆盖动态树木、车辆，LOS 样本中仍可能含多径，且实验也未将其称为人工逐卫星真值 [E1: K10；D09]。",
+          "answer_sha256": "12b8560881c8eda0e403535653e4a5d4bcab5b0a276633d3d24097a76600812e",
+          "context_sha256": "4e6383a2a977587cbedff5c2cc1cdf591602a5f8e17ca974998e42903f4ce7bf",
+          "elapsed_s": 5.98399999999674,
+          "usage": [
+            {
+              "completion_tokens": 231,
+              "prompt_tokens": 2719,
+              "total_tokens": 2950,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": false,
+            "expected_local_guard": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "needs_review",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "unknown 不作为 LOS 标签，且不参与监督和计分",
+                "verdict": "pass",
+                "reason": "unknown 不作为 LOS，不参与监督和计分。"
+              },
+              {
+                "criterion": "说明静态建筑与独立参考位置的几何标签方法",
+                "verdict": "pass",
+                "reason": "正确说明独立 SPAN 位置与静态建筑图。"
+              },
+              {
+                "criterion": "说明低覆盖率限制评分适用范围，不能称全部人工核验的接收真值",
+                "verdict": "pass",
+                "reason": "明确非人工接收真值及覆盖率限制。"
+              }
+            ],
+            "additional_issues": [
+              "错误断言 unknown 当 LOS 会人为抬高 Precision；固定原预测时增加未经确认的负标签并不能保证该方向。"
+            ]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E1",
+              "id": "K10",
+              "document_id": "K10",
+              "heading": "UrbanNav 静态建筑参考标签与 unknown",
+              "content": "UrbanNav 的参考标签由独立 SPAN 位置、卫星轨道和静态建筑天空掩膜生成，不能称为人工核验的卫星接收真值。位置、地图和质量字段只用于参考标签与审计，不作为模型输入。边界、位置质量、缺少轨道或地图覆盖不满足条件时保留 unknown。unknown 可以提供已观测历史，但不参与监督和计分。评分只代表通过参考检查的样本，必须同时查看标签覆盖率；动态树木、车辆与 LOS 多径未被该标签方法验证。",
+              "source_url": "docs/experiments/urbannav_generalization.md"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D09-f55b314e330b",
+              "document_id": "D09",
+              "heading": "标签和特征分开",
+              "content": "参考位置、建筑图、方位角、质量、区域 ID 和标签包络均不作为模型输入；模型预处理只拟合训练侧。未跟踪的卫星不在观测表中。这些标签只能表达静态建筑几何可见性，无法覆盖临时车辆、树木或复杂建筑模型误差，LOS 仍可含多径。标签覆盖率较低意味着本报告不能声称评估了全部路线上的 NLOS。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 35,
+              "end_line": 36
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D07-029a6f18d2f4",
+              "document_id": "D07",
+              "heading": "对项目的重新定位",
+              "content": "1. KLT 配对实验保留为小尺度、较弱域偏移的开发比较；验证区域经验对同一固定测试段的影响，训练量变化也是混杂因素。\n2. UrbanNav 保留为真实未见城区测试：完整城区互斥、源验证阈值固定、逐城区成绩与标签覆盖率共同报告。它能检查同城迁移，而非跨城市结论。\n3. 真正跨城市验证仍未完成，需要不同城市的原始观测和独立 NLOS 参考，明确接收机/天线/频率及标签方法。应使用冻结的源模型、源预处理与源阈值，另报未知标签覆盖和 LOS/NLOS 条件分布；不能只凭来自不同城市的位置真值替代 NLOS 标注。\n\n实验有效性取决于划分和证据能否回答所声明的问题，性能下降不是有效泛化实验的必要条件。现有结果不支持“所有城市泛化良好”，也不支持“同城留出毫无意义”。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 42,
+              "end_line": 46
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D01-d994c31c657d",
+              "document_id": "D01",
+              "heading": "遮挡、信号接收与定位失准标签",
+              "content": "这三层标签回答不同的问题，必须分别保存。本地开发版新增了真实 KLT 数据上的卫星级 LOS/NLOS 识别，尚未实现高楼/树木/车辆的物体分类。\n\n| 层次 | 样本单位 | 字段与取值 | 需要的参考证据 | 当前状态 |\n| --- | --- | --- | --- | --- |\n| 环境场景 | 行程片段 | scene_label：open_sky / urban_canyon / tree_cover / overpass / tunnel / urban_unspecified / unknown | 同步影像、地图或数据集场景标注 | KLT 仅有 urban_unspecified；未标注具体场景类型 |\n| 信号接收 | 时间 × 卫星 | signal_label：los / nlos / unknown | 鱼眼相机天空掩膜、LiDAR 天空掩膜或独立数据集标注 | KLT 相机 LOS/NLOS 标签已接入 |",
+              "source_url": "docs/OBSTRUCTION_LABELS.md",
+              "start_line": 3,
+              "end_line": 8
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D09-b776ac5cf66f",
+              "document_id": "D09",
+              "heading": "UrbanNav 未见城区泛化实验",
+              "content": "已实际下载和处理尖沙咀 TST、黄埔 WP、旺角 MK 的公开记录，并完成冻结 KLT 模型外部测试和六个 UrbanNav 城区互斥实验。这里验证的是**同一城市中的未见城区**，不声称跨城市泛化，也不把静态建筑图参考标签称为人工逐卫星真值。代码、数据清单和汇总报告已在本地准备；尚未上传 GitHub。\n\n[结果 JSON](urbannav_generalization_report.json)记录全部模型的 Precision、NLOS Recall、F1、混淆矩阵、阈值和逐区成绩。训练日志、模型与逐卫星预测保存在忽略的 `artifacts/urbannav_generalization`。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 3,
+              "end_line": 6
+            }
+          ],
+          "numerical_references": []
+        },
+        {
+          "id": "G08",
+          "question": "同域和跨区域的 C/N0 固定规则成绩一样，是否说明训练区域的选择毫无影响？",
+          "answer": "不能这样推论。C/N0 固定规则（C/N0 < 30 dB-Hz）没有训练参数，同域和跨区域协议又使用完全相同的测试采集段和参考标签，因此预测、混淆矩阵和分数必然完全一致 [E1, E2-D07「固定规则成绩相同的原因」]。这是确定性的协议结果，不是训练区域无关或区域间无域偏移的证据。\n\n数据上可以直接验证：两列的 cn0_rule 三区域逐区成绩（KLT1 F1 0.6509、KLT2 0.6074、KLT3 0.6227）和宏平均（F1 0.6270）逐项相同 [E1]，工具的 fixed_rule_warning 也明确说明\"identical paired test observations and labels require identical rule scores, not evidence of no domain shift\" [E1]。\n\n相反的证据还表明训练区域确实有影响：跨区域时训练样本量更少且缺少目标区域经验，文档指出同域—跨区域差值混杂了区域经验与训练量两个因素，不能作单一因果解释 [E2-D08]；而且规则本身在不同目标区域成绩确实不同，UrbanNav 三个新城区的 F1 分别为 TST 0.6468、WP 0.8353、MK 0.7135 [E1, E2-D07]。\n\n若要评估区域分布差异，应比较各区域特征（C/N0、仰角等）分布或训练过模型的同域/跨区域差值，而非这个不经训练的规则在共享测试段上的列间差值 [E2-D04, K9]。",
+          "answer_sha256": "eed464044972af59e7c436e3fd777c0490c412747871e4173cb439aa0a196f96",
+          "context_sha256": "5066d18fd0bf856ff311a1021f5b2fca2be4719445f194325568031d17e3d760",
+          "elapsed_s": 10.59399999998277,
+          "usage": [
+            {
+              "completion_tokens": 360,
+              "prompt_tokens": 11437,
+              "total_tokens": 11797,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "needs_review",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "说明成对协议共享测试观测和标签，固定规则不训练",
+                "verdict": "pass",
+                "reason": "正确说明共享测试观测和无训练固定规则。"
+              },
+              {
+                "criterion": "不据此否定训练区域对学习模型的影响",
+                "verdict": "partial",
+                "reason": "拒绝毫无影响结论，但又称证据表明训练区域确实有影响，超出混杂协议能归因的范围。"
+              },
+              {
+                "criterion": "指出需要检查特征分布、独立采集及混杂因素",
+                "verdict": "pass",
+                "reason": "建议特征分布检查，说明训练量混杂。"
+              }
+            ],
+            "additional_issues": [
+              "不能用分数差异或混杂的协议差值证明单一训练区域因素的效应。"
+            ]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E2",
+              "id": "D04-001d64f5ed88",
+              "document_id": "D04",
+              "heading": "相同测试段上的固定规则为何不变",
+              "content": "固定规则 `score = (C/N0 < 30)` 不读取训练数据。输入测试观测与参考标签不变，Precision/Recall/F1 就不会变化。因此它能作为简单参照，却不能通过“同域列－跨区域列”判断训练域偏移。训练过的 RF/神经网络会随训练集合变化；不同测试区域的规则成绩也可以不同。",
+              "source_url": "docs/lessons/06_generalization.md",
+              "start_line": 7,
+              "end_line": 8
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D07-1d47f10f250a",
+              "document_id": "D07",
+              "heading": "固定规则成绩相同的原因",
+              "content": "KLT 同域/跨区域配对使用完全相同的测试采集段。`C/N0 < 30 dB-Hz` 规则没有训练参数，因此即使训练集合改变，测试预测、标签、混淆矩阵和成绩都不会改变。这是确定性的协议结果，不是区域之间信号分布相同的证据。UrbanNav 外部/城区互斥两列的规则也因使用相同三个目标采集段而一样。\n\n比较区域分布应检查不同区域的观测，而不是这个不经过训练的模型在共享测试段上的两列差值。固定规则仍适合作为物理直觉基线：在新 UrbanNav 不同目标区，其 F1 分别是 TST 0.6468、WP 0.8353、MK 0.7135，确实不相同。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 7,
+              "end_line": 10
+            },
+            {
+              "evidence_id": "E2",
+              "id": "K9",
+              "document_id": "K9",
+              "heading": "同域、同城跨区域与跨城市的实验边界",
+              "content": "本项目同域实验按完整采集段留出，训练可以包含测试区域的其他采集。跨区域实验排除目标区域的训练段；UrbanNav 再比较冻结 KLT 模型外部迁移和三城区互斥划分。现有目标区域全部在香港，不能据此声称跨城市能力。区域、日期、天线和标签方法存在混杂。固定 C/N0 规则不训练，当两种协议共享测试观测和标签时，它的成绩必然相同；应直接检查特征分布判断观测到的域差异。",
+              "source_url": "docs/experiments/nlos_domain_audit.md"
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-f83cf72a89a3",
+              "document_id": "D08",
+              "heading": "两种实验与比例",
+              "content": "同域训练覆盖三处区域，包含测试区域的其他完整采集段；跨区域训练和验证仅覆盖另外两处区域，目标区域的非测试采集段也全部排除。每对实验的验证段、测试段、网络参数、种子和训练规则相同。移除目标区域训练段后，跨区域训练样本也减少，因此差值包含区域经验与训练量的共同影响，不能解释为单一因素的因果效应。\n\n| 目标区域 | 同域 train/val/test 历元 | 同域比例 | 跨区域 train/val/test 历元 | 跨区域比例 |\n|---|---|---|---|---|\n| KLT1 | 1,857 / 573 / 421 | 65.1 / 20.1 / 14.8% | 1,470 / 573 / 421 | 59.7 / 23.3 / 17.1% |\n| KLT2 | 1,793 / 588 / 470 | 62.9 / 20.6 / 16.5% | 1,290 / 588 / 470 | 54.9 / 25.0 / 20.0% |",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 27,
+              "end_line": 32
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-269dd601ea9a",
+              "document_id": "D08",
+              "heading": "同域与跨区域 NLOS 实验",
+              "content": "目的：比较相同测试采集段上，不同模型在“训练见过该区域的其他采集段”和“训练完全没见过该区域”两种条件下的表现。暂停超参数搜索，使用原始固定默认配置；分类阈值和早停检查点仍只由验证集决定。\n\n六个固定参数实验已完成。完整训练与逐卫星预测保存在本地 `artifacts/klt_protocols`，可公开的结果摘要见 [结果 JSON](nlos_protocols_report.json)。",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 3,
+              "end_line": 6
+            }
+          ],
+          "numerical_references": [
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "random_forest",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7253029747,
+                "recall": 0.8195020747,
+                "f1": 0.769530489
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "transformer",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6788959946,
+                "recall": 0.8369294606,
+                "f1": 0.7496747816
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "cn0_rule",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6627956989,
+                "recall": 0.6394190871,
+                "f1": 0.6508975713
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "gru",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7166666667,
+                "recall": 0.8385892116,
+                "f1": 0.7728489484
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7725484091,
+                "recall": 0.7481017204,
+                "f1": 0.7557821744
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7184464036,
+                "recall": 0.8068994993,
+                "f1": 0.7574381315
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7360698808,
+                "recall": 0.7896447578,
+                "f1": 0.7599538313
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7755822439,
+                "recall": 0.7319912255,
+                "f1": 0.7494031724
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.720011194,
+                "recall": 0.7964892452,
+                "f1": 0.7557341292
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7106893032,
+                "recall": 0.8080790249,
+                "f1": 0.7542119902
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8106538579,
+                "recall": 0.7995114413,
+                "f1": 0.7884139465
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7567208259,
+                "recall": 0.8409162149,
+                "f1": 0.7851815799
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7761084,
+                "recall": 0.8183094027,
+                "f1": 0.7856340427
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7470766476,
+                "recall": 0.8784376179,
+                "f1": 0.7851955415
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.681135704,
+                "recall": 0.8942136041,
+                "f1": 0.7489042112
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6956703959,
+                "recall": 0.8860452719,
+                "f1": 0.7512632752
+              }
+            }
+          ]
+        },
+        {
+          "id": "G09",
+          "question": "苹果派怎么烤？",
+          "answer": "当前项目资料中没有找到足以回答这个问题的依据。可以询问 GNSS、LOS/NLOS、项目模型对比、数据划分或实验结果；也可以补充具体术语和场景。 [E1]",
+          "answer_sha256": "6146b23ba5405fdcf5608170dd43114060e12b3b50543a581792ad2eac8483d5",
+          "context_sha256": "90f2fd39aff9730b5aef255ba2705c5e9a0b74fc2048289ff5f3bce49b184b4e",
+          "elapsed_s": 0.0,
+          "usage": [],
+          "generation_skipped": true,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "说明项目资料没有相关依据",
+                "verdict": "pass",
+                "reason": "清楚提示没有依据。"
+              },
+              {
+                "criterion": "不返回不相关行程指标",
+                "verdict": "pass",
+                "reason": "没有不相关行程指标。"
+              },
+              {
+                "criterion": "标记未调用模型 API；这一题不计入真实 GLM 回答质量分母",
+                "verdict": "pass",
+                "reason": "生成跳过且没有 usage，整轮八次调用已分配给 G01–G08；本题为本地保护。"
+              }
+            ],
+            "additional_issues": []
+          },
+          "evidence_sources": [],
+          "numerical_references": []
+        }
+      ],
+      "review_summary": {
+        "actual_model_cases": 8,
+        "passed_cases": 4,
+        "needs_review": 4,
+        "local_guard_cases": 1
+      }
+    },
+    {
+      "name": "targeted",
+      "created_at": "2026-10-12T02:10:40.769609+00:00",
+      "settings": {
+        "output_limit": 8192,
+        "timeout_s": 120,
+        "reasoning_effort": "low"
+      },
+      "system_prompt_sha256": "d27a514aa2fd688fc217fe6f8d7bdbf3616580934a393a7b1e0c719e8c87721d",
+      "model_requests_attempted": 6,
+      "results": [
+        {
+          "id": "G01",
+          "question": "比较新城区泛化中 RF 和 Transformer：请分别列出冻结 KLT 模型外部测试、UrbanNav 城区互斥的平均 Precision、Recall、F1，并说明这些结果是否证明跨城市泛化。",
+          "answer": "**冻结 KLT 模型外部测试（KLT→UrbanNav，三区宏平均，阈值冻结自源验证）** [E1]：\n- RF：Precision 0.8107，Recall 0.7995，F1 0.7884\n- Transformer：Precision 0.7567，Recall 0.8409，F1 0.7852\n\n**UrbanNav 城区互斥（六折方向汇总，area macro）** [E1]：\n- RF：Precision 0.7471，Recall 0.8784，F1 0.7852\n- Transformer：Precision 0.6811，Recall 0.8942，F1 0.7489\n\n两种协议下 RF 的平均 Precision 均更高，Transformer 偏向高 Recall；宏 F1 在外部迁移上两者接近（差约 0.003），城区互斥上 RF 高约 0.036，但均为单种子、无独立置信区间，不能据此认定稳定赢家 [E1]。\n\n**是否证明跨城市泛化：不能。** 项目文档明确声明这些实验验证的是\"同一城市（香港）中的未见城区\"，不声称跨城市泛化；所有目标区域均在香港，且 KLT→UrbanNav 迁移同时改变了地理、采集日期、天线（F9P 分体天线）和参考标签方法（静态建筑图 vs 相机标注），存在混杂；城区互斥内也有区域与日期混杂，六个方向复用三条采集，并非独立数据集 [E1][E2]（文档 D09「UrbanNav 未见城区泛化实验」、D07「同城区域留出是否构成有用的泛化测试？」）。\n\n补充限制：MK 区标签覆盖率仅约 0.199，且此分类结果未与任何定位改进挂钩 [E1]。要验证跨城市泛化，需要另一座城市的独立采集与标签（目前证据中不存在）。",
+          "answer_sha256": "47467d9df326a6c881a5af57970faf73e0b7bf5f10cd14c69d5b57b58ebdf0c7",
+          "context_sha256": "d365ccda8718a917ca74c8bb5f073233e4acd48f4b2e3b4d28ad4a879d93b653",
+          "elapsed_s": 8.25,
+          "usage": [
+            {
+              "completion_tokens": 437,
+              "prompt_tokens": 18032,
+              "total_tokens": 18469,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true,
+            "frozen_context_sent": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "四组模型/协议的数值与当前报告对应，保留指标和平均方式",
+                "verdict": "pass",
+                "reason": "十二个指标均匹配 E1，分别描述 0.003 与 0.036 的 F1 差值。"
+              },
+              {
+                "criterion": "指出目标区域都在香港，不能声称跨城市验证",
+                "verdict": "pass",
+                "reason": "明确不能证明跨城市。"
+              },
+              {
+                "criterion": "引用真实实验工具，不能引用历史论文分数代替当前数值",
+                "verdict": "pass",
+                "reason": "引用两个真实证据块。"
+              }
+            ],
+            "additional_issues": []
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E2",
+              "id": "D09-b776ac5cf66f",
+              "document_id": "D09",
+              "heading": "UrbanNav 未见城区泛化实验",
+              "content": "已实际下载和处理尖沙咀 TST、黄埔 WP、旺角 MK 的公开记录，并完成冻结 KLT 模型外部测试和六个 UrbanNav 城区互斥实验。这里验证的是**同一城市中的未见城区**，不声称跨城市泛化，也不把静态建筑图参考标签称为人工逐卫星真值。代码、数据清单和汇总报告已在本地准备；尚未上传 GitHub。\n\n[结果 JSON](urbannav_generalization_report.json)记录全部模型的 Precision、NLOS Recall、F1、混淆矩阵、阈值和逐区成绩。训练日志、模型与逐卫星预测保存在忽略的 `artifacts/urbannav_generalization`。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 3,
+              "end_line": 6
+            },
+            {
+              "evidence_id": "E2",
+              "id": "K9",
+              "document_id": "K9",
+              "heading": "同域、同城跨区域与跨城市的实验边界",
+              "content": "本项目同域实验按完整采集段留出，训练可以包含测试区域的其他采集。跨区域实验排除目标区域的训练段；UrbanNav 再比较冻结 KLT 模型外部迁移和三城区互斥划分。现有目标区域全部在香港，不能据此声称跨城市能力。区域、日期、天线和标签方法存在混杂。固定 C/N0 规则不训练，当两种协议共享测试观测和标签时，它的成绩必然相同；应直接检查特征分布判断观测到的域差异。",
+              "source_url": "docs/experiments/nlos_domain_audit.md"
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-d2a7c197fc44",
+              "document_id": "D08",
+              "heading": "本次运行结果",
+              "content": "同域测试均值中 MLP F1 最高（0.7612），跨区域 Transformer 最高（0.7557）。两个协议中 RF 的平均 Precision 最高，CNN 的平均 NLOS Recall 最高。按平均验证 F1 选择的模型族分别为 GRU 和 Transformer；同域测试最高的 MLP 没有因测试成绩被重新选中。模型差距较小，尚不足以认定稳定优势。\n\n跨区域没有出现全模型的大幅下降，LR 的平均 F1 甚至略升；KLT3 的多种模型也略升。这里三处区域相邻、接收机相同、输入是同源的信号与几何特征，移除目标区域训练段还改变了日期分布和训练量，验证早停与阈值也随训练模型改变。因此这个结果不能证明跨城市 NLOS 容易泛化，也不能将每个差值都解释为纯区域效应。\n\n各区域的测试 F1 领先者如下（同样仅为观察排名）：\n\n| 目标区域 | 同域 | 跨区域 |\n|---|---|---|\n| KLT1 | GRU 0.7728 | RF 0.7695 |\n| KLT2 | RF 0.7759 | Transformer 0.7654 |",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 64,
+              "end_line": 73
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D09-b577c266f6bf",
+              "document_id": "D09",
+              "heading": "实际结果",
+              "content": "| 模型 | 冻结外部 Precision | 外部 NLOS Recall | 外部 F1 | 城区互斥 Precision | 互斥 NLOS Recall | 互斥 F1 |\n|---|---:|---:|---:|---:|---:|---:|\n| LR | 0.8148 | 0.7235 | 0.7535 | 0.7377 | 0.8017 | 0.7284 |\n| RF | 0.8107 | 0.7995 | 0.7884 | 0.7471 | 0.8784 | 0.7852 |\n| MLP | 0.7506 | 0.8375 | 0.7779 | 0.6867 | 0.8209 | 0.7095 |\n| CNN | 0.7819 | 0.7953 | 0.7771 | 0.6855 | 0.8269 | 0.7152 |\n| LSTM | 0.7695 | 0.7951 | 0.7721 | 0.7043 | 0.8770 | 0.7539 |",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 47,
+              "end_line": 53
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D07-198838d931ca",
+              "document_id": "D07",
+              "heading": "同城区域留出是否构成有用的泛化测试？",
+              "content": "判断：同城未见区域留出是有效但范围有限的实验；旧 KLT 数据对强 C/N0 域偏移的检验偏弱，不能据此推出跨城市可用。新 UrbanNav 三城区体现更明显的经验信号分布差异，仍全部在香港，尚未完成跨城市独立检验。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 3,
+              "end_line": 4
+            }
+          ],
+          "numerical_references": [
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "random_forest",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7253029747,
+                "recall": 0.8195020747,
+                "f1": 0.769530489
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "transformer",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6788959946,
+                "recall": 0.8369294606,
+                "f1": 0.7496747816
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "cn0_rule",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6627956989,
+                "recall": 0.6394190871,
+                "f1": 0.6508975713
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "gru",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7166666667,
+                "recall": 0.8385892116,
+                "f1": 0.7728489484
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7725484091,
+                "recall": 0.7481017204,
+                "f1": 0.7557821744
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7184464036,
+                "recall": 0.8068994993,
+                "f1": 0.7574381315
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7360698808,
+                "recall": 0.7896447578,
+                "f1": 0.7599538313
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7755822439,
+                "recall": 0.7319912255,
+                "f1": 0.7494031724
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.720011194,
+                "recall": 0.7964892452,
+                "f1": 0.7557341292
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7106893032,
+                "recall": 0.8080790249,
+                "f1": 0.7542119902
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8106538579,
+                "recall": 0.7995114413,
+                "f1": 0.7884139465
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7567208259,
+                "recall": 0.8409162149,
+                "f1": 0.7851815799
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7761084,
+                "recall": 0.8183094027,
+                "f1": 0.7856340427
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7470766476,
+                "recall": 0.8784376179,
+                "f1": 0.7851955415
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.681135704,
+                "recall": 0.8942136041,
+                "f1": 0.7489042112
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6956703959,
+                "recall": 0.8860452719,
+                "f1": 0.7512632752
+              }
+            }
+          ]
+        },
+        {
+          "id": "G03",
+          "question": "HDOP 很小，是否足以证明所有卫星都是 LOS，且位置误差很小？",
+          "answer": "不足以。两个结论都不能由小 HDOP 直接推出：\n\n1. **HDOP 不标识 LOS/NLOS。** HDOP 由定位设计矩阵的几何项计算，描述几何对水平误差的放大作用，它既不是观测误差本身，也不是逐卫星的 LOS/NLOS 标签 [E1, K2]。NLOS 卫星（直达路径被遮挡但仍有反射信号被跟踪）可以正常参与几何解算，几何上可能很好，HDOP 仍可能很小 [E1, K3；D01]。\n\n2. **小 HDOP 不保证位置误差小。** 多路径、系统偏差和异常观测仍可能存在；HDOP 只说明“若观测误差小，则水平误差被放大的倍数小” [E1, K2]。此外，小 HDOP 也不是误差小的必要条件 [E1, K2]。\n\n需要补充的是：本回答基于技术背景文档和项目知识库，**当前没有附加的实验工具数据**（compare_nlos / compare_positioning 等）联合测量 HDOP 与实际误差，因此不能引用实验证明二者在本数据集上的实际关系 [E1, K2]。\n\n**可行的诊断路径**：小 HDOP 只是“几何良好”的线索（predictive clue，非保证）。若要判断 LOS/NLOS，应结合载噪比、残差等线索，或使用 KLT 相机天空掩膜提供的逐卫星参考标签——但注意 C/N0 阈值无法稳定区分 LOS/NLOS，强反射信号 C/N0 也可能很高 [E1, K3；D03]。若想验证“HDOP 小则误差小”这一假设，需要一个同时记录 HDOP 与定位误差的实验。",
+          "answer_sha256": "c84188393fa8faceb0381150be84b628aac554dbbce073883cda31fc788efdba",
+          "context_sha256": "1e187686eabf05448d6e2fdce306d10023e3736bb1614c6a58923fe73242bb77",
+          "elapsed_s": 16.64000000001397,
+          "usage": [
+            {
+              "completion_tokens": 366,
+              "prompt_tokens": 2532,
+              "total_tokens": 2898,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true,
+            "frozen_context_sent": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "说明 HDOP 描述观测几何，而不是 NLOS 标签或观测偏差",
+                "verdict": "pass",
+                "reason": "只解释几何项。"
+              },
+              {
+                "criterion": "否定小 HDOP 能保证小误差或全部 LOS",
+                "verdict": "pass",
+                "reason": "否定保证与必要条件。"
+              },
+              {
+                "criterion": "解释多径、NLOS 或系统偏差仍可能影响结果",
+                "verdict": "pass",
+                "reason": "解释偏差，不再附带无关合成定位数值。"
+              }
+            ],
+            "additional_issues": []
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E1",
+              "id": "K2",
+              "document_id": "K2",
+              "heading": "HDOP 和卫星几何",
+              "content": "HDOP 描述卫星观测几何对水平位置精度的放大作用。它由定位设计矩阵的几何项计算，不是观测误差本身，也不是逐卫星 LOS/NLOS 标签。较小 HDOP 不保证定位误差小，因为多路径、系统偏差和异常观测仍可能存在。小 HDOP 也不是每次实际误差小的必要条件：还需考虑观测误差大小。载噪比和残差可提供分类线索，不能独自保证所有卫星为 LOS。没有联合测量 HDOP 与误差的实验不能证明二者的实际关系。",
+              "source_url": "https://gssc.esa.int/navipedia/index.php/Positioning_Error"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D03-8d32ce7b09f8",
+              "document_id": "D03",
+              "heading": "直达、多径和 NLOS",
+              "content": "LOS 表示卫星到天线的直达路径可用。多径表示还有经建筑、地面等反射的路径；即使直达路径存在，也可能受到多径干扰。NLOS 表示直达路径被阻挡，接收机可能仍收到反射/绕射信号。完全没有跟踪到信号是另一种情况，现有 KLT 表没有相应标签。\n\n假设卫星直接到天线的距离为 r，经过楼面反射的路径比 r 长 30 m。传播时间多出约 100 ns，码伪距也可能带来约 30 m 额外偏差。定位器同时解算位置与接收机钟差，多颗卫星几何还会放大或相互影响误差，因此“伪距偏差 30 m”不等于“水平位置偏差 30 m”。\n\n强反射信号的 C/N0 可能很高；弱 LOS 信号可能很低。所以一个 C/N0 阈值无法稳定分开所有 LOS/NLOS。高楼是可能的遮挡来源，但一条 NLOS 标签本身不能确定是楼、树还是车辆。",
+              "source_url": "docs/lessons/05_nlos_zhang2023.md",
+              "start_line": 7,
+              "end_line": 12
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D01-e413e4a33edd",
+              "document_id": "D01",
+              "heading": "遮挡、信号接收与定位失准标签",
+              "content": "LOS 表示直达路径可见，仍可能收到反射而产生多径。NLOS 表示直达路径被遮挡；观测到的反射信号仍可能很强。完全丢失、未被跟踪的卫星不在观测表中，当前模型无法评估这类不可用事件。定位误差大还可能涉及几何、时钟、噪声或参考对齐，不能用“误差 > 10 m”充当 NLOS 真值。",
+              "source_url": "docs/OBSTRUCTION_LABELS.md",
+              "start_line": 14,
+              "end_line": 15
+            },
+            {
+              "evidence_id": "E1",
+              "id": "K3",
+              "document_id": "K3",
+              "heading": "多路径与 NLOS 诊断的证据边界",
+              "content": "NLOS 表示直达路径被遮挡，LOS 表示直达路径可见但仍可能含多径。载噪比、残差和跳变只能提供线索；强反射也可能有较高载噪比。应分别记录场景标签、逐卫星 LOS/NLOS 标签和整机定位失准标签。KLT 的相机天空掩膜可以提供 LOS/NLOS 参考标签，但不区分高楼、树木等具体物体。定位误差超过 10 米不等于发生了 NLOS；识别 NLOS 也不自动证明定位改善。",
+              "source_url": "https://github.com/ebhrz/KLTDataset"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D09-f55b314e330b",
+              "document_id": "D09",
+              "heading": "标签和特征分开",
+              "content": "参考位置、建筑图、方位角、质量、区域 ID 和标签包络均不作为模型输入；模型预处理只拟合训练侧。未跟踪的卫星不在观测表中。这些标签只能表达静态建筑几何可见性，无法覆盖临时车辆、树木或复杂建筑模型误差，LOS 仍可含多径。标签覆盖率较低意味着本报告不能声称评估了全部路线上的 NLOS。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 35,
+              "end_line": 36
+            }
+          ],
+          "numerical_references": []
+        },
+        {
+          "id": "G04",
+          "question": "我们当前的 Transformer 已经完整复现 Zhang 2023 了吗？请指出核心差别。",
+          "answer": "**结论：没有完整复现。** 项目文档明确记录“当前不能声称完成作者结果复现”和“当前实现还不是该论文复现”[E1: D05, D03]。只能称做了方法结构的独立实现 [E1: D05]。\n\n核心差别：\n\n1. **任务范围**：Zhang 2023 是注意力增强 LSTM，联合检测 NLOS 并预测伪距误差的不确定性，属于时空联合任务；当前 NavDiag 只是单卫星历史序列的 NLOS 二分类，没有联合任务 [E1: L01]。\n2. **结构与数据**：论文用 Transformer 增强 LSTM，在香港和 Aachen 的 LiDAR 地图标注数据上评估；当前实验是独立配置的 Transformer（四头注意力，同一卫星 32 次观测，宽 64、两层、dropout 0.1、AdamW lr 5e-4）等模型对比，数据与代码缺口在复现核对文档中单独说明 [E1: L01, D08]。\n3. **结果可比性**：作者报告的跨城市实验结论是其自身评估，不是我们的测试结果，不能拿当前模型指标与之对齐 [E1: L01]。\n\n简言之：可以复现论文的核心结构思路并做方法级对比，但在输入特征、联合任务（伪距误差预测）、LiDAR 标注数据和作者数据集上都未对齐，因此不构成复现。若要验证结构差异的影响，可设计加入伪距误差回归头的消融实验，但当前证据中未记录此类实验。",
+          "answer_sha256": "0bd222d81c327a0dee28ef0c1fd6a9faba3d56cdafd2a184ad1865f0c020d9a1",
+          "context_sha256": "54e1ebaec608977656983d934bc78692b184672f437a58837842f60ce22f821a",
+          "elapsed_s": 8.578000000008615,
+          "usage": [
+            {
+              "completion_tokens": 346,
+              "prompt_tokens": 2706,
+              "total_tokens": 3052,
+              "reasoning_tokens": 10
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true,
+            "frozen_context_sent": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "needs_review",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "明确没有完成论文模型或结果的精确复现",
+                "verdict": "partial",
+                "reason": "否定完整复现，但又称只能称做了方法结构的独立实现。"
+              },
+              {
+                "criterion": "区分当前单卫星历史分类与论文时空/跨卫星及联合误差任务",
+                "verdict": "pass",
+                "reason": "正确区分当前单卫星与联合任务。"
+              },
+              {
+                "criterion": "不宣称实现了没有出现在项目中的训练头、输入或作者数据",
+                "verdict": "fail",
+                "reason": "把原文档的未来可实现误读为已经实现论文方法结构。"
+              }
+            ],
+            "additional_issues": [
+              "未来选项被表述为已完成，原资料首段时态也不够清晰，已澄清。"
+            ]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E1",
+              "id": "D05-106a54a1714c",
+              "document_id": "D05",
+              "heading": "Zhang 2023：方法核对与复现条件",
+              "content": "结论：可以独立实现论文的核心结构并在补齐输入后开展方法复现；当前不能声称完成作者结果复现。用户提供的八页 PDF 已阅读，特征公式、Fig. 3 结构图、Tables I–V 和实验讨论已视觉核对。PDF 结构预检 PASS（仅结构，不代表学术正确性），SHA-256 为 15cf6d88baf4d21e1e8cc9e40d2d52b684eeee60e62470f468209215c9ddbccd。",
+              "source_url": "docs/research/zhang2023_reproduction.md",
+              "start_line": 11,
+              "end_line": 12
+            },
+            {
+              "evidence_id": "E1",
+              "id": "L01",
+              "document_id": "L01",
+              "heading": "Zhang 2023：时空上下文、NLOS 与伪距误差联合学习",
+              "content": "文献方法：Zhang 等将 GNSS 观测作为时空问题处理，用注意力增强 LSTM，同时检测 NLOS 和预测伪距误差；作者在香港及 Aachen 标注数据上评估，并介绍 LiDAR 地图标注与状态估计应用。项目对照：当前 NavDiag 是单卫星历史分类，没有该论文的完整联合任务，不能称为精确复现。作者的实验结论也不是我们项目的测试结果；理解具体结构请结合项目的论文核对文档。",
+              "source_url": "https://arxiv.org/abs/2309.00480v2"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D05-efdaf541cd98",
+              "document_id": "D05",
+              "heading": "Zhang 2023：方法核对与复现条件",
+              "content": "来源：[论文 arXiv v2](https://arxiv.org/abs/2309.00480v2)，Haoming Zhang、Zhanxin Wang、Heike Vallery，*Learning-based NLOS Detection and Uncertainty Prediction of GNSS Observations with Transformer-Enhanced LSTM Network*。学习解读见[第五课](../lessons/05_nlos_zhang2023.md)。原 PDF 与提取全文不复制到发布仓库。",
+              "source_url": "docs/research/zhang2023_reproduction.md",
+              "start_line": 13,
+              "end_line": 14
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D03-9ba501702615",
+              "document_id": "D03",
+              "heading": "第五课：从 Zhang 2023 理解 NLOS",
+              "content": "先读概念和图，再看公式。本文是对 [Zhang 等 2023 论文](https://arxiv.org/abs/2309.00480v2)的原创学习解读；[复现核对](../research/zhang2023_reproduction.md)说明数据与代码缺口。当前实现还不是该论文复现。",
+              "source_url": "docs/lessons/05_nlos_zhang2023.md",
+              "start_line": 3,
+              "end_line": 4
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D08-8afa596769ee",
+              "document_id": "D08",
+              "heading": "模型与比较方法",
+              "content": "MLP、1D CNN、LSTM、GRU、Transformer 均使用同一卫星过去及当前的 32 次观测，网络宽度 64、两层、dropout 0.1，AdamW 学习率 0.0005、weight decay 0.01、batch 128；最多训练 30 轮，验证 BCE 早停 patience 6。Transformer 四头；CNN 卷积核 5。完整参数来自 [固定计划](../../config/nlos_protocols.json)和运行前冻结的 `experiment_plan.json`。\n\nLR、RF 和 C/N0 规则使用当前观测特征。RF 固定为 200 棵树、最大深度 12、叶子至少 8 个样本、类别均衡；LR 固定 C=1、类别均衡。这是完整分类器对比，神经网络与树模型的历史输入不同。此前 56 组搜索的获胜参数没有迁移到这次主实验，也没有继续搜索。",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 39,
+              "end_line": 42
+            }
+          ],
+          "numerical_references": []
+        },
+        {
+          "id": "G05",
+          "question": "请根据 García Crespillo 等的论文，解释开放天空预归一化和多频分支逻辑回归的作用。我们项目已经实现了吗？",
+          "answer": "根据文献摘要 [E1]（García Crespillo 等 2023，核对范围：摘要与引言）：\n\n**两个方法的作用：**\n- **开放天空预归一化**：用开放天空场景数据建立各特征的名义分布模型并预归一化，目的是降低不同接收机、天线增益和安装差异带来的特征偏移（项目文档 D07 也强调该方法需要独立、可靠的开阔场景校准数据，且不能用目标测试城区数据重新归一化后再称“未见城市泛化” [E2]）。\n- **多频分支逻辑回归**：用并行分支处理不同频率特征间歇缺失的问题（多频观测并非总是同时可用），分类器本体采用逻辑回归，保持简单可泛化。\n\n**我们项目实现了吗？** 尚未完整实现。证据明确指出：本项目当前的五特征逻辑回归与该多频方案不同，其验证结果不能替代该方法，且跨城市实验也还未完成 [E1]。文献结论说明物理预处理、硬件差异处理和多频信息可能比模型复杂度更重要，但“我们已有逻辑回归”不等于复现了该论文的方法。\n\n局限说明：本回答基于文献摘要和引言的核对范围，未通读全文细节 [E1]。",
+          "answer_sha256": "c079df8642c1145d35f9da8a459de24485ee4f62877e3e569ee6a6890973cad8",
+          "context_sha256": "b9d47bcc252a122ec86c8dd2177dd6f6ed78475036d994798209bbd326695ff5",
+          "elapsed_s": 10.687999999994645,
+          "usage": [
+            {
+              "completion_tokens": 269,
+              "prompt_tokens": 3164,
+              "total_tokens": 3433,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": false,
+            "has_citations": true,
+            "expected_local_guard": true,
+            "frozen_context_sent": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": ["E2"]
+          },
+          "semantic_review": {
+            "status": "needs_review",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "论文来源为 L04 或有同一原始文献支持的段落",
+                "verdict": "partial",
+                "reason": "仍将 E1 内的 D07 错引为不存在 E2。"
+              },
+              {
+                "criterion": "区分名义特征预归一化、硬件差异与多频特征间歇缺失",
+                "verdict": "pass",
+                "reason": "两种预处理作用正确。"
+              },
+              {
+                "criterion": "不把论文方案和验证成绩说成本项目已实现的成果",
+                "verdict": "pass",
+                "reason": "区分作者方案和本项目。"
+              }
+            ],
+            "additional_issues": ["不存在的 E2；新引用检查正确标出并生成告警。"]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E1",
+              "id": "L04",
+              "document_id": "L04",
+              "heading": "García Crespillo 等 2023：开放天空预归一化与多频分支",
+              "content": "文献方法：García Crespillo 等用开放天空数据建立名义特征模型，预归一化以降低接收机和天线安装差异；用并行分支处理不同频率特征间歇缺失，分类器采用逻辑回归。论文在指定静态场景报告检测结果。项目边界：这说明物理预处理、硬件差异和多频信息可能比网络复杂度更重要，不说明本项目现有逻辑回归已经充分。当前五特征与该多频方案不同，其验证结果不能替代我们未完成的跨城市实验。",
+              "source_url": "https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1171255/full"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D07-5d060598c3f1",
+              "document_id": "D07",
+              "heading": "文献能够支持什么",
+              "content": "用户提供的 [Zhang 等 2023 论文](https://arxiv.org/abs/2309.00480) Table V 记录 HK/AC 数据的平均 C/N0 为 34/49 dB-Hz，并将分布偏移讨论为域外表现下降的可能原因。文中还有 NLOS 比例、卫星数量和数据来源差异。这是跨数据集观察，不能独立证明“城市因素造成全部 C/N0 差异”，更不能推出“同城一定没有泛化难点”。本报告的中位数也不能与论文的均值直接作同一种统计量比较。\n\n[García Crespillo 等 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10416230/)讨论了卫星仰角、天线增益、安装和接收机跟踪配置对 C/N0 的影响，并提出以开阔场景名义分布预归一化。该方法需要独立、可靠的开阔场景校准数据；当前不能根据目标测试城区的标签或分布重新归一化，再把结果称为未见城市泛化。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 34,
+              "end_line": 37
+            },
+            {
+              "evidence_id": "E1",
+              "id": "L01",
+              "document_id": "L01",
+              "heading": "Zhang 2023：时空上下文、NLOS 与伪距误差联合学习",
+              "content": "文献方法：Zhang 等将 GNSS 观测作为时空问题处理，用注意力增强 LSTM，同时检测 NLOS 和预测伪距误差；作者在香港及 Aachen 标注数据上评估，并介绍 LiDAR 地图标注与状态估计应用。项目对照：当前 NavDiag 是单卫星历史分类，没有该论文的完整联合任务，不能称为精确复现。作者的实验结论也不是我们项目的测试结果；理解具体结构请结合项目的论文核对文档。",
+              "source_url": "https://arxiv.org/abs/2309.00480v2"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D08-30d20e577d28",
+              "document_id": "D08",
+              "heading": "复现",
+              "content": "计划、数据校验和、实现文件校验和和参数先冻结，再运行六个实验。两个独立进程只负责并行执行固定实验，彼此隔离随机种子；不是调参。已完成的同一计划可以续跑，发生数据、实现或配置变化时需要新的产物目录。数据、外部代码和模型文件继续留在本地，当前不上传 GitHub。",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 89,
+              "end_line": 89
+            },
+            {
+              "evidence_id": "E1",
+              "id": "L05",
+              "document_id": "L05",
+              "heading": "Grinsztajn 等 2022：表格数据的树模型与神经网络归纳偏置",
+              "content": "文献观察：Grinsztajn 等在多个标准表格数据集上比较树模型和深度模型，发现树模型在其设定下仍很有竞争力，并分析无关特征、数据坐标方向与不规则函数等归纳偏置。项目边界：它为 RF 强于部分简单网络提供通用背景，不是 GNSS NLOS 实验，也没有证明随机森林永远优于 Transformer。当前卫星时序、标签、区域划分与该基准不同，具体排名仍应读取项目报告。",
+              "source_url": "https://arxiv.org/abs/2207.08815v1"
+            }
+          ],
+          "numerical_references": []
+        },
+        {
+          "id": "G07",
+          "question": "UrbanNav 的 unknown 可以当作 LOS 计分吗？为什么还需要报告标签覆盖率，这些参考标签是否都是人工核验的接收真值？",
+          "answer": "不可以。UrbanNav 的 unknown 不是 LOS，把它当作 LOS 计分会引入未经确认的负（NLOS）标签，改变指标含义；而且不能无条件断言 Precision 会升高或 Recall 会下降，必须看标签和预测如何随之变化 [E1, K10]。\n\n之所以要报告标签覆盖率，是因为评分只代表通过参考检查的样本，而不是全部观测；这些标签仅表达静态建筑几何可见性，覆盖率较低意味着不能声称评估了整条路线上的 NLOS。动态树木、车辆以及 LOS 中的多径都未被该标签方法验证 [E1, K10; D09「标签和特征分开」]。因此 UrbanNav 实验中逐区成绩与标签覆盖率是共同报告的 [D07]。\n\n关于真值：这些参考标签由独立 SPAN 位置、卫星轨道和静态建筑天空掩膜生成，不能称为人工核验的卫星接收真值；实验文档也明确不把静态建筑图参考标签称为人工逐卫星真值 [E1, K10; D09]。unknown 的产生条件包括边界、位置质量、缺少轨道或地图覆盖不满足要求，且 unknown 不参与监督和计分 [E1, K10]。",
+          "answer_sha256": "5c2c47f07312186aca2be37c89e75551e74712e852e3f6ff9c9733b7570137d1",
+          "context_sha256": "2b4aa28980b2f891fe6d42fb02c4bce6ba6ebd3d19cf8105312654dddfa2d540",
+          "elapsed_s": 4.625,
+          "usage": [
+            {
+              "completion_tokens": 255,
+              "prompt_tokens": 2895,
+              "total_tokens": 3150,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true,
+            "frozen_context_sent": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "needs_review",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "unknown 不作为 LOS 标签，且不参与监督和计分",
+                "verdict": "partial",
+                "reason": "unknown 不计分正确，但将负类写为负（NLOS）标签；实际负类是 LOS。"
+              },
+              {
+                "criterion": "说明静态建筑与独立参考位置的几何标签方法",
+                "verdict": "pass",
+                "reason": "几何标签说明正确。"
+              },
+              {
+                "criterion": "说明低覆盖率限制评分适用范围，不能称全部人工核验的接收真值",
+                "verdict": "pass",
+                "reason": "覆盖率和非人工真值边界正确。"
+              }
+            ],
+            "additional_issues": ["正负类别混淆。"]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E1",
+              "id": "K10",
+              "document_id": "K10",
+              "heading": "UrbanNav 静态建筑参考标签与 unknown",
+              "content": "UrbanNav 的参考标签由独立 SPAN 位置、卫星轨道和静态建筑天空掩膜生成，不能称为人工核验的卫星接收真值。位置、地图和质量字段只用于参考标签与审计，不作为模型输入。边界、位置质量、缺少轨道或地图覆盖不满足条件时保留 unknown。unknown 可以提供已观测历史，但不参与监督和计分。将 unknown 当成 LOS 会加入未经确认的负标签，改变指标含义；不能无条件断言 Precision 会升高或 Recall 会下降，必须检查标签和预测如何改变。评分只代表通过参考检查的样本，必须同时查看标签覆盖率；动态树木、车辆与 LOS 多径未被该标签方法验证。",
+              "source_url": "docs/experiments/urbannav_generalization.md"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D09-f55b314e330b",
+              "document_id": "D09",
+              "heading": "标签和特征分开",
+              "content": "参考位置、建筑图、方位角、质量、区域 ID 和标签包络均不作为模型输入；模型预处理只拟合训练侧。未跟踪的卫星不在观测表中。这些标签只能表达静态建筑几何可见性，无法覆盖临时车辆、树木或复杂建筑模型误差，LOS 仍可含多径。标签覆盖率较低意味着本报告不能声称评估了全部路线上的 NLOS。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 35,
+              "end_line": 36
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D07-029a6f18d2f4",
+              "document_id": "D07",
+              "heading": "对项目的重新定位",
+              "content": "1. KLT 配对实验保留为小尺度、较弱域偏移的开发比较；验证区域经验对同一固定测试段的影响，训练量变化也是混杂因素。\n2. UrbanNav 保留为真实未见城区测试：完整城区互斥、源验证阈值固定、逐城区成绩与标签覆盖率共同报告。它能检查同城迁移，而非跨城市结论。\n3. 真正跨城市验证仍未完成，需要不同城市的原始观测和独立 NLOS 参考，明确接收机/天线/频率及标签方法。应使用冻结的源模型、源预处理与源阈值，另报未知标签覆盖和 LOS/NLOS 条件分布；不能只凭来自不同城市的位置真值替代 NLOS 标注。\n\n实验有效性取决于划分和证据能否回答所声明的问题，性能下降不是有效泛化实验的必要条件。现有结果不支持“所有城市泛化良好”，也不支持“同城留出毫无意义”。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 42,
+              "end_line": 46
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D01-d994c31c657d",
+              "document_id": "D01",
+              "heading": "遮挡、信号接收与定位失准标签",
+              "content": "这三层标签回答不同的问题，必须分别保存。本地开发版新增了真实 KLT 数据上的卫星级 LOS/NLOS 识别，尚未实现高楼/树木/车辆的物体分类。\n\n| 层次 | 样本单位 | 字段与取值 | 需要的参考证据 | 当前状态 |\n| --- | --- | --- | --- | --- |\n| 环境场景 | 行程片段 | scene_label：open_sky / urban_canyon / tree_cover / overpass / tunnel / urban_unspecified / unknown | 同步影像、地图或数据集场景标注 | KLT 仅有 urban_unspecified；未标注具体场景类型 |\n| 信号接收 | 时间 × 卫星 | signal_label：los / nlos / unknown | 鱼眼相机天空掩膜、LiDAR 天空掩膜或独立数据集标注 | KLT 相机 LOS/NLOS 标签已接入 |",
+              "source_url": "docs/OBSTRUCTION_LABELS.md",
+              "start_line": 3,
+              "end_line": 8
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D09-b776ac5cf66f",
+              "document_id": "D09",
+              "heading": "UrbanNav 未见城区泛化实验",
+              "content": "已实际下载和处理尖沙咀 TST、黄埔 WP、旺角 MK 的公开记录，并完成冻结 KLT 模型外部测试和六个 UrbanNav 城区互斥实验。这里验证的是**同一城市中的未见城区**，不声称跨城市泛化，也不把静态建筑图参考标签称为人工逐卫星真值。代码、数据清单和汇总报告已在本地准备；尚未上传 GitHub。\n\n[结果 JSON](urbannav_generalization_report.json)记录全部模型的 Precision、NLOS Recall、F1、混淆矩阵、阈值和逐区成绩。训练日志、模型与逐卫星预测保存在忽略的 `artifacts/urbannav_generalization`。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 3,
+              "end_line": 6
+            }
+          ],
+          "numerical_references": []
+        },
+        {
+          "id": "G08",
+          "question": "同域和跨区域的 C/N0 固定规则成绩一样，是否说明训练区域的选择毫无影响？",
+          "answer": "**不能这样推断。** C/N0 固定规则（`C/N0 < 30 dB-Hz`）没有任何训练参数，而同域与跨区域两种协议使用完全相同的测试采集段和标签，因此预测、混淆矩阵和分数必然逐格相同 [E1] [E2, D07]。这是协议设计的确定性结果，不是“区域间信号分布相同、训练区域选择无影响”的证据 [E1] [E2, D04]。\n\n要判断训练区域是否有影响，应看经过训练的模型在两种协议下的差异，或直接比较不同区域的特征分布 [E2, D07] [E2, K9]。而且即使观察到训练模型的差值，也需注意：跨区域协议同时移除了目标区域的训练数据，训练量随之减少，差值混合了区域经验与训练规模两个因素，不能解读为单一因果效应 [E2, D08]。另外证据还显示，规则分数在不同目标区域之间确实不同（UrbanNav 中 TST/WP/MK 的 F1 各异）[E1] [E2, D07]，说明区域分布差异是存在的。\n\n**结论**：规则两列相同只说明规则不依赖训练数据；训练区域选择是否有影响，需要比较训练模型或检查特征分布，当前证据不支持“毫无影响”的结论。",
+          "answer_sha256": "253ed13eec2e2abee593223fe4052d2f0ef8cc6c7347425c164e5ae2a068b3a3",
+          "context_sha256": "337bf64ac393b043f189ac06e48cc0746db3541933262b43ebcbca7a39f9e085",
+          "elapsed_s": 7.765999999974156,
+          "usage": [
+            {
+              "completion_tokens": 285,
+              "prompt_tokens": 11580,
+              "total_tokens": 11865,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true,
+            "frozen_context_sent": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "needs_review",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "说明成对协议共享测试观测和标签，固定规则不训练",
+                "verdict": "pass",
+                "reason": "无训练且共享测试观测说明正确。"
+              },
+              {
+                "criterion": "不据此否定训练区域对学习模型的影响",
+                "verdict": "pass",
+                "reason": "不再把训练区域影响说成已证明因果效应。"
+              },
+              {
+                "criterion": "指出需要检查特征分布、独立采集及混杂因素",
+                "verdict": "partial",
+                "reason": "建议检查特征，但随后凭不同城区分数称区域分布差异已证明；标签比例、参考方法和日期也可能影响分数。"
+              }
+            ],
+            "additional_issues": [
+              "不同目标区成绩不同，不能独自证明输入特征分布差异；该题仍需要更审慎表述。"
+            ]
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E2",
+              "id": "D04-001d64f5ed88",
+              "document_id": "D04",
+              "heading": "相同测试段上的固定规则为何不变",
+              "content": "固定规则 `score = (C/N0 < 30)` 不读取训练数据。输入测试观测与参考标签不变，Precision/Recall/F1 就不会变化。因此它能作为简单参照，却不能通过“同域列－跨区域列”判断训练域偏移。训练过的 RF/神经网络会随训练集合变化；不同测试区域的规则成绩也可以不同。",
+              "source_url": "docs/lessons/06_generalization.md",
+              "start_line": 7,
+              "end_line": 8
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D07-1d47f10f250a",
+              "document_id": "D07",
+              "heading": "固定规则成绩相同的原因",
+              "content": "KLT 同域/跨区域配对使用完全相同的测试采集段。`C/N0 < 30 dB-Hz` 规则没有训练参数，因此即使训练集合改变，测试预测、标签、混淆矩阵和成绩都不会改变。这是确定性的协议结果，不是区域之间信号分布相同的证据。UrbanNav 外部/城区互斥两列的规则也因使用相同三个目标采集段而一样。\n\n比较区域分布应检查不同区域的观测，而不是这个不经过训练的模型在共享测试段上的两列差值。固定规则仍适合作为物理直觉基线：在新 UrbanNav 不同目标区，其 F1 分别是 TST 0.6468、WP 0.8353、MK 0.7135，确实不相同。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 7,
+              "end_line": 10
+            },
+            {
+              "evidence_id": "E2",
+              "id": "K9",
+              "document_id": "K9",
+              "heading": "同域、同城跨区域与跨城市的实验边界",
+              "content": "本项目同域实验按完整采集段留出，训练可以包含测试区域的其他采集。跨区域实验排除目标区域的训练段；UrbanNav 再比较冻结 KLT 模型外部迁移和三城区互斥划分。现有目标区域全部在香港，不能据此声称跨城市能力。区域、日期、天线和标签方法存在混杂。固定 C/N0 规则不训练，当两种协议共享测试观测和标签时，它的成绩必然相同；应直接检查特征分布判断观测到的域差异。",
+              "source_url": "docs/experiments/nlos_domain_audit.md"
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-f83cf72a89a3",
+              "document_id": "D08",
+              "heading": "两种实验与比例",
+              "content": "同域训练覆盖三处区域，包含测试区域的其他完整采集段；跨区域训练和验证仅覆盖另外两处区域，目标区域的非测试采集段也全部排除。每对实验的验证段、测试段、网络参数、种子和训练规则相同。移除目标区域训练段后，跨区域训练样本也减少，因此差值包含区域经验与训练量的共同影响，不能解释为单一因素的因果效应。\n\n| 目标区域 | 同域 train/val/test 历元 | 同域比例 | 跨区域 train/val/test 历元 | 跨区域比例 |\n|---|---|---|---|---|\n| KLT1 | 1,857 / 573 / 421 | 65.1 / 20.1 / 14.8% | 1,470 / 573 / 421 | 59.7 / 23.3 / 17.1% |\n| KLT2 | 1,793 / 588 / 470 | 62.9 / 20.6 / 16.5% | 1,290 / 588 / 470 | 54.9 / 25.0 / 20.0% |",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 27,
+              "end_line": 32
+            },
+            {
+              "evidence_id": "E2",
+              "id": "D08-269dd601ea9a",
+              "document_id": "D08",
+              "heading": "同域与跨区域 NLOS 实验",
+              "content": "目的：比较相同测试采集段上，不同模型在“训练见过该区域的其他采集段”和“训练完全没见过该区域”两种条件下的表现。暂停超参数搜索，使用原始固定默认配置；分类阈值和早停检查点仍只由验证集决定。\n\n六个固定参数实验已完成。完整训练与逐卫星预测保存在本地 `artifacts/klt_protocols`，可公开的结果摘要见 [结果 JSON](nlos_protocols_report.json)。",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 3,
+              "end_line": 6
+            }
+          ],
+          "numerical_references": [
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "random_forest",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7253029747,
+                "recall": 0.8195020747,
+                "f1": 0.769530489
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "transformer",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6788959946,
+                "recall": 0.8369294606,
+                "f1": 0.7496747816
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "cn0_rule",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.6627956989,
+                "recall": 0.6394190871,
+                "f1": 0.6508975713
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "selected_fold",
+              "model": "gru",
+              "metric_aggregation": "test",
+              "metrics": {
+                "precision": 0.7166666667,
+                "recall": 0.8385892116,
+                "f1": 0.7728489484
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7725484091,
+                "recall": 0.7481017204,
+                "f1": 0.7557821744
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7184464036,
+                "recall": 0.8068994993,
+                "f1": 0.7574381315
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "in_domain",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7360698808,
+                "recall": 0.7896447578,
+                "f1": 0.7599538313
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7755822439,
+                "recall": 0.7319912255,
+                "f1": 0.7494031724
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.720011194,
+                "recall": 0.7964892452,
+                "f1": 0.7557341292
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6354814342,
+                "recall": 0.6189208916,
+                "f1": 0.6270002778
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "cross_region",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7106893032,
+                "recall": 0.8080790249,
+                "f1": 0.7542119902
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8106538579,
+                "recall": 0.7995114413,
+                "f1": 0.7884139465
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7567208259,
+                "recall": 0.8409162149,
+                "f1": 0.7851815799
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "external_transfer",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7761084,
+                "recall": 0.8183094027,
+                "f1": 0.7856340427
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "random_forest",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.7470766476,
+                "recall": 0.8784376179,
+                "f1": 0.7851955415
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "transformer",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.681135704,
+                "recall": 0.8942136041,
+                "f1": 0.7489042112
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "cn0_rule",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.8401632042,
+                "recall": 0.6572847315,
+                "f1": 0.7318651596
+              }
+            },
+            {
+              "evidence_id": "E1",
+              "scope": "district_holdout",
+              "model": "gru",
+              "metric_aggregation": "test_macro",
+              "metrics": {
+                "precision": 0.6956703959,
+                "recall": 0.8860452719,
+                "f1": 0.7512632752
+              }
+            }
+          ]
+        }
+      ],
+      "review_summary": {
+        "actual_model_cases": 6,
+        "passed_cases": 2,
+        "needs_review": 4,
+        "local_guard_cases": 0
+      }
+    },
+    {
+      "name": "final_targeted",
+      "created_at": "2026-10-12T02:16:58.975200+00:00",
+      "settings": {
+        "output_limit": 8192,
+        "timeout_s": 120,
+        "reasoning_effort": "low"
+      },
+      "system_prompt_sha256": "9f33d1be4d6c7761c3a842d772575a0dcd644f07a9232dc45176b3a6c067ac2e",
+      "model_requests_attempted": 3,
+      "results": [
+        {
+          "id": "G04",
+          "question": "我们当前的 Transformer 已经完整复现 Zhang 2023 了吗？请指出核心差别。",
+          "answer": "没有完整复现。根据项目复现核对文档（“Zhang 2023：方法核对与复现条件”），当前实现既没有完成论文核心结构的精确实现，也没有复现作者结果；这是未来工作，不是已完成成果 [E1]。\n\n核心差别：\n1. **任务范围**：当前 NavDiag 是单卫星历史 NLOS 分类器；Zhang 2023 是注意力增强 LSTM，同时联合学习 NLOS 检测与伪距误差预测 [E1]。\n2. **网络结构**：论文包含跨卫星注意力以及 LSTM/BiLSTM 联合结构，当前模型缺少这些组件 [E1]。\n3. **实验协议**：当前主实验中 Transformer 使用同一卫星过去及当前 32 次观测、四头注意力、两层结构，属于固定对比协议，与论文设定不同 [E1]。\n4. **数据与结果**：作者在香港和 Aachen 标注数据（含 LiDAR 地图标注）上评估；这些是作者结论，不是本项目的测试结果，我们未做跨城市/伪距误差评估 [E1]。\n\n依据的文献摘要只核对了 arXiv v2 的元数据与 Abstract，未通读全文；具体结构细节以项目核对文档（其作者已视觉核对论文 PDF 的 Fig. 3、公式与 Tables I–V）为准 [E1]。",
+          "answer_sha256": "8b6ae5bbdda2dbf68029edaadbe2d6064d0297f8a8f0340fca2515f36ba9bb67",
+          "context_sha256": "d4f76a3f6d52008d8e2aea4df21fe6d0703f5a6ac22544cbfe44e4b194c4bd64",
+          "elapsed_s": 6.782000000006519,
+          "usage": [
+            {
+              "completion_tokens": 301,
+              "prompt_tokens": 2893,
+              "total_tokens": 3194,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true,
+            "frozen_context_sent": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "明确没有完成论文模型或结果的精确复现",
+                "verdict": "pass",
+                "reason": "明确结构和作者结果均未复现。"
+              },
+              {
+                "criterion": "区分当前单卫星历史分类与论文时空/跨卫星及联合误差任务",
+                "verdict": "pass",
+                "reason": "明确跨卫星注意力、LSTM/BiLSTM 与联合误差任务差别。"
+              },
+              {
+                "criterion": "不宣称实现了没有出现在项目中的训练头、输入或作者数据",
+                "verdict": "pass",
+                "reason": "未来工作没有被说成已实现。"
+              }
+            ],
+            "additional_issues": []
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E1",
+              "id": "D05-a73b42986f66",
+              "document_id": "D05",
+              "heading": "Zhang 2023：方法核对与复现条件",
+              "content": "结论：当前既没有完成论文核心结构的精确实现，也没有复现作者结果。现有模型是单卫星历史 Transformer 分类器，缺少论文跨卫星注意力、LSTM/BiLSTM 联合结构及误差回归任务。补齐输入后可以开展这些实现与方法复现，这是未来工作，不是已经完成的成果。用户提供的八页 PDF 已阅读，特征公式、Fig. 3 结构图、Tables I–V 和实验讨论已视觉核对。PDF 结构预检 PASS（仅结构，不代表学术正确性），SHA-256 为 15cf6d88baf4d21e1e8cc9e40d2d52b684eeee60e62470f468209215c9ddbccd。",
+              "source_url": "docs/research/zhang2023_reproduction.md",
+              "start_line": 11,
+              "end_line": 12
+            },
+            {
+              "evidence_id": "E1",
+              "id": "L01",
+              "document_id": "L01",
+              "heading": "Zhang 2023：时空上下文、NLOS 与伪距误差联合学习",
+              "content": "文献方法：Zhang 等将 GNSS 观测作为时空问题处理，用注意力增强 LSTM，同时检测 NLOS 和预测伪距误差；作者在香港及 Aachen 标注数据上评估，并介绍 LiDAR 地图标注与状态估计应用。项目对照：当前 NavDiag 是单卫星历史分类，没有该论文的完整联合任务，不能称为精确复现。作者的实验结论也不是我们项目的测试结果；理解具体结构请结合项目的论文核对文档。",
+              "source_url": "https://arxiv.org/abs/2309.00480v2"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D05-efdaf541cd98",
+              "document_id": "D05",
+              "heading": "Zhang 2023：方法核对与复现条件",
+              "content": "来源：[论文 arXiv v2](https://arxiv.org/abs/2309.00480v2)，Haoming Zhang、Zhanxin Wang、Heike Vallery，*Learning-based NLOS Detection and Uncertainty Prediction of GNSS Observations with Transformer-Enhanced LSTM Network*。学习解读见[第五课](../lessons/05_nlos_zhang2023.md)。原 PDF 与提取全文不复制到发布仓库。",
+              "source_url": "docs/research/zhang2023_reproduction.md",
+              "start_line": 13,
+              "end_line": 14
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D03-9ba501702615",
+              "document_id": "D03",
+              "heading": "第五课：从 Zhang 2023 理解 NLOS",
+              "content": "先读概念和图，再看公式。本文是对 [Zhang 等 2023 论文](https://arxiv.org/abs/2309.00480v2)的原创学习解读；[复现核对](../research/zhang2023_reproduction.md)说明数据与代码缺口。当前实现还不是该论文复现。",
+              "source_url": "docs/lessons/05_nlos_zhang2023.md",
+              "start_line": 3,
+              "end_line": 4
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D08-8afa596769ee",
+              "document_id": "D08",
+              "heading": "模型与比较方法",
+              "content": "MLP、1D CNN、LSTM、GRU、Transformer 均使用同一卫星过去及当前的 32 次观测，网络宽度 64、两层、dropout 0.1，AdamW 学习率 0.0005、weight decay 0.01、batch 128；最多训练 30 轮，验证 BCE 早停 patience 6。Transformer 四头；CNN 卷积核 5。完整参数来自 [固定计划](../../config/nlos_protocols.json)和运行前冻结的 `experiment_plan.json`。\n\nLR、RF 和 C/N0 规则使用当前观测特征。RF 固定为 200 棵树、最大深度 12、叶子至少 8 个样本、类别均衡；LR 固定 C=1、类别均衡。这是完整分类器对比，神经网络与树模型的历史输入不同。此前 56 组搜索的获胜参数没有迁移到这次主实验，也没有继续搜索。",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 39,
+              "end_line": 42
+            }
+          ],
+          "numerical_references": []
+        },
+        {
+          "id": "G05",
+          "question": "请根据 García Crespillo 等的论文，解释开放天空预归一化和多频分支逻辑回归的作用。我们项目已经实现了吗？",
+          "answer": "**开放天空预归一化的作用**：García Crespillo 等（2023）用开放天空数据建立各特征的名义分布模型，并据此对特征做预归一化，以降低不同接收机、天线增益和安装差异带来的影响（如 C/N0 受仰角、天线增益、安装和跟踪配置影响）[E1]。项目文档也指出：该方法需要独立、可靠的开阔场景校准数据，且不能基于目标测试城区的标签或分布来重新归一化，否则不能称为未见城市泛化 [E1]（文档 D07「文献能够支持什么」）。\n\n**多频分支与逻辑回归的作用**：该论文用并行分支处理不同频率特征的间歇缺失问题，分类器本身采用逻辑回归 [E1]（L04，标题「García Crespillo 等 2023：开放天空预归一化与多频分支」）。多频分支的目的是保证某些频点信号缺失时分类器仍可用，而简单的逻辑回归结构配合物理预处理也表明，物理预处理、硬件差异校正和多频信息可能比网络复杂度更重要。\n\n**我们项目实现了吗？** 没有。项目文档明确指出：当前的五特征逻辑回归与该论文的多频方案不同，其验证结果不能替代未完成的跨城市实验 [E1]（L04）。检索到的证据中没有显示本项目已实现开放天空预归一化或多频分支；这属于可选的未来工作方向，不是已完成成果。\n\n**限制说明**：以上文献信息来自摘要与引言的核对 [E1]（L04，read_scope: Abstract; Introduction），未读全文，故仅限该范围的方法描述；论文在指定静态场景的结果不等于我们项目的实验指标。",
+          "answer_sha256": "1644bc136f79a12c6251c686370f3d532a005e38776ec28391a5f9e065a40263",
+          "context_sha256": "4f0f4a7275da692752a962538bf1b896e9fb89a69a36e08ae8fe4fc8cff1e90a",
+          "elapsed_s": 7.6710000000020955,
+          "usage": [
+            {
+              "completion_tokens": 370,
+              "prompt_tokens": 3210,
+              "total_tokens": 3580,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true,
+            "frozen_context_sent": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "论文来源为 L04 或有同一原始文献支持的段落",
+                "verdict": "pass",
+                "reason": "L04 与 D07 均正确归入 E1，范围为摘要和引言。"
+              },
+              {
+                "criterion": "区分名义特征预归一化、硬件差异与多频特征间歇缺失",
+                "verdict": "pass",
+                "reason": "明确硬件名义模型与多频缺失。"
+              },
+              {
+                "criterion": "不把论文方案和验证成绩说成本项目已实现的成果",
+                "verdict": "pass",
+                "reason": "方案仍为未实现的未来选项。"
+              }
+            ],
+            "additional_issues": []
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E1",
+              "id": "L04",
+              "document_id": "L04",
+              "heading": "García Crespillo 等 2023：开放天空预归一化与多频分支",
+              "content": "文献方法：García Crespillo 等用开放天空数据建立名义特征模型，预归一化以降低接收机和天线安装差异；用并行分支处理不同频率特征间歇缺失，分类器采用逻辑回归。论文在指定静态场景报告检测结果。项目边界：这说明物理预处理、硬件差异和多频信息可能比网络复杂度更重要，不说明本项目现有逻辑回归已经充分。当前五特征与该多频方案不同，其验证结果不能替代我们未完成的跨城市实验。",
+              "source_url": "https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2023.1171255/full"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D07-5d060598c3f1",
+              "document_id": "D07",
+              "heading": "文献能够支持什么",
+              "content": "用户提供的 [Zhang 等 2023 论文](https://arxiv.org/abs/2309.00480) Table V 记录 HK/AC 数据的平均 C/N0 为 34/49 dB-Hz，并将分布偏移讨论为域外表现下降的可能原因。文中还有 NLOS 比例、卫星数量和数据来源差异。这是跨数据集观察，不能独立证明“城市因素造成全部 C/N0 差异”，更不能推出“同城一定没有泛化难点”。本报告的中位数也不能与论文的均值直接作同一种统计量比较。\n\n[García Crespillo 等 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10416230/)讨论了卫星仰角、天线增益、安装和接收机跟踪配置对 C/N0 的影响，并提出以开阔场景名义分布预归一化。该方法需要独立、可靠的开阔场景校准数据；当前不能根据目标测试城区的标签或分布重新归一化，再把结果称为未见城市泛化。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 34,
+              "end_line": 37
+            },
+            {
+              "evidence_id": "E1",
+              "id": "L01",
+              "document_id": "L01",
+              "heading": "Zhang 2023：时空上下文、NLOS 与伪距误差联合学习",
+              "content": "文献方法：Zhang 等将 GNSS 观测作为时空问题处理，用注意力增强 LSTM，同时检测 NLOS 和预测伪距误差；作者在香港及 Aachen 标注数据上评估，并介绍 LiDAR 地图标注与状态估计应用。项目对照：当前 NavDiag 是单卫星历史分类，没有该论文的完整联合任务，不能称为精确复现。作者的实验结论也不是我们项目的测试结果；理解具体结构请结合项目的论文核对文档。",
+              "source_url": "https://arxiv.org/abs/2309.00480v2"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D05-a73b42986f66",
+              "document_id": "D05",
+              "heading": "Zhang 2023：方法核对与复现条件",
+              "content": "结论：当前既没有完成论文核心结构的精确实现，也没有复现作者结果。现有模型是单卫星历史 Transformer 分类器，缺少论文跨卫星注意力、LSTM/BiLSTM 联合结构及误差回归任务。补齐输入后可以开展这些实现与方法复现，这是未来工作，不是已经完成的成果。用户提供的八页 PDF 已阅读，特征公式、Fig. 3 结构图、Tables I–V 和实验讨论已视觉核对。PDF 结构预检 PASS（仅结构，不代表学术正确性），SHA-256 为 15cf6d88baf4d21e1e8cc9e40d2d52b684eeee60e62470f468209215c9ddbccd。",
+              "source_url": "docs/research/zhang2023_reproduction.md",
+              "start_line": 11,
+              "end_line": 12
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D08-30d20e577d28",
+              "document_id": "D08",
+              "heading": "复现",
+              "content": "计划、数据校验和、实现文件校验和和参数先冻结，再运行六个实验。两个独立进程只负责并行执行固定实验，彼此隔离随机种子；不是调参。已完成的同一计划可以续跑，发生数据、实现或配置变化时需要新的产物目录。数据、外部代码和模型文件继续留在本地，当前不上传 GitHub。",
+              "source_url": "docs/experiments/nlos_protocols.md",
+              "start_line": 89,
+              "end_line": 89
+            }
+          ],
+          "numerical_references": []
+        },
+        {
+          "id": "G07",
+          "question": "UrbanNav 的 unknown 可以当作 LOS 计分吗？为什么还需要报告标签覆盖率，这些参考标签是否都是人工核验的接收真值？",
+          "answer": "**不能把 unknown 当作 LOS 计分。** 按任务定义，unknown 仅提供已观测历史，但不参与监督与计分，也不是负类（LOS）标签 [E1, K10]。UrbanNav 的标签是由独立 SPAN 位置、卫星轨道和静态建筑天空掩膜生成的；当出现边界条件、位置质量不佳、缺少轨道或地图覆盖不足时保留 unknown——把这类样本当成 LOS，等于给指标加入未经确认的负标签，会改变 Precision/Recall 的含义，且指标变化方向（如 Precision 升高、Recall 下降）不能不加检查就断言，必须看标签与预测如何随之改变 [E1, K10]。\n\n**为什么还要报告标签覆盖率：** 评分只代表通过参考检查的样本，覆盖率较低意味着报告不能声称评估了全部路线上的 NLOS；因此 UrbanNav 实验要求逐城区成绩与标签覆盖率共同报告 [E1, K10；D09「标签和特征分开」；D07]。此外，这类标签只表达静态建筑几何可见性，动态树木、车辆以及 LOS 中的多径都未被验证 [E1, K10；D09]。\n\n**是否人工核验的真值：** 不是。这些标签是静态建筑图推导的参考标签，项目文档明确不将其称为人工逐卫星核验的接收真值 [E1, K10；D09「UrbanNav 未见城区泛化实验」]。",
+          "answer_sha256": "92fc38453ba5ef5a7d6c217341d1e802c68bbf69cdf9f973e4a3432409be470b",
+          "context_sha256": "e1d7411ab73cadc60782a828bbddd5304b4e5e83cfd9f45fe69a794753528b34",
+          "elapsed_s": 5.48499999998603,
+          "usage": [
+            {
+              "completion_tokens": 311,
+              "prompt_tokens": 3037,
+              "total_tokens": 3348,
+              "reasoning_tokens": 0
+            }
+          ],
+          "generation_skipped": false,
+          "answer_complete": true,
+          "original_runtime_checks": {
+            "answer_complete": true,
+            "known_citation_ids": true,
+            "has_citations": true,
+            "expected_local_guard": true,
+            "frozen_context_sent": true
+          },
+          "citation_check_after_parser_fix": {
+            "has_evidence_citations": true,
+            "unknown_citations": []
+          },
+          "semantic_review": {
+            "status": "pass",
+            "reviewer_kind": "assistant",
+            "judgments": [
+              {
+                "criterion": "unknown 不作为 LOS 标签，且不参与监督和计分",
+                "verdict": "pass",
+                "reason": "unknown 不评分，负类正确为 LOS，不断言指标单向变化。"
+              },
+              {
+                "criterion": "说明静态建筑与独立参考位置的几何标签方法",
+                "verdict": "pass",
+                "reason": "正确描述独立位置和静态几何标签。"
+              },
+              {
+                "criterion": "说明低覆盖率限制评分适用范围，不能称全部人工核验的接收真值",
+                "verdict": "pass",
+                "reason": "覆盖率限制和非人工接收真值清楚。"
+              }
+            ],
+            "additional_issues": []
+          },
+          "evidence_sources": [
+            {
+              "evidence_id": "E1",
+              "id": "K10",
+              "document_id": "K10",
+              "heading": "UrbanNav 静态建筑参考标签与 unknown",
+              "content": "UrbanNav 的参考标签由独立 SPAN 位置、卫星轨道和静态建筑天空掩膜生成，不能称为人工核验的卫星接收真值。位置、地图和质量字段只用于参考标签与审计，不作为模型输入。边界、位置质量、缺少轨道或地图覆盖不满足条件时保留 unknown。unknown 可以提供已观测历史，但不参与监督和计分。将 unknown 当成 LOS 会加入未经确认的负标签，改变指标含义；不能无条件断言 Precision 会升高或 Recall 会下降，必须检查标签和预测如何改变。评分只代表通过参考检查的样本，必须同时查看标签覆盖率；动态树木、车辆与 LOS 多径未被该标签方法验证。",
+              "source_url": "docs/experiments/urbannav_generalization.md"
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D09-f55b314e330b",
+              "document_id": "D09",
+              "heading": "标签和特征分开",
+              "content": "参考位置、建筑图、方位角、质量、区域 ID 和标签包络均不作为模型输入；模型预处理只拟合训练侧。未跟踪的卫星不在观测表中。这些标签只能表达静态建筑几何可见性，无法覆盖临时车辆、树木或复杂建筑模型误差，LOS 仍可含多径。标签覆盖率较低意味着本报告不能声称评估了全部路线上的 NLOS。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 35,
+              "end_line": 36
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D07-029a6f18d2f4",
+              "document_id": "D07",
+              "heading": "对项目的重新定位",
+              "content": "1. KLT 配对实验保留为小尺度、较弱域偏移的开发比较；验证区域经验对同一固定测试段的影响，训练量变化也是混杂因素。\n2. UrbanNav 保留为真实未见城区测试：完整城区互斥、源验证阈值固定、逐城区成绩与标签覆盖率共同报告。它能检查同城迁移，而非跨城市结论。\n3. 真正跨城市验证仍未完成，需要不同城市的原始观测和独立 NLOS 参考，明确接收机/天线/频率及标签方法。应使用冻结的源模型、源预处理与源阈值，另报未知标签覆盖和 LOS/NLOS 条件分布；不能只凭来自不同城市的位置真值替代 NLOS 标注。\n\n实验有效性取决于划分和证据能否回答所声明的问题，性能下降不是有效泛化实验的必要条件。现有结果不支持“所有城市泛化良好”，也不支持“同城留出毫无意义”。",
+              "source_url": "docs/experiments/nlos_domain_audit.md",
+              "start_line": 42,
+              "end_line": 46
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D01-d994c31c657d",
+              "document_id": "D01",
+              "heading": "遮挡、信号接收与定位失准标签",
+              "content": "这三层标签回答不同的问题，必须分别保存。本地开发版新增了真实 KLT 数据上的卫星级 LOS/NLOS 识别，尚未实现高楼/树木/车辆的物体分类。\n\n| 层次 | 样本单位 | 字段与取值 | 需要的参考证据 | 当前状态 |\n| --- | --- | --- | --- | --- |\n| 环境场景 | 行程片段 | scene_label：open_sky / urban_canyon / tree_cover / overpass / tunnel / urban_unspecified / unknown | 同步影像、地图或数据集场景标注 | KLT 仅有 urban_unspecified；未标注具体场景类型 |\n| 信号接收 | 时间 × 卫星 | signal_label：los / nlos / unknown | 鱼眼相机天空掩膜、LiDAR 天空掩膜或独立数据集标注 | KLT 相机 LOS/NLOS 标签已接入 |",
+              "source_url": "docs/OBSTRUCTION_LABELS.md",
+              "start_line": 3,
+              "end_line": 8
+            },
+            {
+              "evidence_id": "E1",
+              "id": "D09-b776ac5cf66f",
+              "document_id": "D09",
+              "heading": "UrbanNav 未见城区泛化实验",
+              "content": "已实际下载和处理尖沙咀 TST、黄埔 WP、旺角 MK 的公开记录，并完成冻结 KLT 模型外部测试和六个 UrbanNav 城区互斥实验。这里验证的是**同一城市中的未见城区**，不声称跨城市泛化，也不把静态建筑图参考标签称为人工逐卫星真值。代码、数据清单和汇总报告已在本地准备；尚未上传 GitHub。\n\n[结果 JSON](urbannav_generalization_report.json)记录全部模型的 Precision、NLOS Recall、F1、混淆矩阵、阈值和逐区成绩。训练日志、模型与逐卫星预测保存在忽略的 `artifacts/urbannav_generalization`。",
+              "source_url": "docs/experiments/urbannav_generalization.md",
+              "start_line": 3,
+              "end_line": 6
+            }
+          ],
+          "numerical_references": []
+        }
+      ],
+      "review_summary": {
+        "actual_model_cases": 3,
+        "passed_cases": 3,
+        "needs_review": 0,
+        "local_guard_cases": 0
+      }
+    }
+  ],
+  "summary": {
+    "actual_model_requests": 17,
+    "actual_responses": 17,
+    "local_guard_cases": 1,
+    "latency_s": {
+      "minimum": 4.625,
+      "median": 8.25,
+      "maximum": 35.28200000000652
+    },
+    "usage": {
+      "prompt_tokens": 122262,
+      "completion_tokens": 5900,
+      "total_tokens": 128162,
+      "reasoning_tokens": 52
+    },
+    "most_recent_per_case_review_from_mixed_revisions": {
+      "G01": {
+        "round": "targeted",
+        "status": "pass"
+      },
+      "G02": {
+        "round": "initial",
+        "status": "pass"
+      },
+      "G03": {
+        "round": "targeted",
+        "status": "pass"
+      },
+      "G04": {
+        "round": "final_targeted",
+        "status": "pass"
+      },
+      "G05": {
+        "round": "final_targeted",
+        "status": "pass"
+      },
+      "G06": {
+        "round": "initial",
+        "status": "pass"
+      },
+      "G07": {
+        "round": "final_targeted",
+        "status": "pass"
+      },
+      "G08": {
+        "round": "targeted",
+        "status": "needs_review"
+      }
+    }
+  }
+}

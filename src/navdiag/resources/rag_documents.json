@@ -21,7 +21,7 @@
     },
     {
       "path": "docs/research/zhang2023_reproduction.md",
-      "sha256": "619979b840d00afeb3d004121e2a95bde6dd1cb8aac0eec96ac558503eec887e"
+      "sha256": "36f98a3c241b457de48ee8da08607808cd0167c35f978aecca2080e993ad497e"
     },
     {
       "path": "docs/OPEN_SOURCE_REFERENCES.md",
@@ -854,14 +854,14 @@
       "end_line": 8
     },
     {
-      "id": "D05-106a54a1714c",
+      "id": "D05-a73b42986f66",
       "document_id": "D05",
       "title": "Zhang 2023：方法核对与复现条件",
       "heading": "Zhang 2023：方法核对与复现条件",
       "keywords": [
         "Zhang 2023：方法核对与复现条件"
       ],
-      "content": "结论：可以独立实现论文的核心结构并在补齐输入后开展方法复现；当前不能声称完成作者结果复现。用户提供的八页 PDF 已阅读，特征公式、Fig. 3 结构图、Tables I–V 和实验讨论已视觉核对。PDF 结构预检 PASS（仅结构，不代表学术正确性），SHA-256 为 15cf6d88baf4d21e1e8cc9e40d2d52b684eeee60e62470f468209215c9ddbccd。",
+      "content": "结论：当前既没有完成论文核心结构的精确实现，也没有复现作者结果。现有模型是单卫星历史 Transformer 分类器，缺少论文跨卫星注意力、LSTM/BiLSTM 联合结构及误差回归任务。补齐输入后可以开展这些实现与方法复现，这是未来工作，不是已经完成的成果。用户提供的八页 PDF 已阅读，特征公式、Fig. 3 结构图、Tables I–V 和实验讨论已视觉核对。PDF 结构预检 PASS（仅结构，不代表学术正确性），SHA-256 为 15cf6d88baf4d21e1e8cc9e40d2d52b684eeee60e62470f468209215c9ddbccd。",
       "source_url": "docs/research/zhang2023_reproduction.md",
       "source_type": "project_document",
       "start_line": 11,

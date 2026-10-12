@@ -47,6 +47,32 @@ def test_paper_concept_question_uses_passages_without_unrelated_trip_metrics(art
     assert '模拟实验' not in result['answer']
 
 
+def test_hdop_guarantee_question_does_not_attach_unrelated_position_scores(artifacts):
+    result = ask('HDOP 很小，是否足以证明所有卫星都是 LOS，且位置误差很小？', artifacts)
+    assert [item['tool'] for item in result['evidence']] == ['search_knowledge']
+    assert any(note['id'] == 'K2' for note in result['evidence'][0]['payload']['notes'])
+
+
+def test_citation_check_recognizes_grouped_and_annotated_unknown_ids():
+    evidence = [{'evidence_id': 'E1'}, {'evidence_id': 'E2'}]
+    assert agent.check_citations('结论 [E1: K2]，比较 [E1, E2]。', evidence) == {
+        'has_evidence_citations': True, 'unknown_citations': []}
+    assert agent.check_citations('正文 [E3: D07] 与 [E2-D08]；E4 不是引用。', evidence) == {
+        'has_evidence_citations': True, 'unknown_citations': ['E3']}
+    assert agent.check_citations('[L04] 与 [D07] 不是工具引用。', evidence) == {
+        'has_evidence_citations': False, 'unknown_citations': []}
+
+
+def test_nlos_context_maps_documents_to_one_tool_and_defines_classes():
+    from navdiag.agent_context import evidence_context
+    evidence = [{'evidence_id': 'E1', 'tool': 'search_knowledge', 'payload': {'notes': [
+        {'id': 'L04', 'document_id': 'L04'}, {'id': 'D07-chunk', 'document_id': 'D07'}]}}]
+    context, _ = evidence_context('论文预处理', evidence, 'satellite_nlos')
+    assert context['evidence_catalog'] == [{'evidence_id': 'E1', 'tool': 'search_knowledge', 'document_ids': ['D07', 'L04']}]
+    assert context['task_definitions']['positive_class'] == 'NLOS'
+    assert context['task_definitions']['negative_class'] == 'LOS'
+
+
 def test_no_evidence_abstains_locally_without_any_model_request(monkeypatch, artifacts):
     monkeypatch.setenv('NAVDIAG_RETRIEVAL_MODE', 'sparse')
     def forbidden(*args):

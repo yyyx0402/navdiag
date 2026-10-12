@@ -8,7 +8,7 @@
 
 # Zhang 2023：方法核对与复现条件
 
-结论：可以独立实现论文的核心结构并在补齐输入后开展方法复现；当前不能声称完成作者结果复现。用户提供的八页 PDF 已阅读，特征公式、Fig. 3 结构图、Tables I–V 和实验讨论已视觉核对。PDF 结构预检 PASS（仅结构，不代表学术正确性），SHA-256 为 15cf6d88baf4d21e1e8cc9e40d2d52b684eeee60e62470f468209215c9ddbccd。
+结论：当前既没有完成论文核心结构的精确实现，也没有复现作者结果。现有模型是单卫星历史 Transformer 分类器，缺少论文跨卫星注意力、LSTM/BiLSTM 联合结构及误差回归任务。补齐输入后可以开展这些实现与方法复现，这是未来工作，不是已经完成的成果。用户提供的八页 PDF 已阅读，特征公式、Fig. 3 结构图、Tables I–V 和实验讨论已视觉核对。PDF 结构预检 PASS（仅结构，不代表学术正确性），SHA-256 为 15cf6d88baf4d21e1e8cc9e40d2d52b684eeee60e62470f468209215c9ddbccd。
 
 来源：[论文 arXiv v2](https://arxiv.org/abs/2309.00480v2)，Haoming Zhang、Zhanxin Wang、Heike Vallery，*Learning-based NLOS Detection and Uncertainty Prediction of GNSS Observations with Transformer-Enhanced LSTM Network*。学习解读见[第五课](../lessons/05_nlos_zhang2023.md)。原 PDF 与提取全文不复制到发布仓库。
 

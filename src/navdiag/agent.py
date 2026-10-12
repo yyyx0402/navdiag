@@ -40,6 +40,19 @@ SYSTEM_PROMPT = (
     ' Research summaries report cited authors\' methods/findings, not NavDiag results. Respect their '
     'recorded reading scope; never claim that an entire paper was read when only an abstract/sections '
     'were checked. You have no live internet search tool in this application; do not claim a web search.'
+    ' Use standalone citations such as [E1]; name a retrieved document separately in prose. '
+    'Only cite evidence IDs actually attached to this request; document IDs are not new tool evidence. '
+    'Answer the requested question first and omit unrelated experiment metrics. A general concept '
+    'cannot be proved by an experiment that did not measure the asserted relationship. '
+    'Distinguish a predictive clue from a guarantee, and an association from a necessary condition '
+    'or a causal effect. Do not infer a metric change direction without checking its definition and '
+    'the predictions/labels involved. Describe each protocol separately rather than extending one '
+    'protocol\'s small gap or ranking to all protocols. If a region/protocol is ambiguous, identify '
+    'which recorded experiment the statement describes and flag other relevant protocols.'
+    ' Use the evidence_catalog to find each document\'s enclosing tool evidence ID: multiple '
+    'documents inside E1 must all cite [E1], not new IDs. A source saying a method can be '
+    'implemented is a future option, never a statement that its architecture is already implemented. '
+    'Follow task_definitions when naming positive and negative classes.'
 )
 
 
@@ -378,7 +391,8 @@ def offline_answer(question: str, tools: EvidenceTools, trip_id: str | None = No
     nlos_question |= task_context == 'satellite_nlos' and any(word in lower for word in
         ['模型', 'f1', 'precision', 'recall', '数据', '划分', 'model', 'dataset', 'split',
          'transformer', '随机森林', 'random forest', 'lstm', 'gru', 'mlp', 'cnn'])
-    concept_only = any(word in lower for word in ['含义', '能否证明', '区别', '原理', '未来', '泄漏',
+    concept_only = any(word in lower for word in ['含义', '能否证明', '是否足以证明', '是否能证明',
+                                                '能保证', '完整复现', '核心差别', '区别', '原理', '未来', '泄漏',
                                                 '论文', '跨卫星', '网络结构', '双向', 'what is', 'causal'])
     concept_only &= not any(word in lower for word in ['效果', '表现', '排名', '本次', '多少', '对照', 'performance'])
     if interval:
@@ -483,6 +497,14 @@ def offline_answer(question: str, tools: EvidenceTools, trip_id: str | None = No
     if any(item['data_kind'] == 'synthetic' for item in tools.evidence) and not nlos_question:
         answer += '\n\n当前是模拟实验，指标不代表真实 GNSS 性能。'
     return answer
+
+
+def check_citations(text: str, evidence: list[dict]) -> dict:
+    """Check IDs in bracketed citation variants, not whether claims are supported."""
+    known = {item['evidence_id'] for item in evidence}
+    brackets = re.findall(r'\[([^\]\n]+)\]', text)
+    cited = {citation for bracket in brackets for citation in re.findall(r'\bE\d+\b', bracket)}
+    return {'has_evidence_citations': bool(cited), 'unknown_citations': sorted(cited - known)}
 
 
 def ask(question: str, artifacts: Path, config: LLMConfig | None = None, trip_id: str | None = None,
@@ -592,8 +614,7 @@ def ask(question: str, artifacts: Path, config: LLMConfig | None = None, trip_id
             raise RuntimeError('Agent did not produce a final answer within its tool-call budget')
         if not tools.evidence:
             raise RuntimeError('The model did not call an evidence tool. Use evidence mode, or select a model with tool support.')
-    known = {item['evidence_id'] for item in tools.evidence}
-    cited = set(re.findall(r'\[(E\d+)\]', text))
+    citation_check = check_citations(text, tools.evidence)
     return {'answer': text, 'backend': 'local_evidence_guard' if generation_skipped else config.provider,
             'configured_provider': config.provider, 'generation_skipped': generation_skipped,
             'skip_reason': 'no_relevant_evidence' if generation_skipped else None,
@@ -604,9 +625,9 @@ def ask(question: str, artifacts: Path, config: LLMConfig | None = None, trip_id
             'model_diagnostics': diagnostics, 'context_stats': context_stats,
             'warnings': (['回答达到输出上限，正文可能不完整；请提高输出上限后重新提问。']
                          if any(item['finish_reason'] == 'length' for item in diagnostics) else []) +
-                        (['回答包含不存在的证据引用，请核对后再采用结论。'] if cited - known else []) +
-                        (['回答没有标注证据引用，结论仍需核对。'] if config.provider != 'offline' and not cited else []),
-            'citation_check': {'has_evidence_citations': bool(cited), 'unknown_citations': sorted(cited - known)},
+                        (['回答包含不存在的证据引用，请核对后再采用结论。'] if citation_check['unknown_citations'] else []) +
+                        (['回答没有标注证据引用，结论仍需核对。'] if config.provider != 'offline' and not citation_check['has_evidence_citations'] else []),
+            'citation_check': citation_check,
             'notice': 'No model API call was made: no relevant project evidence.' if generation_skipped
                       else 'Offline mode is a deterministic baseline, not an LLM.' if config.provider == 'offline'
                       else 'Citation IDs were checked; that check alone does not verify every factual claim.'}

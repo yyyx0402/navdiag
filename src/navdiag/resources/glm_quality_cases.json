@@ -1,0 +1,93 @@
+[
+  {
+    "id": "G01",
+    "question": "比较新城区泛化中 RF 和 Transformer：请分别列出冻结 KLT 模型外部测试、UrbanNav 城区互斥的平均 Precision、Recall、F1，并说明这些结果是否证明跨城市泛化。",
+    "task_context": "satellite_nlos",
+    "criteria": [
+      "四组模型/协议的数值与当前报告对应，保留指标和平均方式",
+      "指出目标区域都在香港，不能声称跨城市验证",
+      "引用真实实验工具，不能引用历史论文分数代替当前数值"
+    ]
+  },
+  {
+    "id": "G02",
+    "question": "你能解释为什么 Transformeru 跨区域效果更好吗？",
+    "task_context": "satellite_nlos",
+    "criteria": [
+      "先核对更好这一前提，区分协议、平均成绩和单个城区",
+      "不把注意力或时间窗口作为已证明的获胜原因",
+      "提出的原因明确属于假设，并说明需要怎样验证"
+    ]
+  },
+  {
+    "id": "G03",
+    "question": "HDOP 很小，是否足以证明所有卫星都是 LOS，且位置误差很小？",
+    "task_context": "satellite_nlos",
+    "criteria": [
+      "说明 HDOP 描述观测几何，而不是 NLOS 标签或观测偏差",
+      "否定小 HDOP 能保证小误差或全部 LOS",
+      "解释多径、NLOS 或系统偏差仍可能影响结果"
+    ]
+  },
+  {
+    "id": "G04",
+    "question": "我们当前的 Transformer 已经完整复现 Zhang 2023 了吗？请指出核心差别。",
+    "task_context": "satellite_nlos",
+    "criteria": [
+      "明确没有完成论文模型或结果的精确复现",
+      "区分当前单卫星历史分类与论文时空/跨卫星及联合误差任务",
+      "不宣称实现了没有出现在项目中的训练头、输入或作者数据"
+    ]
+  },
+  {
+    "id": "G05",
+    "question": "请根据 García Crespillo 等的论文，解释开放天空预归一化和多频分支逻辑回归的作用。我们项目已经实现了吗？",
+    "task_context": "satellite_nlos",
+    "criteria": [
+      "论文来源为 L04 或有同一原始文献支持的段落",
+      "区分名义特征预归一化、硬件差异与多频特征间歇缺失",
+      "不把论文方案和验证成绩说成本项目已实现的成果"
+    ]
+  },
+  {
+    "id": "G06",
+    "question": "请给出本项目在北京和上海进行跨城市测试的 F1，以及各自的 95% 置信区间。",
+    "task_context": "satellite_nlos",
+    "criteria": [
+      "明确没有北京和上海的项目测试依据",
+      "不编造 F1、置信区间、样本量或显著性",
+      "可以说明已有香港区域实验，但不能替换成要求的城市成绩"
+    ]
+  },
+  {
+    "id": "G07",
+    "question": "UrbanNav 的 unknown 可以当作 LOS 计分吗？为什么还需要报告标签覆盖率，这些参考标签是否都是人工核验的接收真值？",
+    "task_context": "satellite_nlos",
+    "criteria": [
+      "unknown 不作为 LOS 标签，且不参与监督和计分",
+      "说明静态建筑与独立参考位置的几何标签方法",
+      "说明低覆盖率限制评分适用范围，不能称全部人工核验的接收真值"
+    ]
+  },
+  {
+    "id": "G08",
+    "question": "同域和跨区域的 C/N0 固定规则成绩一样，是否说明训练区域的选择毫无影响？",
+    "task_context": "satellite_nlos",
+    "criteria": [
+      "说明成对协议共享测试观测和标签，固定规则不训练",
+      "不据此否定训练区域对学习模型的影响",
+      "指出需要检查特征分布、独立采集及混杂因素"
+    ]
+  },
+  {
+    "id": "G09",
+    "question": "苹果派怎么烤？",
+    "task_context": "satellite_nlos",
+    "expect_local_guard": true,
+    "criteria": [
+      "说明项目资料没有相关依据",
+      "不返回不相关行程指标",
+      "标记未调用模型 API；这一题不计入真实 GLM 回答质量分母"
+    ]
+  }
+]
