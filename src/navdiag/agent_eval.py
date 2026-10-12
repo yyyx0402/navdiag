@@ -37,6 +37,9 @@ def evaluate_agent(artifacts: Path, output: Path, config: LLMConfig | None = Non
                      all({'id', 'source_url', 'source_type'} <= set(note) for note in item['payload']['notes']))
                     for item in evidence),
             }
+            if config.provider != 'offline' and 'answer_check' in answer:
+                checks['explicit_recorded_values_match'] = answer['answer_check']['needs_review'] == 0
+                checks['bounded_comparisons_consistent'] = not answer['answer_check']['comparison_warnings']
             if case.get('knowledge_id'):
                 checks['expected_note_in_top_5'] = case['knowledge_id'] in notes
             results.append({'id': case['id'], 'question': case['question'], 'checks': checks,
@@ -51,10 +54,10 @@ def evaluate_agent(artifacts: Path, output: Path, config: LLMConfig | None = Non
         'cases': len(results), 'passed': passed, 'pass_rate': passed / len(results),
         'latency_p50_s': float(np.median(latencies)) if latencies else None,
         'latency_p95_s': float(np.percentile(latencies, 95)) if latencies else None,
-        'scope': 'Tool routing, citation IDs, evidence provenance and optional note retrieval only.',
+        'scope': 'Tool routing, citation IDs, evidence provenance, optional retrieval and bounded explicit metric checks.',
         'limitations': ('This is an offline deterministic baseline evaluation, not an LLM evaluation. '
                         if config.provider == 'offline' else '') +
-                       'These checks do not grade answer correctness, numerical claims, root-cause reasoning or user usefulness.',
+                       'These checks do not grade full answer correctness, every numerical claim, root-cause reasoning or user usefulness. Unparsed prose is not verified.',
         'results': results,
     }
     output.parent.mkdir(parents=True, exist_ok=True)

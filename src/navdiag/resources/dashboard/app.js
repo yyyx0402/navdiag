@@ -1401,6 +1401,12 @@ function updateConnectionState() {
 function editConnection(identifier = "") {
   const saved = modelConnections.find((item) => item.id === identifier);
   editingConnectionId = saved?.id || "";
+  if (saved) {
+    try {
+      // Only the opaque selection ID is stored here; credentials remain on the server.
+      localStorage.setItem("navdiag-connection-id", saved.id);
+    } catch {}
+  }
   el("connection-select").value = editingConnectionId;
   el("connection-name").value = saved?.name || "";
   el("connection-url").value = saved?.base_url || "";
@@ -1563,7 +1569,15 @@ el("connection-delete").addEventListener("click", async () => {
 async function initializeConnections() {
   try {
     await refreshConnections();
-    if (modelConnections.length) editConnection(modelConnections[0].id);
+    let preferred;
+    try {
+      preferred = localStorage.getItem("navdiag-connection-id");
+    } catch {}
+    if (modelConnections.length)
+      editConnection(
+        modelConnections.find((item) => item.id === preferred)?.id ||
+          modelConnections.at(-1).id,
+      );
     connectionStatus(
       modelConnections.length
         ? `本机已保存 ${modelConnections.length} 个连接。选择自定义模型 API 后使用。`
@@ -1578,7 +1592,11 @@ document
   .forEach((button) =>
     button.addEventListener(
       "click",
-      () => (el("question").value = button.textContent),
+      () => {
+        el("question").value = button.textContent.trim();
+        if (button.dataset.task)
+          el("diagnostic-task").value = button.dataset.task;
+      },
     ),
   );
 el("ask-button").addEventListener("click", async () => {
@@ -1630,6 +1648,9 @@ el("ask-button").addEventListener("click", async () => {
       : `回答完成 · ${number(result.elapsed_s, 2)} 秒 · ${result.evidence.length} 条来源 · ${result.backend === "offline" ? "本地资料速查" : result.model}`;
     if (result.warnings?.length)
       el("agent-status").textContent += ` · ${result.warnings.join(" ")}`;
+    if (result.answer_check?.matched) {
+      el("agent-status").textContent += ` · ${result.answer_check.matched} 项显式指标与记录匹配，解释仍需结合来源判断`;
+    }
     result.evidence.forEach((item) => {
       const detail = document.createElement("details");
       detail.className = "evidence";

@@ -121,10 +121,12 @@ def test_context_projection_preserves_scores_premise_and_limits_without_mutating
     context, stats = evidence_context(question, evidence, 'satellite_nlos')
     reduced = context['evidence'][0]['payload']
     assert context['question'] == question and 'transformer' in context['retrieval_query']
-    assert reduced['models']['transformer']['test'] == metrics
+    models_sent = reduced['protocol_comparison']['cross_region']['models']
+    assert not reduced['models']  # Unrequested selected-fold scores do not enter this comparison.
+    assert models_sent['transformer']['test'] == metrics
     assert reduced['warning'] == payload['warning']
-    assert set(reduced['models']) == {'transformer', 'random_forest'}
-    assert 'validation_threshold_tradeoff' not in reduced['models']['transformer']
+    assert set(models_sent) == {'transformer', 'random_forest'}
+    assert 'validation_threshold_tradeoff' not in models_sent['transformer']
     assert reduced['premise_checks'][0]['recorded_comparison']['f1']['transformer_minus_rf'] == 0
     assert reduced['premise_checks'][0]['causal_explanation_available'] is False
     assert stats['sent_evidence_characters'] < stats['original_evidence_characters']

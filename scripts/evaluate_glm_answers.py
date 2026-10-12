@@ -34,7 +34,7 @@ def prepare(artifacts, nlos, generalization, case_ids=None):
     prepared = []
     for case in cases:
         tools = agent.EvidenceTools(artifacts, nlos, generalization)
-        agent.offline_answer(case['question'], tools, task_context=case['task_context'])
+        agent.prepare_evidence(case['question'], tools, task_context=case['task_context'])
         context, stats = evidence_context(case['question'], tools.evidence, case['task_context'])
         prepared.append({**case, 'context': context, 'context_stats': stats,
                          'context_sha256': context_hash(context)})

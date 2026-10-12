@@ -1,0 +1,459 @@
+{
+  "model": "glm-5.3",
+  "reviewer_kind": "developer_assistant",
+  "scope": "Previously seen project questions, mixed revisions; no blind or independent accuracy estimate.",
+  "rounds": [
+    {
+      "name": "initial",
+      "settings": {
+        "max_output_tokens": 2048,
+        "reasoning_effort": "default",
+        "timeout_s": 90
+      },
+      "model_requests": 11,
+      "passed": 5,
+      "needs_review": 4,
+      "cases": [
+        {
+          "id": "A01",
+          "mode": "evidence",
+          "status": "pass",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 32.094000000011874,
+          "answer_sha256": "0be8744e50711e877278fd3ddc28eff3c5aec3e8497ddaf05f095b3071bf14c4",
+          "tools": [
+            "compare_nlos",
+            "search_knowledge"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。差值应更明确统一相减顺序。",
+          "usage": [
+            {
+              "completion_tokens": 1796,
+              "prompt_tokens": 5291,
+              "total_tokens": 7087,
+              "reasoning_tokens": 1298
+            }
+          ]
+        },
+        {
+          "id": "A02",
+          "mode": "evidence",
+          "status": "pass",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 12.265999999974156,
+          "answer_sha256": "9b5f6030a433e65bfbf19c4ffa1abf38e5322295aaa8d5c8b1c12d983703cb63",
+          "tools": [
+            "compare_nlos",
+            "search_knowledge"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。",
+          "usage": [
+            {
+              "completion_tokens": 696,
+              "prompt_tokens": 3031,
+              "total_tokens": 3727,
+              "reasoning_tokens": 354
+            }
+          ]
+        },
+        {
+          "id": "A03",
+          "mode": "evidence",
+          "status": "needs_review",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 17.687999999994645,
+          "answer_sha256": "571d6fff9c38917aa090bbdec81b5c9199e341983f21922354bfc0e7f9d635ab",
+          "tools": [
+            "search_knowledge"
+          ],
+          "note": "把不同定义推为几何与可见性完全无关/独立。",
+          "usage": [
+            {
+              "completion_tokens": 1098,
+              "prompt_tokens": 2590,
+              "total_tokens": 3688,
+              "reasoning_tokens": 677
+            }
+          ]
+        },
+        {
+          "id": "A04",
+          "mode": "evidence",
+          "status": "pass",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 14.687000000005355,
+          "answer_sha256": "e2e99bde1b242c73f0b995dc8fb8a56f2a541c6cba839df4db8510994b3b70ed",
+          "tools": [
+            "compare_nlos",
+            "search_knowledge"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。",
+          "usage": [
+            {
+              "completion_tokens": 1040,
+              "prompt_tokens": 3284,
+              "total_tokens": 4324,
+              "reasoning_tokens": 564
+            }
+          ]
+        },
+        {
+          "id": "A05",
+          "mode": "evidence",
+          "status": "pass",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 10.26600000000326,
+          "answer_sha256": "a7fdd8127b7448d47316a7747095485d3fac9149f32610557d07dfaa08815657",
+          "tools": [
+            "search_knowledge"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。",
+          "usage": [
+            {
+              "completion_tokens": 682,
+              "prompt_tokens": 2351,
+              "total_tokens": 3033,
+              "reasoning_tokens": 335
+            }
+          ]
+        },
+        {
+          "id": "A06",
+          "mode": "evidence",
+          "status": "needs_review",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 16.98399999999674,
+          "answer_sha256": "1c079058e7c92e9ecc904620bfacaafb0a91613dd9ffa8bbfe9e566aeae066b7",
+          "tools": [
+            "compare_nlos",
+            "search_knowledge"
+          ],
+          "note": "编造KLT位于Karlsruhe；实际为香港九龙塘。",
+          "usage": [
+            {
+              "completion_tokens": 757,
+              "prompt_tokens": 4482,
+              "total_tokens": 5239,
+              "reasoning_tokens": 430
+            }
+          ]
+        },
+        {
+          "id": "A07",
+          "mode": "evidence",
+          "status": "needs_review",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 15.280999999988126,
+          "answer_sha256": "ec681d3b0064b2e90086803d23fe0bdc98888be8b4b95f3a23fd999ff62c974f",
+          "tools": [
+            "compare_positioning",
+            "search_knowledge"
+          ],
+          "note": "将旺角变差的P95说成略优。",
+          "usage": [
+            {
+              "completion_tokens": 1164,
+              "prompt_tokens": 4872,
+              "total_tokens": 6036,
+              "reasoning_tokens": 727
+            }
+          ]
+        },
+        {
+          "id": "A08",
+          "mode": "evidence",
+          "status": "local_guard",
+          "requests": 0,
+          "answer_complete": true,
+          "elapsed_s": 0.01600000000325963,
+          "answer_sha256": "4cac68ba0e66dfe55f007e013077e5c27ad405477ac7aeb6efb14e711245b045",
+          "tools": [
+            "search_knowledge"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。",
+          "usage": []
+        },
+        {
+          "id": "T01",
+          "mode": "tools",
+          "status": "pass",
+          "requests": 2,
+          "answer_complete": true,
+          "elapsed_s": 21.515999999974156,
+          "answer_sha256": "8835c33468481f51ba610d1dee83f8e28c3fdba5acab2786165a220a3025bf8b",
+          "tools": [
+            "compare_models",
+            "compare_nlos"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。",
+          "usage": [
+            {
+              "completion_tokens": 102,
+              "prompt_tokens": 1160,
+              "total_tokens": 1262,
+              "reasoning_tokens": 91
+            },
+            {
+              "completion_tokens": 816,
+              "prompt_tokens": 5486,
+              "total_tokens": 6302,
+              "reasoning_tokens": 461
+            }
+          ]
+        },
+        {
+          "id": "T02",
+          "mode": "tools",
+          "status": "needs_review",
+          "requests": 2,
+          "answer_complete": true,
+          "elapsed_s": 28.937000000005355,
+          "answer_sha256": "b18ade262c564af76f0ee83f984119b08865007ac17f31a7443f92b158f61222",
+          "tools": [
+            "search_knowledge",
+            "search_knowledge",
+            "compare_nlos"
+          ],
+          "note": "将验证F1阈值选择误述为早停标准。",
+          "usage": [
+            {
+              "completion_tokens": 214,
+              "prompt_tokens": 1157,
+              "total_tokens": 1371,
+              "reasoning_tokens": 169
+            },
+            {
+              "completion_tokens": 1259,
+              "prompt_tokens": 6571,
+              "total_tokens": 7830,
+              "reasoning_tokens": 726
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "followup",
+      "settings": {
+        "max_output_tokens": 2048,
+        "reasoning_effort": "default",
+        "timeout_s": 90
+      },
+      "model_requests": 7,
+      "passed": 3,
+      "needs_review": 2,
+      "cases": [
+        {
+          "id": "A03",
+          "mode": "evidence",
+          "status": "needs_review",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 20.375,
+          "answer_sha256": "1faeb399851e2d2275b7d574a9d1be729cf9e8466c3a6e5a07f98adf04ea945f",
+          "tools": [
+            "search_knowledge"
+          ],
+          "note": "把好几何说成不会放大误差，表述过强。",
+          "usage": [
+            {
+              "completion_tokens": 911,
+              "prompt_tokens": 2706,
+              "total_tokens": 3617,
+              "reasoning_tokens": 594
+            }
+          ]
+        },
+        {
+          "id": "A06",
+          "mode": "evidence",
+          "status": "pass",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 12.812999999994645,
+          "answer_sha256": "a5c06cd0571b291ff0fa64c2a146794aea35c375febc1915144894603657f98f",
+          "tools": [
+            "compare_nlos",
+            "search_knowledge"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。",
+          "usage": [
+            {
+              "completion_tokens": 785,
+              "prompt_tokens": 5012,
+              "total_tokens": 5797,
+              "reasoning_tokens": 471
+            }
+          ]
+        },
+        {
+          "id": "A07",
+          "mode": "evidence",
+          "status": "needs_review",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 16.203000000008615,
+          "answer_sha256": "c01d102428809b981dde30bdaea1ac420cb705a41bf699ff565ef6cc34194a51",
+          "tools": [
+            "compare_positioning",
+            "search_knowledge"
+          ],
+          "note": "核心方向已纠正，但额外的文献跨断解改善说法无附带来源支持。",
+          "usage": [
+            {
+              "completion_tokens": 1199,
+              "prompt_tokens": 5176,
+              "total_tokens": 6375,
+              "reasoning_tokens": 756
+            }
+          ]
+        },
+        {
+          "id": "T01",
+          "mode": "tools",
+          "status": "pass",
+          "requests": 2,
+          "answer_complete": true,
+          "elapsed_s": 19.45299999997951,
+          "answer_sha256": "b149eac56d9bbe43942e358b67639e9f4130dea925c876dd7d8571d40f005193",
+          "tools": [
+            "compare_nlos"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。",
+          "usage": [
+            {
+              "completion_tokens": 93,
+              "prompt_tokens": 925,
+              "total_tokens": 1018,
+              "reasoning_tokens": 86
+            },
+            {
+              "completion_tokens": 687,
+              "prompt_tokens": 4644,
+              "total_tokens": 5331,
+              "reasoning_tokens": 366
+            }
+          ]
+        },
+        {
+          "id": "T02",
+          "mode": "tools",
+          "status": "pass",
+          "requests": 2,
+          "answer_complete": true,
+          "elapsed_s": 40.92200000002049,
+          "answer_sha256": "48f28ab765ff65b20ffe735c77a13a81a53858a4e15a0b4ac7cea1f078a1236f",
+          "tools": [
+            "search_knowledge",
+            "search_knowledge",
+            "compare_nlos"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。",
+          "usage": [
+            {
+              "completion_tokens": 186,
+              "prompt_tokens": 922,
+              "total_tokens": 1108,
+              "reasoning_tokens": 137
+            },
+            {
+              "completion_tokens": 1328,
+              "prompt_tokens": 6372,
+              "total_tokens": 7700,
+              "reasoning_tokens": 822
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "final_targeted",
+      "settings": {
+        "max_output_tokens": 2048,
+        "reasoning_effort": "default",
+        "timeout_s": 90
+      },
+      "model_requests": 2,
+      "passed": 2,
+      "needs_review": 0,
+      "cases": [
+        {
+          "id": "A03",
+          "mode": "evidence",
+          "status": "pass",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 21.405999999988126,
+          "answer_sha256": "a556bf365cc2c03bc15eba912fd1877a2e19a4f97116500b38dce1d0b273df08",
+          "tools": [
+            "search_knowledge"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。HDOP是几何指标，文中“不同层次标签”措辞仍可更精确。",
+          "usage": [
+            {
+              "completion_tokens": 1095,
+              "prompt_tokens": 2716,
+              "total_tokens": 3811,
+              "reasoning_tokens": 639
+            }
+          ]
+        },
+        {
+          "id": "A07",
+          "mode": "evidence",
+          "status": "pass",
+          "requests": 1,
+          "answer_complete": true,
+          "elapsed_s": 14.969000000011874,
+          "answer_sha256": "8973811cfebf4cbac4ee9336ccf2f5ff57f4894b96521aa2be30f00e7565a09e",
+          "tools": [
+            "compare_positioning",
+            "search_knowledge"
+          ],
+          "note": "预设核心要求满足，未发现重大附加错误。",
+          "usage": [
+            {
+              "completion_tokens": 1111,
+              "prompt_tokens": 4166,
+              "total_tokens": 5277,
+              "reasoning_tokens": 698
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "model_requests_excluding_baseline": 20,
+  "limitations": [
+    "Semantic review is not independent human review.",
+    "Metric checks cover bounded forms only.",
+    "Last answers across revisions are not a single frozen-version evaluation.",
+    "One response per question does not establish generation stability."
+  ],
+  "baseline_requests": 2,
+  "input_comparison": [
+    {
+      "question": "比较新城区泛化中RF与Transformer，分别报告外部迁移和城区互斥的Precision、Recall、F1。",
+      "before_prompt_tokens": 17797,
+      "first_refinement_prompt_tokens": 5291,
+      "reduction_percent": 70.3,
+      "before_latency_s": 26.40600000001723,
+      "after_latency_s": 32.094000000011874
+    },
+    {
+      "question": "LSTM训练使用了哪些超参数？请只解释LSTM。",
+      "before_prompt_tokens": 5854,
+      "first_refinement_prompt_tokens": 3031,
+      "reduction_percent": 48.2,
+      "before_latency_s": 15.453000000008615,
+      "after_latency_s": 12.265999999974156
+    }
+  ]
+}

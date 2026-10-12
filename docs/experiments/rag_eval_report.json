@@ -145,10 +145,11 @@
     "technical_anchor_min_bm25_raw": 2.0
   },
   "corpus_sha256": "1fe2241adcf79ad51b28981ff429ffb24e778f1dac62759d34dc7ec6b9a6ff12",
+  "notes_sha256": "49a9afe20a95705c72a68ac2a0feb383197a609607591b8802f6381a8df41261",
   "literature_sha256": "941892cce1f51c98b34715f9c18a844d3fdfcae9c349740f6ff95061f7a731ff",
   "queries_v2_sha256": "22ced8acc38b66d5778a5e9d6845f516b2d6ff21e64754308247c158cd25ac8f",
   "literature_queries_sha256": "7ff21fa51b35bccb230e5a9559f364f2909e9a27ad831328acfe8739159677e0",
-  "scope": "Source/heading regression after public documentation cleanup; developer-authored and previously seen queries, not answer accuracy or blind evaluation.",
+  "scope": "Previously seen source/heading regression after diagnostic evidence refinement; not blind retrieval or answer-quality evaluation.",
   "limitations": [
     "Small project-authored queries, not representative user traffic.",
     "Old 23 queries are regression cases, including their formerly reserved cases.",

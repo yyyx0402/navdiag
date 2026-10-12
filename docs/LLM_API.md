@@ -30,7 +30,11 @@
 
 编辑连接时密钥留空表示保留，勾选清除表示移除；更换地址必须重新填写对应密钥或明确清除。请求不跟随重定向。远程地址使用 HTTPS，本地回环允许 HTTP。问题及相关证据发送到所选服务，付费按服务规则处理。
 
+刷新页面会恢复上次选择的连接；没有选择记录时使用最近保存的连接。浏览器仅保存连接ID，密钥仍保存在本机服务端。
+
 命令行可使用 `.env.example` 的 `compatible` 配置，或通过 `ask --connection 连接ID` 复用网页连接；`--connection` 与 `--provider` 二选一。`NAVDIAG_ANSWER_MODE=evidence/tools` 选择回答方式。
+
+`ask` 与 `evaluate-agent` 可用 `--answer-mode evidence/tools` 临时覆盖回答方式，不修改保存的连接。真实工具调用的两题复现入口见[诊断质量](experiments/agent_quality.md)。
 
 ## 常见错误
 

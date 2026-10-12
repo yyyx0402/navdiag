@@ -72,6 +72,7 @@ def main() -> None:
     agent.add_argument('--provider', choices=['offline', 'openai', 'deepseek', 'compatible'], default=None)
     agent.add_argument('--env-file', type=Path, default=Path('.env'))
     agent.add_argument('--connection', help='Saved connection ID from the local dashboard')
+    agent.add_argument('--answer-mode', choices=['evidence', 'tools'], help='Override this call only; keep saved connection unchanged')
     agent.add_argument('--trip', default=None)
     agent.add_argument('--nlos-artifacts', type=Path, help='NLOS fold or protocol suite; defaults to the current local suite when present')
     agent.add_argument('--generalization-artifacts', type=Path)
@@ -83,6 +84,7 @@ def main() -> None:
     evaluation.add_argument('--provider', choices=['offline', 'openai', 'deepseek', 'compatible'], default=None)
     evaluation.add_argument('--env-file', type=Path, default=Path('.env'))
     evaluation.add_argument('--connection', help='Evaluate with a saved dashboard connection')
+    evaluation.add_argument('--answer-mode', choices=['evidence', 'tools'], help='Override this evaluation only')
     evaluation.add_argument('--cases', type=Path)
     evaluation.add_argument('--nlos-artifacts', type=Path)
     evaluation.add_argument('--generalization-artifacts', type=Path)
@@ -173,6 +175,8 @@ def main() -> None:
                 raise ValueError('Choose --connection or --provider, not both')
             config = (ConnectionStore(connection_path(args.env_file)).config(args.connection) if args.connection
                       else LLMConfig.from_environment(args.provider, args.env_file))
+            if args.answer_mode:
+                config.answer_mode = args.answer_mode
             result = ask(args.question, args.artifacts, config, args.trip,
                          args.nlos_artifacts, args.generalization_artifacts, args.task_context)
             if args.out:
@@ -188,6 +192,8 @@ def main() -> None:
                 raise ValueError('Choose --connection or --provider, not both')
             config = (ConnectionStore(connection_path(args.env_file)).config(args.connection) if args.connection
                       else LLMConfig.from_environment(args.provider, args.env_file))
+            if args.answer_mode:
+                config.answer_mode = args.answer_mode
             report = evaluate_agent(args.artifacts, args.out, config, args.cases,
                                     args.nlos_artifacts, args.generalization_artifacts)
             print(f"Backend: {report['backend']} | cases: {report['passed']}/{report['cases']} | {args.out.resolve()}")

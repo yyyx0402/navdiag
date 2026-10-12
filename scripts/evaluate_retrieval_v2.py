@@ -56,6 +56,7 @@ def evaluate(output, split=None):
                                  'sparse_min_char': 0.065, 'sparse_min_bm25_raw': 2.0,
                                  'technical_anchor_min_char': 0.035, 'technical_anchor_min_bm25_raw': 2.0},
               'corpus_sha256': hashlib.sha256(resources.joinpath('rag_documents.json').read_bytes()).hexdigest(),
+              'notes_sha256': hashlib.sha256(resources.joinpath('knowledge.json').read_bytes()).hexdigest(),
               'literature_sha256': hashlib.sha256(resources.joinpath('literature.json').read_bytes()).hexdigest(),
               'queries_v2_sha256': hashlib.sha256(resources.joinpath('retrieval_cases_v2.json').read_bytes()).hexdigest(),
               'literature_queries_sha256': hashlib.sha256(resources.joinpath('literature_cases.json').read_bytes()).hexdigest(),

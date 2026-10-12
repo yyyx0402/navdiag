@@ -667,12 +667,12 @@
                   placeholder="例如：随机森林与 Transformer 在不同城区表现如何？"
                 ></textarea>
                 <div class="example-questions">
-                  <button>
+                  <button data-task="satellite_nlos">
                     新城区泛化中，随机森林与 Transformer 的表现如何？</button
-                  ><button>同域与跨区域中，哪些模型更占优势？</button
-                  ><button>遮挡识别模型效果如何？</button
-                  ><button>HDOP 能否证明发生了 NLOS？</button
-                  ><button>自适应滤波是否改善位置误差？</button>
+                  ><button data-task="satellite_nlos">同域与跨区域中，哪些模型更占优势？</button
+                  ><button data-task="satellite_nlos">遮挡识别模型效果如何？</button
+                  ><button data-task="satellite_nlos">HDOP 能否证明发生了 NLOS？</button
+                  ><button data-task="position_error">自适应滤波是否改善位置误差？</button>
                 </div>
                 <button class="primary" id="ask-button">
                   获取回答<span>↗</span>

@@ -6,7 +6,7 @@
 | 任务、特征、模型与限制 | [模型卡](MODEL_CARD.md)、[标签](OBSTRUCTION_LABELS.md) |
 | 当前识别结果 | [KLT 双协议](experiments/nlos_protocols.md)、[UrbanNav 城区留出](experiments/urbannav_generalization.md)、[分布审计](experiments/nlos_domain_audit.md) |
 | 当前定位结果 | [完整路线评估](experiments/positioning_expansion.md)、[方法来源](research/positioning_methods.md) |
-| 问答与文献 | [API](LLM_API.md)、[RAG](RAG_RETRIEVAL.md)、[回答检查](experiments/glm_quality.md)、[文献目录](research/reading_list.md) |
+| 问答与文献 | [API](LLM_API.md)、[RAG](RAG_RETRIEVAL.md)、[诊断质量](experiments/agent_quality.md)、[历史回答检查](experiments/glm_quality.md)、[文献目录](research/reading_list.md) |
 | 技术背景 | [NLOS](knowledge/nlos.md)、[泛化](knowledge/generalization.md)、[Zhang 2023 方法对照](research/zhang2023_reproduction.md) |
 
 ## 可选依赖

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "T01",
+    "question": "比较UrbanNav城区互斥中RF与Transformer的平均F1，并指出旺角是否符合这个排名。",
+    "task_context": "satellite_nlos",
+    "required_tool": "compare_nlos"
+  },
+  {
+    "id": "T02",
+    "question": "解释当前Transformer和Zhang2023论文网络的差别，请先查找资料再回答。",
+    "task_context": "satellite_nlos",
+    "required_tool": "search_knowledge"
+  }
+]

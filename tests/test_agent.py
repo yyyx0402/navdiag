@@ -61,6 +61,8 @@ def test_citation_check_recognizes_grouped_and_annotated_unknown_ids():
         'has_evidence_citations': True, 'unknown_citations': ['E3']}
     assert agent.check_citations('[L04] 与 [D07] 不是工具引用。', evidence) == {
         'has_evidence_citations': False, 'unknown_citations': []}
+    assert agent.check_citations('依据［E1｜K2］及【E9】，已查到[E2]。', evidence) == {
+        'has_evidence_citations': True, 'unknown_citations': ['E9']}
 
 
 def test_nlos_context_maps_documents_to_one_tool_and_defines_classes():
@@ -238,3 +240,91 @@ def test_unknown_evidence_citation_is_exposed_as_a_warning(monkeypatch, artifact
     result = ask('比较模型的 F1', artifacts, LLMConfig('compatible', 'my-model', 'https://fixture.invalid', answer_mode='evidence'))
     assert result['citation_check']['unknown_citations'] == ['E999']
     assert any('不存在' in warning for warning in result['warnings'])
+
+
+def test_training_question_keeps_only_requested_architecture_and_no_test_scores():
+    from navdiag.agent_context import evidence_context
+    payload = {'available': True, 'models': {
+        'lstm': {'training': {'architecture': 'lstm', 'configuration': {'layers': 2, 'heads': 4, 'kernel_size': 5}},
+                 'test': {'f1': .7}}, 'random_forest': {'test': {'f1': .8}}}, 'splits': {}}
+    context, _ = evidence_context('LSTM训练用了哪些超参数？', [{'tool': 'compare_nlos', 'evidence_id': 'E1', 'payload': payload}], 'satellite_nlos')
+    models = context['evidence'][0]['payload']['models']
+    assert set(models) == {'lstm'} and 'test' not in models['lstm']
+    assert models['lstm']['training']['configuration'] == {'layers': 2}
+
+
+def test_new_district_question_drops_klt_protocols_and_duplicate_directions():
+    from navdiag.agent_context import evidence_context
+    model = {'test_macro': {'f1': .75}, 'per_area': {'MK': {'test_mean': {'f1': .7},
+             'directions': {'TST': {'f1': .8}, 'WP': {'f1': .6}}}}}
+    payload = {'available': True, 'models': {'random_forest': {'test': {'f1': .6}}},
+               'protocol_comparison': {'in_domain': {'models': {'random_forest': model}}},
+               'new_district_generalization': {'external_transfer': {'models': {'random_forest': model}},
+                                                'district_holdout': {'models': {'random_forest': model}}}}
+    context, _ = evidence_context('新城区RF的F1是多少？', [{'tool': 'compare_nlos', 'evidence_id': 'E1', 'payload': payload}], 'satellite_nlos')
+    selected = context['evidence'][0]['payload']
+    assert not selected['models'] and not selected['protocol_comparison']
+    assert selected['new_district_generalization']['district_holdout']['models']['random_forest']['per_area']['MK'] == {'test_mean': {'f1': .7}}
+
+
+def test_evidence_preparation_is_independent_of_offline_answer_template(monkeypatch, artifacts):
+    monkeypatch.setattr(agent, 'offline_answer', lambda *args: (_ for _ in ()).throw(AssertionError('No template routing')))
+    monkeypatch.setattr(agent, '_post', lambda *args: {'choices': [{'message': {'content': 'Saved comparison [E1]'}}]})
+    result = ask('比较模型的F1', artifacts, LLMConfig('compatible', 'fixture', 'https://fixture.invalid', answer_mode='evidence'))
+    assert result['evidence'][0]['tool'] == 'compare_models'
+
+
+def test_selected_satellite_task_cannot_call_epoch_alarm_tools(artifacts):
+    tools = EvidenceTools(artifacts)
+    tools.task_context = 'satellite_nlos'
+    assert {row['name'] for row in tools.definitions()} == {'compare_nlos', 'search_knowledge'}
+    with pytest.raises(ValueError, match='Unknown tool'):
+        tools.invoke('compare_models', {})
+
+
+def test_doppler_comparison_keeps_tail_and_rmse_directions_separate():
+    from navdiag.agent_context import evidence_context
+    evidence = [{'tool': 'compare_positioning', 'evidence_id': 'E1', 'payload': {'methods': {
+        'wls': {'rmse_m': 15., 'p95_m': 28.}, 'doppler_filter': {'rmse_m': 14., 'p95_m': 33.}}}}]
+    context, _ = evidence_context('Doppler定位效果如何？', evidence, 'position_error')
+    comparisons = context['evidence'][0]['payload']['baseline_comparison']['metrics']
+    assert comparisons['rmse_m']['doppler_improved'] is True
+    assert comparisons['p95_m']['doppler_improved'] is False
+
+
+def test_cli_answer_mode_override_does_not_modify_saved_profile(monkeypatch, tmp_path):
+    import sys
+    from navdiag.cli import main
+    from navdiag.llm_connections import ConnectionStore
+    store = ConnectionStore(tmp_path / '.navdiag' / 'llm_connections.json')
+    saved = store.save({'name': 'fixture', 'model': 'fixture-model', 'base_url': 'https://fixture.invalid',
+                        'answer_mode': 'evidence'})
+    modes = []
+    def fake_ask(question, artifacts, config, *args):
+        modes.append(config.answer_mode)
+        return {'answer': 'fixture'}
+    monkeypatch.setattr(agent, 'ask', fake_ask)
+    monkeypatch.setattr(sys, 'argv', ['navdiag', 'ask', 'fixture', '--connection', saved['id'],
+                                    '--env-file', str(tmp_path / '.env'), '--answer-mode', 'tools'])
+    main()
+    assert modes == ['tools']
+    assert store.config(saved['id']).answer_mode == 'evidence'
+
+
+def test_application_model_advantage_question_requests_metrics():
+    from navdiag.agent_context import question_plan
+    plan = question_plan('同域与跨区域，哪些模型更占优势？', 'satellite_nlos')
+    assert plan['intent'] == 'performance' and set(plan['scopes']) == {'in_domain', 'cross_region'}
+
+
+@pytest.mark.parametrize('question,scope', [
+    ('冻结KLT到UrbanNav的外部迁移F1是多少？', 'external_transfer'),
+    ('UrbanNav城区互斥中RF与Transformer的F1是多少？', 'district_holdout')])
+def test_source_dataset_name_does_not_request_unrelated_protocols(question, scope):
+    from navdiag.agent_context import question_plan
+    assert question_plan(question, 'satellite_nlos')['scopes'] == [scope]
+
+
+def test_doppler_radio_feature_question_is_not_position_filter_comparison():
+    from navdiag.agent_context import question_plan
+    assert question_plan('Doppler一致性特征是什么？', 'satellite_nlos')['intent'] == 'concept'

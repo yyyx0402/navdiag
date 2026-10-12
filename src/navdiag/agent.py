@@ -18,7 +18,8 @@ import pandas as pd
 
 from navdiag.evidence import summarize_trip
 from navdiag.knowledge import normalize_query, retrieve_knowledge
-from navdiag.agent_context import evidence_context
+from navdiag.agent_context import evidence_context, question_plan
+from navdiag.answer_checks import check_answer_metrics
 
 SYSTEM_PROMPT = (
     'You are NavDiag, a GNSS experiment diagnostic assistant. Respond in the user language. '
@@ -54,6 +55,14 @@ SYSTEM_PROMPT = (
     'documents inside E1 must all cite [E1], not new IDs. A source saying a method can be '
     'implemented is a future option, never a statement that its architecture is already implemented. '
     'Follow task_definitions when naming positive and negative classes.'
+    ' Retrieved passages may be partial excerpts; do not conclude that an omitted row or statement '
+    'is absent from the original document. For training questions, describe only settings applicable '
+    'to the named architecture. Do not append unrelated model scores.'
+    ' Use explicit project_geography names, never guess a city from an acronym. Do not infer '
+    'statistical independence between HDOP and LOS/NLOS from their definitions. For positioning, '
+    'check baseline_comparison before claiming improvement: lower RMSE does not imply lower P95 '
+    'or better availability. Checkpoint selection and threshold selection are distinct operations '
+    'specified in task_definitions.'
 )
 
 
@@ -136,6 +145,7 @@ class LLMConfig:
 class EvidenceTools:
     def __init__(self, artifacts: Path, nlos_artifacts: Path | None = None,
                  generalization_artifacts: Path | None = None):
+        self.task_context = None
         self.artifacts = artifacts.resolve()
         self.report = json.loads((self.artifacts / 'report.json').read_text(encoding='utf-8'))
         self.frame = pd.read_csv(self.artifacts / 'predictions.csv', dtype={'trip_id': 'string'})
@@ -155,13 +165,12 @@ class EvidenceTools:
         self.generalization_artifacts = generalization_artifacts or self.artifacts.parent / 'urbannav_generalization'
         self.evidence = []
 
-    @staticmethod
-    def definitions() -> list[dict]:
+    def definitions(self) -> list[dict]:
         specifications = [
             ('list_trips', 'List held-out trips and data provenance.', {}),
             ('trip_summary', 'Summarize observed signals and predicted risk; no reference labels.',
              {'trip_id': {'type': ['string', 'null'], 'description': 'A listed trip ID, or null for the first trip'}}),
-            ('compare_models', 'Read recorded classification metrics and validation-selected model.', {}),
+            ('compare_models', 'Read epoch position-error ALERT metrics only, never satellite LOS/NLOS scores.', {}),
             ('compare_nlos', 'Read satellite LOS/NLOS metrics, camera/map label provenance, and geographic holdouts. Not epoch position-error risk.', {}),
             ('compare_positioning', 'Read offline reference-based positioning metrics, when available.', {}),
             ('segment_summary', 'Summarize observations and predicted risk in a relative time interval.',
@@ -169,6 +178,10 @@ class EvidenceTools:
             ('search_knowledge', 'Retrieve local technical notes with original source references.',
              {'query': {'type': 'string'}}),
         ]
+        if self.task_context == 'satellite_nlos':
+            specifications = [row for row in specifications if row[0] in {'compare_nlos', 'search_knowledge'}]
+        elif self.task_context == 'position_error':
+            specifications = [row for row in specifications if row[0] != 'compare_nlos']
         return [{'name': name, 'description': description,
                  'parameters': {'type': 'object', 'properties': properties, 'required': list(properties),
                                 'additionalProperties': False}, 'strict': True}
@@ -213,6 +226,9 @@ class EvidenceTools:
                     raise ValueError('The companion experiment is not satellite NLOS detection')
                 payload['available'] = True
                 payload['reference_labels_used'] = True
+                if payload.get('source', {}).get('source_url') == 'https://github.com/ebhrz/KLTDataset':
+                    payload['project_geography'] = {'source_dataset': 'KLT', 'source_location': 'Kowloon Tong, Hong Kong',
+                                                    'cross_city_evaluated': False}
                 payload['models'] = {name: {key: value for key, value in model.items() if key != 'training_history'}
                                      for name, model in payload['models'].items()}
                 suite_path = self.nlos_artifacts.parent.parent / 'suite_report.json'
@@ -229,6 +245,9 @@ class EvidenceTools:
                 if generalization_path.exists():
                     generalization = json.loads(generalization_path.read_text(encoding='utf-8'))
                     if generalization.get('task_type') == 'satellite_nlos_generalization':
+                        if generalization.get('dataset', {}).get('source_url') == 'https://github.com/IPNL-POLYU/UrbanNavDataset':
+                            payload.setdefault('project_geography', {}).update(target_city='Hong Kong',
+                                target_districts=['TST', 'WP', 'MK'], cross_city_evaluated=False)
                         payload['new_district_generalization'] = {
                             'external_transfer': generalization['external_transfer'],
                             'district_holdout': generalization['district_holdout'],
@@ -538,9 +557,26 @@ def offline_answer(question: str, tools: EvidenceTools, trip_id: str | None = No
 def check_citations(text: str, evidence: list[dict]) -> dict:
     """Check IDs in bracketed citation variants, not whether claims are supported."""
     known = {item['evidence_id'] for item in evidence}
+    text = text.translate(str.maketrans({'［': '[', '］': ']', '【': '[', '】': ']'}))
     brackets = re.findall(r'\[([^\]\n]+)\]', text)
     cited = {citation for bracket in brackets for citation in re.findall(r'\bE\d+\b', bracket)}
     return {'has_evidence_citations': bool(cited), 'unknown_citations': sorted(cited - known)}
+
+
+def prepare_evidence(question, tools, trip_id=None, task_context=None):
+    """Prepare a single-request answer's evidence, separate from the offline template."""
+    plan = question_plan(question, task_context)
+    interval = re.search(r'(?:前\s*|first\s+)(\d+(?:\.\d+)?)\s*(?:秒|seconds?|s\b)', normalize_query(question).lower())
+    if interval:
+        tools.invoke('segment_summary', {'trip_id': trip_id, 'start_s': 0, 'end_s': float(interval[1])})
+    elif plan['intent'] == 'positioning':
+        tools.invoke('compare_positioning', {})
+    elif plan['intent'] in {'training', 'performance', 'dataset'}:
+        tools.invoke('compare_nlos' if plan['task'] == 'satellite_nlos' else 'compare_models', {})
+    elif any(word in question.lower() for word in ('行程', '风险片段', 'trip summary')):
+        tools.invoke('trip_summary', {'trip_id': trip_id})
+    tools.invoke('search_knowledge', {'query': question})
+    return plan
 
 
 def ask(question: str, artifacts: Path, config: LLMConfig | None = None, trip_id: str | None = None,
@@ -554,16 +590,20 @@ def ask(question: str, artifacts: Path, config: LLMConfig | None = None, trip_id
         raise ValueError('Task context must be satellite_nlos, position_error, or null')
     config = (config or LLMConfig()).validate()
     tools, started, usage = EvidenceTools(artifacts, nlos_artifacts, generalization_artifacts), time.monotonic(), []
+    if config.provider != 'offline' and config.answer_mode == 'tools':
+        tools.task_context = task_context
     diagnostics, context_stats, generation_skipped = [], {}, False
     # A missing passage must not trigger an unrelated trip summary or a paid call.
     # Tool agents retain LLM routing/query-rewrite ability; the local baseline is
     # only a preflight in evidence mode, which promises a single model request.
-    baseline = offline_answer(question, tools, trip_id, task_context) if (
-        config.provider == 'offline' or config.answer_mode == 'evidence') else None
+    baseline = offline_answer(question, tools, trip_id, task_context) if config.provider == 'offline' else None
+    if config.provider != 'offline' and config.answer_mode == 'evidence':
+        prepare_evidence(question, tools, trip_id, task_context)
     no_evidence = (len(tools.evidence) == 1 and tools.evidence[0]['tool'] == 'search_knowledge'
                    and not tools.evidence[0]['payload']['notes'])
     if no_evidence:
-        text, generation_skipped = baseline, config.provider != 'offline'
+        text = baseline or '当前项目资料中没有找到足以回答这个问题的依据。请补充具体术语或场景。 [E1]'
+        generation_skipped = config.provider != 'offline'
     elif config.provider == 'offline':
         text = baseline
     elif config.answer_mode == 'evidence':
@@ -638,8 +678,12 @@ def ask(question: str, artifacts: Path, config: LLMConfig | None = None, trip_id
                 except (ValueError, TypeError, json.JSONDecodeError) as error:
                     result = {'tool_error': str(error)}
                 if 'payload' in result:
-                    projected, _ = evidence_context(question, [result], task_context, trip_id)
+                    projected, stats = evidence_context(question, [result], task_context, trip_id)
                     result = projected['evidence'][0]
+                    result['answer_context'] = {key: projected[key] for key in
+                                               ('evidence_catalog', 'task_definitions', 'context_scope')}
+                    for key in ('original_evidence_characters', 'sent_evidence_characters'):
+                        context_stats[key] = context_stats.get(key, 0) + stats[key]
                 serialized = json.dumps(result, ensure_ascii=False, allow_nan=False)
                 if native:
                     conversation.append({'type': 'function_call_output', 'call_id': call['call_id'], 'output': serialized})
@@ -651,18 +695,24 @@ def ask(question: str, artifacts: Path, config: LLMConfig | None = None, trip_id
         if not tools.evidence:
             raise RuntimeError('The model did not call an evidence tool. Use evidence mode, or select a model with tool support.')
     citation_check = check_citations(text, tools.evidence)
+    checked_context, _ = evidence_context(question, tools.evidence, task_context, trip_id)
+    answer_check = check_answer_metrics(text, tools.evidence if config.provider == 'offline' else checked_context['evidence'])
     return {'answer': text, 'backend': 'local_evidence_guard' if generation_skipped else config.provider,
             'configured_provider': config.provider, 'generation_skipped': generation_skipped,
             'skip_reason': 'no_relevant_evidence' if generation_skipped else None,
             'answer_mode': config.answer_mode,
             'model': 'local_evidence_guard' if generation_skipped else config.model or 'deterministic_tool_baseline',
-            'evidence': tools.evidence, 'usage': usage, 'elapsed_s': time.monotonic() - started,
+            'evidence': tools.evidence if config.provider == 'offline' else checked_context['evidence'],
+            'usage': usage, 'elapsed_s': time.monotonic() - started,
             'answer_complete': not any(item['finish_reason'] == 'length' for item in diagnostics),
             'model_diagnostics': diagnostics, 'context_stats': context_stats,
+            'answer_check': answer_check,
             'warnings': (['回答达到输出上限，正文可能不完整；请提高输出上限后重新提问。']
                          if any(item['finish_reason'] == 'length' for item in diagnostics) else []) +
                         (['回答包含不存在的证据引用，请核对后再采用结论。'] if citation_check['unknown_citations'] else []) +
-                        (['回答没有标注证据引用，结论仍需核对。'] if config.provider != 'offline' and not citation_check['has_evidence_citations'] else []),
+                        (['回答没有标注证据引用，结论仍需核对。'] if config.provider != 'offline' and not citation_check['has_evidence_citations'] else []) +
+                        ([f"回答中有 {answer_check['needs_review']} 项显式指标数值未与相应记录匹配，请展开依据核对。"]
+                         if answer_check['needs_review'] else []) + answer_check['comparison_warnings'],
             'citation_check': citation_check,
             'notice': 'No model API call was made: no relevant project evidence.' if generation_skipped
                       else 'Offline mode is a deterministic baseline, not an LLM.' if config.provider == 'offline'
