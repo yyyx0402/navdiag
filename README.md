@@ -2,178 +2,138 @@
 
 [![Python checks](https://github.com/yyyx0402/navdiag/actions/workflows/ci.yml/badge.svg)](https://github.com/yyyx0402/navdiag/actions/workflows/ci.yml)
 
-**GNSS 遮挡识别、区域实验与证据诊断 / GNSS LOS/NLOS experiments and evidence-backed diagnostics**
+**GNSS 信号识别、定位分析与有来源的诊断问答**
 
-把卫星导航专业知识与机器学习、LLM 工具调用结合起来的项目。主线是逐卫星 LOS/NLOS 识别：公开数据预处理、五种神经网络与传统参照、同域和区域留出实验、错误分析与证据诊断。定位和“水平误差 >10 m”告警保留为独立辅助实验。
+NavDiag 是结合卫星导航、机器学习与 RAG 的本地应用。它提供逐卫星 LOS/NLOS 识别、区域适应性对比、定位与失准告警分析，以及按问题查找文献的学习入口。适合学习、离线研究与求职项目展示。
 
-v0.3 已完成 KLT 九段采集的双协议对比，以及 UrbanNav 三个新城区的冻结源模型迁移与六个城区互斥方向。网页以真实识别实验为主，提供可折叠面板、指标切换条形图、区域热力图、参考标签覆盖率、混淆矩阵与逐卫星检查。无需模型密钥即可查看离线证据。
+当前版本为 v0.3，文档更新于 **2026-10-12**。查看结果、使用离线诊断和查找文献无需模型 API；问答支持自行配置 Chat Completions 兼容服务。
 
-**结果边界：**修正 GSDC 2021 时间与参考高度处理后，公开数据共 4,572 个匹配历元；两个完整行程用于训练和验证，留出解析样例只有 11 个历元，且没有失准正样本。旧真实验证 F1 0.991 已撤回，见[修正记录](docs/experiments/gsdc2021_correction.md)。模拟指标只验证流程；真实大模型评测需要用户自行配置密钥。
+## 可以做什么
 
-![真实遮挡识别与可折叠可视化工作台](docs/images/nlos-workbench.png)
+| 功能         | 已实现内容                                                                                        | 阅读入口                                                                                                    |
+| ------------ | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| 卫星信号识别 | LR、RF、C/N0 规则与 MLP、CNN、LSTM、GRU、Transformer 五网络；混淆矩阵、阈值权衡与逐卫星检查       | [标签说明](docs/OBSTRUCTION_LABELS.md)、[模型卡](docs/MODEL_CARD.md)                                        |
+| 区域适应性   | KLT 同域/跨区域配对实验；冻结 KLT 模型迁移至 UrbanNav；UrbanNav 六个城区互斥方向                  | [双协议结果](docs/experiments/nlos_protocols.md)、[新城区结果](docs/experiments/urbannav_generalization.md) |
+| 定位与告警   | RTKLIB SPP、固定/风险自适应 KF、Doppler 速度约束 KF；三条整段路线轮流留出；原始可用率和断解时间线 | [完整路线评估](docs/experiments/positioning_expansion.md)、[方法出处](docs/research/positioning_methods.md) |
+| 诊断问答     | 只读实验工具、本地语义/关键词检索、来源行号与引用检查；离线速查、证据问答和工具 Agent             | [RAG](docs/RAG_RETRIEVAL.md)、[模型与 API](docs/LLM_API.md)                                                 |
+| 文献学习     | 20 篇有出处和阅读范围的研究摘要；按问题、主题和难度筛选，提供原文入口和阅读提示                   | [文献目录](docs/research/reading_list.md)、[学习路线](docs/LEARNING_PATH.md)                                |
 
-工程检查和研究边界见[项目检查记录](docs/PROJECT_REVIEW.md)。RAG 包含 11 条短笔记、9 份原创文档的 114 段资料和[20 篇文献摘要与学习指南](docs/research/reading_list.md)，采用本地 BGE 中文向量与关键词检索，保留来源行号和实验证据。网页新增按问题推荐阅读、主题/难度筛选及原文入口，推荐不调用问答模型。新增相关查询命中 6/8，无关查询返回空结果 5/6；这些是小型手写查询集的检索检查，不代表回答正确率。工具 Agent 可由 LLM 选择工具和改写查询；当前未接联网搜索。已完成用户配置的 GLM-5.3 真实问答回归验证，保留失败与修订记录，详见[回答质量检查](docs/experiments/glm_quality.md)和 [RAG 实施记录](docs/RAG_RETRIEVAL.md)。
+各面板和精确指标表可展开、收起；模型对比支持切换 Precision / Recall / F1。文献推荐在本地执行，不调用问答模型。当前应用的 LLM 没有联网搜索工具。
 
-定位部分仍是离线学习/研究原型：模拟数据上固定滤波优于自适应，真实最终样例仅 11 历元，尚未验证逐卫星 NLOS 识别带来的真实定位增益。与 GSDC/因子图/DGNSS 文献的指标和输入条件对照见[定位能力审计](docs/research/positioning_audit.md)，不能据异构数据直接声称算法领先或用于真实导航部署。
+![已保存的 NLOS 工作台截图；定位和文献功能以当前应用为准](docs/images/nlos-workbench.png)
 
-## 本地新增：真实遮挡识别
+## 两种任务，分别评估
 
-已新增[UrbanNav 未见城区泛化](docs/experiments/urbannav_generalization.md)：公开记录来自尖沙咀、黄埔、旺角，共 5,671 个原始历元、77,744 条卫星观测。独立位置和三维建筑图产生可评分几何参考 27,839 条，其余为 unknown。冻结 KLT 模型和源阈值的外部测试已完成；另完成同设备、同地图标签方法的一城区训练、另一城区验证、第三城区测试的六个方向，继续使用固定参数，无新增搜索。
+| 任务          | 一条样本       | 正类与参考                                         | 学习输入                                                  |
+| ------------- | -------------- | -------------------------------------------------- | --------------------------------------------------------- |
+| 卫星 LOS/NLOS | 时间 × 卫星    | NLOS；KLT 相机天空掩膜或 UrbanNav 静态建筑几何参考 | 五项无线电/几何特征；神经网络使用同一卫星的过去及当前观测 |
+| 定位失准告警  | 接收机定位历元 | 基线水平误差 >10 m；独立参考轨迹生成标签           | 卫星数、C/N0 均值/最小值、HDOP、残差 RMS、因果估计速度    |
 
-RF 的外部/城区互斥平均 F1 为 0.7884/0.7852，Transformer 为 0.7852/0.7489；旺角的 Transformer F1 更高，逐城区结果见报告。静态建筑参考、低质量/边缘样本排除和旺角 19.9% 的标签覆盖率限制了结论。它们全部位于香港，**跨城市验证尚未完成**。对 C/N0 真实分布、固定规则两列成绩相同的原因与同城测试价值的理性分析见[域偏移审计](docs/experiments/nlos_domain_audit.md)。
+参考误差、参考位置和标签不作为模型输入。`unknown` 不参与 NLOS 监督或评分，但其可用观测可以保留在因果历史中。10 m 是告警定义，位置精度另用 Median/P95/RMSE 和误差内比例评估。当前位置告警和滤波尚未完成“逐卫星 NLOS 预测 → 观测加权 → 定位收益”的闭环。
 
-```powershell
-.\.venv\Scripts\python.exe scripts/fetch_urbannav.py
-.\.venv\Scripts\python.exe tools/urbannav/prepare.py
-# 依赖下文 KLT 双协议实验已经生成的源模型。
-.\.venv\Scripts\python.exe -m navdiag evaluate-nlos-regions
-.\.venv\Scripts\python.exe -m navdiag serve --artifacts artifacts/navigation_demo --nlos-artifacts artifacts/klt_protocols --generalization-artifacts artifacts/urbannav_generalization
-```
+## 运行应用
 
-![新城区泛化结果](docs/images/urbannav-generalization.png)
+### 已有本地产物
 
-当前主实验采用[同域与跨区域的配对设计](docs/experiments/nlos_protocols.md)：同域训练覆盖测试区域的其他采集段，跨区域训练完全排除目标区域；每对使用相同验证和测试采集段，分别考察三个 KLT 区域。固定原始参数，不继续调参；阈值和检查点只由验证集确定。
-
-数据已扩展到九段、三个日期，2,851 个历元、45,228 条卫星观测，并用相同流程重算特征。旧表全部 26,522 条标签及五项特征与重算结果一致（浮点容差 1e-6）；排除了原作者声明不可靠的 KLT3-649 标签。同域训练比例约 59%～65%，按完整段接近 6∶2∶2；跨区域比例随区域大小变化。每次训练使用 1,277～1,857 个历元，原实验为 595 个。
-
-此前[56 组验证集超参数搜索](docs/experiments/nlos_hyperparameter_search.md)保留为历史开发记录；这些获胜参数没有迁移到新主实验。下表也是历史四段默认实验，不是双协议实验的成绩。
-
-历史 v0.2 是工程原型。v0.3 新增独立卫星级 LOS/NLOS 任务，复用 [KLT / Fossett Laboratory 特征表](https://github.com/fossettlab/gnss-nlos-notebook)，与“定位误差 > 10 m”任务分开评估。以下四段实验保留为历史记录。
-
-26,522 条卫星观测来自四个短采集段。KLT2 两段训练（9,830 行），KLT1 验证（6,607），KLT3 测试（10,085）；同一区域不跨集合。标签来自鱼眼相机天空掩膜，模型只读取信号/几何特征。高楼、树木等物体类型未知，LOS 也可能包含多径。
-
-| 方法 | Test Precision | Test Recall | Test F1 |
-| --- | ---: | ---: | ---: |
-| C/N0 固定规则 | 0.621 | 0.625 | 0.623 |
-| LR | 0.796 | 0.658 | 0.720 |
-| RF（验证集选中） | 0.672 | 0.778 | 0.721 |
-| MLP（历史窗口） | 0.697 | 0.713 | 0.705 |
-| 1D CNN | 0.689 | 0.752 | 0.719 |
-| LSTM | 0.716 | 0.700 | 0.708 |
-| GRU（神经网络组验证优选） | 0.739 | 0.684 | 0.710 |
-| Transformer（32 次观测） | 0.782 | 0.653 | 0.712 |
-
-RF 仍有 1,366 次误报、801 次漏报，强信号 NLOS 是主要短板。五种神经网络统一使用同一卫星过去及当前的 32 项五特征观测、训练预算与验证早停，当前只比较完整模型，不保留组件消融。RF 由验证集在全体模型中选出；CNN 测试 F1 与其接近，但不按测试排名重新选模。只有一个留出区域和一个种子，尚未证明跨城市/设备泛化或定位改善。详见[五网络实验](docs/experiments/five_neural_nlos.md)、[历史 Transformer 实验](docs/experiments/transformer_nlos.md)与[标签定义](docs/OBSTRUCTION_LABELS.md)。
-
-用户指定的 Zhang 2023 Transformer-Enhanced LSTM 论文已完成[复现条件核对](docs/research/zhang2023_reproduction.md)和[NLOS 学习解读](docs/lessons/05_nlos_zhang2023.md)。其跨卫星上下文、输入特征和误差回归任务与当前初版不同，尚未完成论文模型或结果复现。
+在项目根目录执行以下命令读取已完成结果，不重新训练：
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/fetch_nlos_data.py
-.\.venv\Scripts\python.exe -m pip install -e ".[temporal,gnss]"
-.\.venv\Scripts\python.exe scripts/fetch_klt_extended.py
-.\.venv\Scripts\python.exe tools/klt/prepare.py
-.\.venv\Scripts\python.exe -m navdiag compare-nlos-protocols
-.\.venv\Scripts\python.exe -m navdiag serve --artifacts artifacts/navigation_demo --nlos-artifacts artifacts/klt_protocols
+.\.venv\Scripts\python.exe -m navdiag serve --artifacts artifacts/urbannav_positioning --nlos-artifacts artifacts/klt_protocols --generalization-artifacts artifacts/urbannav_generalization
 ```
 
-网页各部分都可以展开与收起，并记住主要面板的状态。泛化和 KLT 对比支持切换 Precision / Recall / F1，点击模型联动区域表现；精确数值表按需展开。模拟定位默认收起，问答任务明确区分卫星 NLOS 与位置失准。常量预测参照、随机种子与 SHA-256 等信息保存在 JSON 报告。上游数据与实现留在 Git 忽略目录；独立预处理工具使用 GPL，详见[工具许可](tools/klt/README.md)。
+打开 **http://127.0.0.1:8765**。定位面板读取旺角主实验及三路线对照；卫星识别读取 KLT 与 UrbanNav 的独立报告。VS Code 的 `NavDiag: dashboard` 入口使用同样的目录。原始数据、模型权重和实验产物由 Git 忽略，新克隆的仓库需要先生成它们。
 
-## 项目结构
+### 从源码快速体验
 
-```mermaid
-flowchart LR
-    N[KLT 相机标签 / UrbanNav 建筑参考] --> O[独立参考与 unknown 审计]
-    N --> P[五项观测特征]
-    P --> Q[五种神经网络 / LR / RF / CNO]
-    O --> R[同域 / 区域留出 / 冻结迁移]
-    Q --> R
-    R --> J[实验报告]
-    A[GSDC 观测或模拟伪距] --> B[时间与字段适配]
-    B --> C[WLS / 稳健 WLS]
-    C --> D[质量特征]
-    D --> E[规则 / LR / RF / 因果 GRU]
-    E --> F[风险评分]
-    F --> G[平面滤波对照]
-    C --> G
-    H[独立参考轨迹] --> I[训练标签和离线评测]
-    I --> E
-    I --> J[实验报告]
-    G --> J
-    J --> K[只读工具与本地知识检索]
-    K --> L[离线诊断或 LLM Agent]
-    J --> M[网页可视化]
-    L --> M
-```
-
-参考误差不作为模型输入。滤波器不读取参考轨迹；真实 IMU 原始姿态/标定流程还没有实现，当前支持的是已转换到 ENU 的平面加速度接口。
-
-## 快速运行
-
-推荐 Python 3.12，在项目根目录执行。Windows PowerShell 不需要激活虚拟环境：
+推荐 Python 3.12。以下入口生成独立的模拟学习产物，运行 LR/RF 和定位流程；真实识别数据的复现入口见下一节。
 
 ```powershell
+git clone https://github.com/yyyx0402/navdiag.git
+cd navdiag
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -c requirements-lock.txt -e ".[dev]"
-# 可选：CPU 版 PyTorch，用于 GRU / Transformer
+.\.venv\Scripts\python.exe -m navdiag demo --navigation --out artifacts/learning_demo
+.\.venv\Scripts\python.exe -m navdiag serve --artifacts artifacts/learning_demo --port 8766
+```
+
+打开 **http://127.0.0.1:8766**。模拟页面仅供学习，不代表真实城市成绩。Linux/macOS 将解释器路径换为 `.venv/bin/python`。首次安装需要网络；`requirements-lock.txt` 是测试环境版本快照，PyTorch 单独安装。
+
+需要五网络/GRU、原始 RINEX 或本地语义检索时再安装相应依赖：
+
+```powershell
 .\.venv\Scripts\python.exe -m pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu
-.\.venv\Scripts\python.exe -m navdiag demo --navigation --with-gru --out artifacts/navigation_demo
-.\.venv\Scripts\python.exe -m navdiag serve --artifacts artifacts/navigation_demo
+.\.venv\Scripts\python.exe -m pip install -c requirements-lock.txt -e ".[temporal,gnss,rag]"
+.\.venv\Scripts\python.exe scripts/prepare_semantic_index.py --download
 ```
 
-浏览器打开 **http://127.0.0.1:8765**。不安装 PyTorch 时，去掉 `--with-gru`，其余模型和网页照常使用。Linux / macOS 将解释器路径替换为 `.venv/bin/python`。首次安装需要网络，模拟实验及离线诊断在本机运行。
+最后一条下载固定版本的公开 BGE 权重并在本机编码，不调用模型 API。未准备语义模型时，应用明确回退到关键词检索。
 
-`demo --navigation` 生成 15 个模拟行程，先模拟卫星坐标与伪距，再运行本项目的定位算法。普通 `demo` 是更简单的特征教学样例。
+## 真实数据与复现入口
 
-## 公开真实数据版本
+| 实验               | 数据规模与用途                                                                  | 操作说明                                                                                  |
+| ------------------ | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| KLT 双协议         | 九段、三个日期；2851 历元、45228 条卫星观测；六个配对实验                       | [预处理工具](tools/klt/README.md)、[固定计划与复现](docs/experiments/nlos_protocols.md)   |
+| UrbanNav NLOS      | 三城区；5671 原始历元、77744 条卫星观测；27839 条通过几何参考保护，其余 unknown | [工具](tools/urbannav/README.md)、[泛化实验](docs/experiments/urbannav_generalization.md) |
+| UrbanNav 定位/告警 | 三段约94.5分钟；5671 原始历元、1193 个可评分点；三路线分别留出一次              | [完整步骤与分母](docs/experiments/positioning_expansion.md)                               |
+| GSDC 历史解析样例  | 修正后4572个匹配历元；完整两路线用于训练/验证，11点留出仅作解析检查             | [字段与适配](data/README.md)、[纠错记录](docs/experiments/gsdc2021_correction.md)         |
 
-下载脚本从 Stanford NavLab 已发布的 GitHub 文件获取 8 个示例文件，不需要 Kaggle 账号。版本、大小和 SHA-256 固定在 [public_sources.json](config/public_sources.json)，不重新分发第三方数据。
+下载器记录固定 URL、版本、大小和 SHA-256，第三方数据不随仓库分发。主 Python 包采用 MIT；调用上游 GPL 提取器的独立预处理工具采用各自 GPL 许可，不包含在 wheel 中。
+
+当前学习先读取保存的报告。复现训练应使用新产物目录，保留旧报告和冻结计划；不删除指纹检查以继续写入旧实验。历史调参保留为开发记录，当前 NLOS 主实验使用固定默认参数。详细许可、字段和时间处理见[数据说明](data/README.md)与[复用记录](docs/OPEN_SOURCE_REFERENCES.md)。
+
+## 当前结果与实际边界
+
+KLT 同域/跨区域使用相同的配对测试段；固定 C/N0 规则两侧成绩相同是设计所致，不能证明没有域偏移。三目标区域等权平均、逐区域成绩和验证选模依据见[协议报告](docs/experiments/nlos_protocols.md)。UrbanNav RF 的外部迁移/城区互斥平均 F1 为0.7884/0.7852，Transformer 为0.7852/0.7489；旺角的局部排名不同，不能推广为普遍模型优势。
+
+定位的同轮水平 RMSE（米）：
+
+| 测试路线       | RTKLIB SPP | 固定 KF | 风险自适应 KF | Doppler KF |
+| -------------- | ---------: | ------: | ------------: | ---------: |
+| 尖沙咀，311 点 |      7.881 |   9.559 |         6.902 |      8.531 |
+| 黄埔，743 点   |     12.153 |  15.848 |        12.285 |     11.170 |
+| 旺角，139 点   |     15.481 |  15.669 |        15.751 |     14.610 |
+
+这些误差只针对有有效解且参考合格的点。旺角全段 SPP 可用率17.2%，最长断解约464秒；Doppler 虽降低 RMSE，Median/P95 却变差。完整可用率、告警误报/漏报和方法对照见[定位报告](docs/experiments/positioning_expansion.md)。当前属于离线原型，尚未支持连续可靠导航；FGO、TDCP、完整 GNSS/IMU 和 Zhang 2023 论文模型尚未复现。
+
+所有当前区域实验均在香港，部分测试段已在开发中查看。设备、日期、参考方法和覆盖率会影响比较；跨城市与稳定模型排名仍需新的独立数据。旧 GSDC 验证 F1 0.991 已撤回。历史四段 NLOS、模拟定位和调参结果分别保存在[五网络记录](docs/experiments/five_neural_nlos.md)、[v0.2](docs/experiments/v0_2.md)与[历史搜索](docs/experiments/nlos_hyperparameter_search.md)，不混入当前结果。
+
+## RAG、问答与文献学习
+
+RAG 使用11条短笔记、10份项目文档和20篇原创研究摘要，按相关性取少量片段，并用只读工具读取当前数值。学习卡的 WHY/HOW/WHAT、项目关系和原文链接供使用者阅读，不把全部文献或学习指南发送给模型。文档更新后的段落数和检索检查见 [RAG 记录](docs/RAG_RETRIEVAL.md)。
+
+网页 **诊断助手 → 自定义模型 API → 配置模型与 API** 可保存多个自选服务。证据问答先在本地准备依据、再进行一次模型请求；工具 Agent 由模型选择工具和改写检索词。连接与密钥保存在本机 Git 忽略目录，读取接口不回传密钥；支持的模型与地址由所选服务决定。
+
+已使用用户配置的 GLM-5.3 完成17次真实证据问答，保留错误和复测。39/39离线检查验证路由、检索和引用关系；引用存在、检索命中或 API 成功都不等于回答事实正确。详情见[真实回答检查](docs/experiments/glm_quality.md)、[Agent](docs/AGENT.md)和[接口说明](docs/LLM_API.md)。
+
+可先运行零模型 API 的本地诊断：
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/fetch_public_data.py
-.\.venv\Scripts\python.exe -m navdiag prepare-gsdc --root data/raw --out data/processed/public_gsdc
-.\.venv\Scripts\python.exe -m navdiag train --csv data/processed/public_gsdc/epochs.csv --allow-missing-features --with-gru --split-manifest config/public_split.json --out artifacts/public_gsdc
-.\.venv\Scripts\python.exe -m navdiag serve --artifacts artifacts/public_gsdc --port 8766
+.\.venv\Scripts\python.exe -m navdiag ask "比较模型的 F1" --provider offline --artifacts artifacts/urbannav_positioning --task-context satellite_nlos --nlos-artifacts artifacts/klt_protocols --generalization-artifacts artifacts/urbannav_generalization
+.\.venv\Scripts\python.exe -m navdiag ask "比较定位精度" --provider offline --artifacts artifacts/urbannav_positioning --task-context position_error
 ```
 
-公开例子主要用于格式适配、定位和训练流程验证。GSDC 2021 派生文件没有 C/N0，保留缺失值；训练集不足 50% 覆盖的特征被移除，其他缺失值仅用训练集拟合的中位数填充。[数据说明](data/README.md)解释字段、时间换算、参考对齐和来源。
+## 项目导航与学习
 
-## 诊断与 API
+| 路径                                           | 作用                                                        |
+| ---------------------------------------------- | ----------------------------------------------------------- |
+| [src/navdiag](src/navdiag)                     | 数据校验、识别模型、定位/滤波、检索、证据工具与本地网页服务 |
+| [config](config)                               | 数据来源、整段划分与冻结实验设置                            |
+| [tools](tools) / [scripts](scripts)            | 独立原始数据适配、下载、评测和只读回放                      |
+| [tests](tests)                                 | 因果历史、参考隔离、指标、API、检索和产物关系检查           |
+| [docs/LEARNING_PATH.md](docs/LEARNING_PATH.md) | 面向会Python、机器学习入门者的分阶段学习与验收任务          |
+| [docs/ROADMAP.md](docs/ROADMAP.md)             | 已实现能力与后续研究缺口                                    |
 
-```powershell
-.\.venv\Scripts\python.exe -m navdiag ask "比较模型的 F1 和召回率" --provider offline
-.\.venv\Scripts\python.exe -m navdiag evaluate-agent --provider offline --out artifacts/agent_eval.json
-.\.venv\Scripts\python.exe -m navdiag ask "比较模型的 F1" --task-context satellite_nlos --nlos-artifacts artifacts/klt_protocols --provider offline
-.\.venv\Scripts\python.exe scripts/review_project.py
-```
+先使用已有应用，再按[学习路线](docs/LEARNING_PATH.md)从 NLOS 标签和 LR/RF 开始，逐步进入区域评估、五网络、定位/Doppler 和 RAG。每阶段都有可点击源码入口、一个小练习和能否讲清的检查点。
 
-离线模式是确定性工具基线。网页 **诊断助手 → 自定义模型 API → 配置模型与 API** 支持自行填写服务地址、模型 ID 和本地密钥，并保存多个连接。默认“证据问答”先读取实验与笔记，再交给模型解释；支持 function calling 的模型也可选择工具 Agent。接口采用 Chat Completions 兼容格式，不绑定供应商或模型。步骤与本地 Ollama 接入见[自选模型与 API](docs/LLM_API.md)。CLI 也可复用保存的连接或 [.env.example](.env.example)；实际密钥不提交到 Git。
-
-工具包括行程列表、观测汇总、片段风险、模型对照、离线定位指标与本地技术检索。回答记录 `[E1]` 等证据 ID、工具结果、耗时和 API usage。在线观测汇总不读取参考标签，离线误差对照明确使用参考轨迹。实现与评测边界见 [Agent 说明](docs/AGENT.md)。
-
-## 已运行的结果
-
-2026-10-12 已新增[完整真实路线定位与告警评估](docs/experiments/positioning_expansion.md)：三段 UrbanNav 约94.5分钟、5671个原始历元，轮流留出共1193个可评分点；网页可查看可用率、断解时间线和逐路线滤波对照。增加 Doppler 速度约束基线，黄埔/旺角 RMSE 改善而尖沙咀退步，尚不能证明可靠导航。方法出处及复现范围见[方法来源](docs/research/positioning_methods.md)。运行网页可用 `--artifacts artifacts/urbannav_positioning`；完整步骤见实验记录，旧演示仍可单独启动。
-
-以下是 **15 行程、1,800 历元的模拟伪距实验**；测试为 3 行程、360 历元。验证集选出 LR。
-
-| 方法 | 测试 Precision | Recall | F1 |
-| --- | ---: | ---: | ---: |
-| 固定规则 | 0.420 | 0.241 | 0.307 |
-| LR | 0.509 | 0.966 | 0.667 |
-| RF | 0.503 | 0.920 | 0.650 |
-| GRU | 0.491 | 0.943 | 0.646 |
-
-| 定位方法 | Median (m) | P95 (m) | RMSE (m) |
-| --- | ---: | ---: | ---: |
-| WLS | 4.867 | 19.913 | 9.043 |
-| 固定方差滤波 | 2.598 | 9.868 | 4.691 |
-| 自适应方差滤波 | 3.127 | 10.774 | 5.559 |
-
-自适应方案在这个实验中没有超过固定方案，保留这个结果用于学习和后续研究。完整真实/模拟记录和原始报告摘要见 [v0.2 实验记录](docs/experiments/v0_2.md)。不能把这些数值写成真实城市定位提升。
-
-## 实验产物与验证
-
-每次训练输出 `report.json`、`predictions.csv`、`risk_plot.png` 和 `models.joblib`。报告保存数据指纹、行程划分、特征、缺失覆盖、阈值和指标。模型仅加载可信来源；`predict` 可以对不包含参考误差的观测表推理。
+## 验证与开源
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q
-.\.venv\Scripts\python.exe -m navdiag predict --csv your_observations.csv --model artifacts/navigation_demo/models.joblib --out artifacts/inference.csv
+.\.venv\Scripts\python.exe scripts/check_release.py
+.\.venv\Scripts\python.exe scripts/review_project.py
+.\.venv\Scripts\python.exe scripts/review_positioning.py
 ```
 
-本地测试覆盖坐标/定位、时间修正、划分泄漏、卫星历史窗口、Transformer 因果注意力、测试标签隔离、滤波、模型持久化、API 协议、文档检索和网页接口。39 个诊断问题的离线工具/引用/检索检查通过；这不代表真实 LLM 的语义正确率。远程 CI 仅覆盖已上传版本，当前修改以本地验证为准。
+后两项需要已完成的本地真实产物，只检查/回放，不训练。检查数、检索命中和真实生成审查的含义分别记录在[项目检查](docs/PROJECT_REVIEW.md)；远程 CI 可由顶部徽章查看，它检查代码与模拟流程，不下载完整真实数据重跑。
 
-## 后续学习
-
-先使用成品，再按 [学习路线](docs/LEARNING_PATH.md)逐段读代码。配套资料包括 [特征与标签](docs/lessons/01_features_labels_splits.md)、[定位与参考对齐](docs/lessons/02_positioning.md)、[模型与因果推理](docs/lessons/03_models.md)、[Agent 工具调用](docs/lessons/04_agent.md)、[模型卡](docs/MODEL_CARD.md)和 [扩展路线](docs/ROADMAP.md)。
-
-原创代码使用 [MIT License](LICENSE)。第三方数据和文档适用各自条款，原始数据、密钥、环境、缓存及生成产物由 `.gitignore` 排除。贡献与发布流程见 [CONTRIBUTING](CONTRIBUTING.md) 和 [PUBLISHING](docs/PUBLISHING.md)。
+每次实验保留数据指纹、划分、阈值、指标和冻结设置；可公开汇总记录，原始轨迹、模型权重、环境、缓存及密钥保留在 Git 忽略目录。原创代码使用 [MIT](LICENSE)。贡献与发布见 [CONTRIBUTING](CONTRIBUTING.md) 和[发布说明](docs/PUBLISHING.md)。

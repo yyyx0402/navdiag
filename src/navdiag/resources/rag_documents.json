@@ -9,7 +9,7 @@
     },
     {
       "path": "docs/MODEL_CARD.md",
-      "sha256": "83425e45e72e4ae56bd30d17a2cce6810200cfe693191021e40c33d663b6598b"
+      "sha256": "ee0a87a3c944e503658af7a311c1ac06c753fac9effa2d3d871cba82212bf03d"
     },
     {
       "path": "docs/lessons/05_nlos_zhang2023.md",
@@ -144,14 +144,14 @@
       "end_line": 3
     },
     {
-      "id": "D02-9095cb8dfc55",
+      "id": "D02-dbd55e4d1a1d",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Model card — NavDiag local v0.3",
       "keywords": [
         "Model card — NavDiag local v0.3"
       ],
-      "content": "city performance and positioning benefits remain unverified.\n\nThe first sections below describe the separate historical positioning/alarm branch. Satellite-classification details and chronological development records follow; their datasets, labels and metrics must not be interchanged.",
+      "content": "city performance and positioning benefits remain unverified.\n\nUpdated 2026-10-12: the separate positioning/alarm branch now includes three full UrbanNav drives and a Doppler-velocity KF comparison. GSDC parser samples, the four-run KLT comparison and tuning results below remain dated development records. Their datasets, labels and metrics must not be interchanged. Learning guidance is in [LEARNING_PATH](LEARNING_PATH.md).",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 3,
@@ -242,28 +242,28 @@
       "end_line": 25
     },
     {
-      "id": "D02-d368b6453d45",
+      "id": "D02-d07d13f0ea2c",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Positioning and filtering",
       "keywords": [
         "Positioning and filtering"
       ],
-      "content": "The parser uses supplied satellite states and applies satellite clock, inter-signal, ionospheric and tropospheric corrections. It does not derive ephemerides or perform carrier-phase/RTK processing. Least squares estimates ECEF position and one clock per constellation, with Earth rotation correction. Huber IRLS provides a robust comparison; failures fall back to ordinary WLS and are counted. Reference ECEF positions are interpolated only within support and the configured maxi",
+      "content": "The historical GSDC adapter uses supplied satellite states and satellite clock, inter-signal, ionospheric and tropospheric corrections; it does not derive ephemerides or perform carrier-phase/RTK processing. Its own LS estimates ECEF and one clock per constellation, with Earth rotation correction; Huber failures fall back to WLS and are counted. GSDC reference interpolation remains within support and the configured maximum gap. The current UrbanNav standalone adapter instead",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 28,
       "end_line": 28
     },
     {
-      "id": "D02-6157bab3e5f0",
+      "id": "D02-80d630efcc00",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Positioning and filtering",
       "keywords": [
         "Positioning and filtering"
       ],
-      "content": "mum gap.",
+      "content": "calls RTKLIB broadcast single-frequency GPS/BeiDou SPP, with a 10-degree mask and independent SPAN time/quality scoring guards.",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 28,
@@ -298,14 +298,14 @@
       "end_line": 31
     },
     {
-      "id": "D02-4803d3de3622",
+      "id": "D02-8cf061a694c1",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Evaluation and limitations",
       "keywords": [
         "Evaluation and limitations"
       ],
-      "content": "Classification metrics include Precision, Recall, F1, false-positive rate, AP, ROC AUC, Brier score and `[[TN, FP], [FN, TP]]`. Recall/F1 are null if no reference positives exist; Precision is null if no positive prediction exists. AP/AUC are null for a single label class. Risk scores are not calibrated probabilities. Aggregate metrics weight epochs equally rather than trips equally.",
+      "content": "Classification metrics include Precision, Recall, F1, false-positive rate, AP, ROC AUC, Brier score and `[[TN, FP], [FN, TP]]`. Recall/F1 are null without reference positives; Precision is null without positive predictions; AP/AUC are null for a single class. Risk scores are not calibrated. Individual reports weight scored observations equally; KLT/UrbanNav regional summaries and the positioning rotation use explicitly declared equal-area/equal-drive averages.",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 34,
@@ -340,70 +340,70 @@
       "end_line": 37
     },
     {
-      "id": "D02-cdb2e6eaf878",
+      "id": "D02-db25b831924f",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Evaluation and limitations",
       "keywords": [
         "Evaluation and limitations"
       ],
-      "content": "The navigation simulation contains 15 generated trips. Its observation geometry, biases, signal statistics and acceleration are simplified. Real WLS computation on simulated pseudoranges does not make the experiment real data. In this simulation fixed filtering outperformed adaptive filtering; in the 11-epoch real smoke test adaptive filtering also did not improve WLS RMSE. No consistent learned-filter improvement has been established.",
+      "content": "The historical navigation simulation contains 15 simplified generated trips. Running LS on synthetic pseudoranges does not make it real data. Fixed filtering outperformed adaptive filtering there. In the corrected GSDC 11-point sample, adaptive RMSE was 6.383 m versus WLS 6.391 m; this 0.008 m difference is not reliable evidence of benefit. Current full-drive results remain mixed, as recorded under Full-drive positioning and alarm expansion.",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 38,
       "end_line": 39
     },
     {
-      "id": "D02-3236a0bd41d2",
+      "id": "D02-c8537b146143",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Evaluation and limitations",
       "keywords": [
         "Evaluation and limitations"
       ],
-      "content": "Signal statistics and model risk alone cannot establish an NLOS cause. Diagnostics must distinguish recorded facts from hypotheses and missing evidence. The optional LLM adapters have protocol tests; no live API quality evaluation is claimed without configured credentials.",
+      "content": "Signal statistics and model risk alone cannot establish an NLOS cause. Diagnostics distinguish facts, hypotheses and missing evidence. A small 17-request live GLM-5.3 evidence-answer audit is recorded in [quality checks](experiments/glm_quality.md); failures and revisions are preserved. It is not a blind or representative answer-correctness evaluation, and tool-Agent generation quality remains unverified.",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 40,
       "end_line": 41
     },
     {
-      "id": "D02-77d7fccd5bc8",
+      "id": "D02-288ee8d522f0",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Separate satellite LOS/NLOS task (local v0.3)",
       "keywords": [
         "Separate satellite LOS/NLOS task (local v0.3)"
       ],
-      "content": "The separate local satellite LOS/NLOS branch consumes the pinned Fossett Laboratory numeric table derived from KLT: 26,522 GPS/BeiDou observations, four short runs on 2023-11-09, with fisheye sky-mask labels. Five published radio/geometry features are consumed; raw RINEX extraction and camera-label accuracy are not independently reproduced. Scene IDs and reference labels are excluded from model inputs; missing-value imputation is fitted on training only.",
+      "content": "This section records the historical four-run KLT comparison: 26,522 GPS/BeiDou observations on 2023-11-09 from the pinned Fossett numeric table, with fisheye sky-mask labels. Later paired main experiments re-extract nine runs as described under Reproducibility. Camera-label accuracy is not independently established. Scene IDs and reference labels are excluded from inputs; imputation fits training only.",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 44,
       "end_line": 45
     },
     {
-      "id": "D02-271f4bc16caa",
+      "id": "D02-bd313c3e8ab8",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Separate satellite LOS/NLOS task (local v0.3)",
       "keywords": [
         "Separate satellite LOS/NLOS task (local v0.3)"
       ],
-      "content": "Two KLT2 runs supply 9,830 training rows, KLT1 supplies 6,607 validation rows, and KLT3 supplies 10,085 test rows. Areas are disjoint. Current comparisons include five neural classifiers (MLP, temporal CNN, LSTM, GRU, Transformer), plus C/N0 < 30, LR and RF. Constant LOS/NLOS sanity baselines remain in JSON reports and are hidden in the UI. No component ablations are included. The validation-selected RF test Precision/Recall/F1 are 0.672/0.778/0.721. Neural test F1 values are",
+      "content": "In the historical four-run comparison, KLT2 supplies 9,830 train rows, KLT1 6,607 validation rows and KLT3 10,085 test rows. Five neural classifiers plus C/N0, LR and RF are compared, with no component ablations. Historical RF Precision/Recall/F1 are 0.672/0.778/0.721; neural F1 values are 0.705/0.719/0.708/0.710/0.712 and GRU is validation-preferred among networks. Current paired/UrbanNav results are recorded separately. Constant sanity baselines remain in reports but are hi",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 46,
       "end_line": 46
     },
     {
-      "id": "D02-20f37ff07f5a",
+      "id": "D02-490a06c38c4c",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Separate satellite LOS/NLOS task (local v0.3)",
       "keywords": [
         "Separate satellite LOS/NLOS task (local v0.3)"
       ],
-      "content": "0.705/0.719/0.708/0.710/0.712, respectively; the validation-preferred neural model is GRU. Model selection remains based on validation, not the best test score. See [five-network experiment](experiments/five_neural_nlos.md).",
+      "content": "dden in the UI. See [historical five-network experiment](experiments/five_neural_nlos.md).",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 46,
@@ -438,42 +438,42 @@
       "end_line": 49
     },
     {
-      "id": "D02-cc32c374227b",
+      "id": "D02-cbb7a4ee5a51",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Separate satellite LOS/NLOS task (local v0.3)",
       "keywords": [
         "Separate satellite LOS/NLOS task (local v0.3)"
       ],
-      "content": "The Transformer uses the same five features over 32 past/current observations of one satellite, resetting across trips, receivers and gaps >5 seconds. Short history repeats the first available observation on the left. A 64-wide, four-head, two-layer encoder with causal attention, sinusoidal positions and a last-token classifier has 67,521 parameters. Train-only median imputation/scaling, weighted BCE and AdamW are used. Validation BCE selects the checkpoint (best epoch 1 of 7",
+      "content": "The Transformer uses five features over 32 past/current observations of one satellite, resetting across trips, receivers and gaps >5 seconds. Short history repeats the first observation. A 64-wide, four-head, two-layer causal encoder with sinusoidal positions and last-token classification has 67,521 parameters. Train-only imputation/scaling, weighted BCE and AdamW are used. In the historical four-run experiment, the best checkpoint was epoch 1 of 7 and the validation threshol",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 50,
       "end_line": 50
     },
     {
-      "id": "D02-ef0233d1e2d3",
+      "id": "D02-d5c0ad410e0a",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Separate satellite LOS/NLOS task (local v0.3)",
       "keywords": [
         "Separate satellite LOS/NLOS task (local v0.3)"
       ],
-      "content": "run, patience 6), then validation F1 selects threshold 0.65. Unknown labels may supply observed history but never supervision. This compares complete pipelines with different history access, not an isolated architecture advantage. See [Transformer experiment](experiments/transformer_nlos.md).",
+      "content": "d was 0.65; these are not current per-fold settings. Unknown labels may supply observed history but never supervision. See [historical Transformer experiment](experiments/transformer_nlos.md).",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 50,
       "end_line": 51
     },
     {
-      "id": "D02-2a93c4d3c63a",
+      "id": "D02-c54a6ed8ab75",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Separate satellite LOS/NLOS task (local v0.3)",
       "keywords": [
         "Separate satellite LOS/NLOS task (local v0.3)"
       ],
-      "content": "The selected RF has 1,366 false positives and 801 false negatives. At C/N0 in (35,45] dB-Hz it finds only 67 of 395 NLOS labels. Per-system, C/N0 and elevation metrics expose these failures without retuning on test. A single test area cannot support independent-drive confidence intervals or city/device generalization.",
+      "content": "The historical four-run selected RF had 1,366 false positives and 801 false negatives; in C/N0 (35,45] dB-Hz it found only 67 of 395 NLOS labels. These counts belong to that development test, not current regional totals. Per-system/C/N0/elevation slices expose failures without retuning. A single test area cannot support independent-drive confidence intervals or city/device generalization.",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 52,
@@ -578,28 +578,28 @@
       "end_line": 63
     },
     {
-      "id": "D02-ce16416cab5e",
+      "id": "D02-45e4dea5fd2b",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Reproducibility",
       "keywords": [
         "Reproducibility"
       ],
-      "content": "The latest bounded search uses eight predefined candidates per LR/RF/neural family (56 total), including each default. Trial records contain validation scores only; selected configurations are frozen to disk before final refitting and test evaluation. Validation selects CNN (F1 0.7637), with development-holdout test F1 0.7215 against the original RF 0.7212. The tiny difference is not evidence of stable improvement. LSTM test F1 is 0.7243 but it is not selected by test rank. T",
+      "content": "The historical bounded search used eight predefined candidates per family (56 total). Validation selected CNN (F1 0.7637), with development-holdout test F1 0.7215 against RF 0.7212. This tiny difference is not stable improvement; the holdout was already repeatedly inspected. This search remains stopped and its winners are not transferred into current fixed-default main experiments. Full trials and other model outcomes remain in the [historical search record](experiments/nlos_",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 64,
       "end_line": 64
     },
     {
-      "id": "D02-bc4ae28d4879",
+      "id": "D02-a2ba52eecca2",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Reproducibility",
       "keywords": [
         "Reproducibility"
       ],
-      "content": "uned RF improves validation yet declines on test, illustrating selection/generalization limits. The current test area has been repeatedly inspected during development; further claims need a new untouched final holdout. See [search record](experiments/nlos_hyperparameter_search.md).",
+      "content": "hyperparameter_search.md).",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 64,
@@ -620,14 +620,14 @@
       "end_line": 67
     },
     {
-      "id": "D02-43445d59a810",
+      "id": "D02-2b50fe26d3e8",
       "document_id": "D02",
       "title": "Model card — NavDiag local v0.3",
       "heading": "Reproducibility",
       "keywords": [
         "Reproducibility"
       ],
-      "content": "Published result summaries and limitations are in `docs/experiments/v0_2.md`. Third-party raw data and model binaries are excluded from Git. Load only model files you generated or trust, since joblib is a pickle-based format.",
+      "content": "Published current results are in [paired protocols](experiments/nlos_protocols.md), [UrbanNav NLOS](experiments/urbannav_generalization.md) and [full-drive positioning](experiments/positioning_expansion.md); v0.2 remains a historical record. Third-party raw data and binaries are excluded from Git. Load only model files you generated or trust, since joblib is pickle-based.",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 68,
@@ -687,7 +687,77 @@
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 76,
-      "end_line": 76
+      "end_line": 77
+    },
+    {
+      "id": "D02-b0eaa152c09b",
+      "document_id": "D02",
+      "title": "Model card — NavDiag local v0.3",
+      "heading": "Full-drive positioning and alarm expansion",
+      "keywords": [
+        "Full-drive positioning and alarm expansion"
+      ],
+      "content": "The exploratory rotation evaluates each of TST, WP and MK once, with fixed train/validation roles: 5,671 raw epochs over about 94.5 minutes, 1,193 reference-scored fixes, only three acquisitions. The primary split trains TST, validates WP and tests MK. MK has 3,350 raw epochs, 577 successful SPP fixes, 1,270 quality-eligible references and 139 scored fixes. Its raw SPP availability is 17.2%; reference coverage is partial and the longest solution outage is about 464 seconds. P",
+      "source_url": "docs/MODEL_CARD.md",
+      "source_type": "project_document",
+      "start_line": 80,
+      "end_line": 80
+    },
+    {
+      "id": "D02-2217c47cd026",
+      "document_id": "D02",
+      "title": "Model card — NavDiag local v0.3",
+      "heading": "Full-drive positioning and alarm expansion",
+      "keywords": [
+        "Full-drive positioning and alarm expansion"
+      ],
+      "content": "reviously explored data and area/date confounding preclude an untouched or cross-city claim.",
+      "source_url": "docs/MODEL_CARD.md",
+      "source_type": "project_document",
+      "start_line": 80,
+      "end_line": 81
+    },
+    {
+      "id": "D02-043dc7ae49da",
+      "document_id": "D02",
+      "title": "Model card — NavDiag local v0.3",
+      "heading": "Full-drive positioning and alarm expansion",
+      "keywords": [
+        "Full-drive positioning and alarm expansion"
+      ],
+      "content": "All successful observation epochs enter causal filtering and GRU history; reference guards only select supervision and scoring rows. The origin is the first successful SPP fix. Failed SPP epochs are not credited with a valid position or alert output. The primary MK alert winner is validation-selected RF, threshold 0.25, test Precision/Recall/F1 0.529/0.818/0.643 on 139 scored fixes; this is baseline error >10 m, not satellite NLOS or post-filter alarm quality.",
+      "source_url": "docs/MODEL_CARD.md",
+      "source_type": "project_document",
+      "start_line": 82,
+      "end_line": 83
+    },
+    {
+      "id": "D02-7c77e67aad81",
+      "document_id": "D02",
+      "title": "Model card — NavDiag local v0.3",
+      "heading": "Full-drive positioning and alarm expansion",
+      "keywords": [
+        "Full-drive positioning and alarm expansion"
+      ],
+      "content": "The added causal planar Doppler KF consumes RTKLIB velocity/qv rotated into ENU. It approximates position/velocity correlation as zero; velocity covariance is not empirically calibrated. Existing sigma/process candidates are selected only on each validation drive. It keeps the same scored population and does not retrain alert/NLOS models. This is a method-inspired baseline, not TDCP, FGO or full GNSS/IMU reproduction.",
+      "source_url": "docs/MODEL_CARD.md",
+      "source_type": "project_document",
+      "start_line": 84,
+      "end_line": 85
+    },
+    {
+      "id": "D02-ac582432432b",
+      "document_id": "D02",
+      "title": "Model card — NavDiag local v0.3",
+      "heading": "Full-drive positioning and alarm expansion",
+      "keywords": [
+        "Full-drive positioning and alarm expansion"
+      ],
+      "content": "Test RMSE for SPP/Doppler is 7.881/8.531 m on TST, 12.153/11.170 m on WP and 15.481/14.610 m on MK. MK Doppler Median/P95 worsen despite lower RMSE. Accuracy is conditional on reference-scored successful fixes; joint availability/accuracy uses all quality-eligible reference epochs. Full denominators, parameters, provenance and failures are in [expanded results](experiments/positioning_expansion.md) and [method sources](research/positioning_methods.md).",
+      "source_url": "docs/MODEL_CARD.md",
+      "source_type": "project_document",
+      "start_line": 86,
+      "end_line": 86
     },
     {
       "id": "D03-9ba501702615",

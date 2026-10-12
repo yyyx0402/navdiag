@@ -1,5 +1,7 @@
 # 数据来源、字段与处理
 
+项目区分“接收机历元表”和“时间×卫星表”。下文先说明定位历元与历史GSDC适配，再说明当前KLT/UrbanNav识别；两者标签和输入不能互换。
+
 每行是一个定位历元。`schema.csv` 只含字段名。模型输入是卫星数、平均/最小 C/N0（dB-Hz）、HDOP、WLS 残差 RMS（m）和因果估计速度（m/s）。`trip_id` / `device_id` 用于分组，`timestamp_ms` 是 UTC Unix 毫秒；`data_kind` 区分真实/模拟。`horizontal_error_m` 是相对独立参考轨迹的水平误差，只生成标签和离线指标。
 
 ## 三种运行方式
@@ -12,12 +14,12 @@
 
 来源为 [Stanford NavLab deep_gnss](https://github.com/Stanford-NavLab/deep_gnss) 与 [gnss_lib_py](https://github.com/Stanford-NavLab/gnss_lib_py)。具体版本与文件 SHA-256 在 `config/public_sources.json`；下载后副本与清单只保存于忽略的 `data/raw/`。
 
-| 本地采集组 | 格式 / 设备 | 匹配历元 | 当前用途 |
-| --- | --- | ---: | --- |
-| 2021-04-22-US-SJC-1 | GSDC 2021 / SamsungS20Ultra | 2,824 | 训练 |
-| 2020-05-14-US-MTV-1 | GSDC 2021 / Pixel4 | 1,737 | 验证 |
-| published-sample | GSDC 2022 parser example | 6 | 流程测试 |
-| 2023-09-07-18-59-us-ca | GSDC 2023 / pixel7pro | 5 | 流程测试 |
+| 本地采集组             | 格式 / 设备                 | 匹配历元 | 当前用途 |
+| ---------------------- | --------------------------- | -------: | -------- |
+| 2021-04-22-US-SJC-1    | GSDC 2021 / SamsungS20Ultra |    2,824 | 训练     |
+| 2020-05-14-US-MTV-1    | GSDC 2021 / Pixel4          |    1,737 | 验证     |
+| published-sample       | GSDC 2022 parser example    |        6 | 流程测试 |
+| 2023-09-07-18-59-us-ca | GSDC 2023 / pixel7pro       |        5 | 流程测试 |
 
 2022 格式例子的时间属于 2021-04-29，原始完整行程名没有从示例元数据中确定；保留 `published-sample` 名称。这里的年份是格式/数据发布标签，不必然是采集年份。两个短示例不是完整驾驶实验。训练/验证行程名称在上游目录中的分配不构成本项目的最终测试方案；本项目明确使用 `config/public_split.json`。
 
@@ -56,3 +58,11 @@
 ## UrbanNav 新城区记录
 
 公开三城区记录已按 [固定源清单](../config/urbannav_sources.json) 下载到忽略的 `data/raw/urbannav`，独立位置/建筑图几何标签与同源五项无线电特征生成于 `data/processed/urbannav`。原始 5,671 历元、77,744 卫星行，27,839 行通过参考质量、时间、网格、高度和边缘检查；其余 unknown 不进入分类评分。标签方法、覆盖、固定模型实验及许可边界见 [UrbanNav 报告](../docs/experiments/urbannav_generalization.md)。所有区域都在香港，未验证跨城市。
+
+## UrbanNav 定位与告警表
+
+独立定位分支使用同一批原始GNSS/参考采集，生成在 `data/processed/urbannav_positioning_v3`：`observations.csv`保留全部成功SPP观测，`epochs.csv`保留合格参考监督/评分行，`availability.csv`记录所有原始历元的解算与参考状态。原点来自首个成功SPP，滤波/GRU历史保留无合格参考的成功观测；真值仅用于监督、验证和评分。
+
+三段5671原始历元中，1193点同时具有成功解和合格参考。旺角3350原始点、577有效解、1270合格参考、139可评分点，分母分别报告。`data/processed/urbannav_doppler/velocity.csv`另存RTKLIB速度和协方差，不改变告警六项输入或原评分人口。
+
+当前整段划分、三路线轮换、Doppler提取和复查见[完整定位报告](../docs/experiments/positioning_expansion.md)与[方法来源](../docs/research/positioning_methods.md)；GSDC的11点历史样例不与此分支池化。
