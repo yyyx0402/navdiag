@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCUMENTS = (
     'docs/OBSTRUCTION_LABELS.md', 'docs/MODEL_CARD.md',
-    'docs/lessons/05_nlos_zhang2023.md', 'docs/lessons/06_generalization.md',
+    'docs/knowledge/nlos.md', 'docs/knowledge/generalization.md',
     'docs/research/zhang2023_reproduction.md', 'docs/OPEN_SOURCE_REFERENCES.md',
     'docs/experiments/nlos_domain_audit.md', 'docs/experiments/nlos_protocols.md',
     'docs/experiments/urbannav_generalization.md',
@@ -69,6 +69,8 @@ def chunks(text, document_id, source):
 def build():
     records, sources = [], []
     for number, source in enumerate(DOCUMENTS, 1):
+        if not source.startswith('docs/') or 'private' in Path(source).parts:
+            raise ValueError('RAG sources must be public project documentation')
         text = (ROOT / source).read_text(encoding='utf-8')
         records.extend(chunks(text, f'D{number:02}', source))
         sources.append({'path': source, 'sha256': hashlib.sha256(text.encode()).hexdigest()})

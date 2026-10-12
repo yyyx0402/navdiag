@@ -3351,27 +3351,15 @@
   "geographic_audit": {
     "TST": {
       "minimum_recorded_truth_distance_to_any_KLT_route_m": 2665.92728179009,
-      "median_distance_m": 2971.6617386355697,
-      "centroid_latlon": [
-        22.300028852145985,
-        114.17759312926373
-      ]
+      "median_distance_m": 2971.6617386355697
     },
     "WP": {
       "minimum_recorded_truth_distance_to_any_KLT_route_m": 2196.2359850862713,
-      "median_distance_m": 2613.4754265973756,
-      "centroid_latlon": [
-        22.304862426873516,
-        114.18840277971087
-      ]
+      "median_distance_m": 2613.4754265973756
     },
     "MK": {
       "minimum_recorded_truth_distance_to_any_KLT_route_m": 996.0093033125278,
-      "median_distance_m": 1390.595995415244,
-      "centroid_latlon": [
-        22.319219938378268,
-        114.1684415572508
-      ]
+      "median_distance_m": 1390.595995415244
     }
   },
   "dataset": {
@@ -3696,5 +3684,6 @@
       "gru",
       "transformer"
     ]
-  }
+  },
+  "report_scope": "Current aggregate and per-district metrics; no raw observations."
 }

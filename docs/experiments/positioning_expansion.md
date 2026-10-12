@@ -1,6 +1,6 @@
 # 完整路线定位与告警评估（2026-10-12）
 
-新增 UrbanNav 尖沙咀、黄埔、旺角三段原始 GNSS 与独立 SPAN 参考。主实验为尖沙咀训练、黄埔验证、旺角测试；补充三轮固定角色循环，每条路线测试一次。固定规则、LR、RF、GRU 使用原默认参数；滤波八组既有噪声候选、分类阈值和 GRU 早停只使用各轮验证段。NLOS 调参保持停止。
+使用 UrbanNav 尖沙咀、黄埔、旺角三段原始 GNSS 与独立 SPAN 参考。主实验为尖沙咀训练、黄埔验证、旺角测试；补充三轮固定角色循环，每条路线测试一次。固定规则、LR、RF、GRU 使用原默认参数；滤波八组既有噪声候选、分类阈值和 GRU 早停只使用各轮验证段。
 
 数据以前已用于 NLOS 研究，主路线结果也在补充轮换前查看过，因此是开发阶段整段留出，**不是全新盲测或跨城市验证**。区域与日期共同变化；1193 个相关点不是 1193 个独立实验。
 
@@ -28,7 +28,7 @@
 | 黄埔，743 点 | 12.153 | 15.848 | 12.285 | 11.170 |
 | 旺角，139 点 | 15.481 | 15.669 | 15.751 | 14.610 |
 
-自适应不普遍更优；Doppler 降低黄埔/旺角 RMSE，尖沙咀变差。旺角 Doppler Median/P95 为 8.979/33.151 m，SPP 为 7.563/28.046 m：**RMSE 改善不代表中位或尾部误差同步改善**。不根据测试重调阈值或删困难点。
+自适应不普遍更优；Doppler 降低黄埔/旺角 RMSE，尖沙咀变差。旺角 Doppler Median/P95 为 8.979/33.151 m，SPP 为 7.563/28.046 m：**RMSE 改善不代表中位或尾部误差同步改善**。
 
 旺角自适应的 ≤2 m 为 11.5%（139 个可评分点中的16个）；以全部1270个合格参考历元为分母，“有输出且≤2 m”仅1.26%。Doppler 仍用相同人口，不提升解算可用率。不能用条件误差掩盖断解。
 
@@ -67,4 +67,4 @@ Copy-Item data/processed/urbannav_positioning_v3/availability.csv artifacts/urba
 .\.venv\Scripts\python.exe -m navdiag serve --artifacts artifacts/urbannav_positioning --nlos-artifacts artifacts/klt_protocols --generalization-artifacts artifacts/urbannav_generalization
 ```
 
-遵循来源条款；下载器也获取原主线需要的遮挡图。冻结记录对应当时源文件/实现与环境，后续变更应使用新输出目录，不能改写指纹伪装原运行。已完成目录拒绝覆盖。旧 GSDC 11 点结果保留在[历史审计](../research/positioning_audit.md)，未与 UrbanNav 不同硬件/算法池化。
+遵循来源条款；下载器也获取原主线需要的遮挡图。冻结记录对应当时源文件/实现与环境，后续变更应使用新输出目录，不能改写指纹伪装原运行。已完成目录拒绝覆盖。GSDC 11点解析样例未与UrbanNav池化。

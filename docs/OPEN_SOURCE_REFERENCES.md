@@ -1,6 +1,6 @@
 # 开源参考与复用记录
 
-用户授权参考其他开源项目完善 NavDiag。当前复用已有数据、特征表和成熟库，把实现重点放在标签、无泄漏评估、错误分析与导航验证。
+数据、提取工具与算法依赖的来源、使用方式及许可如下。
 
 | 来源 | 本项目实际使用方式 | 许可与边界 |
 | --- | --- | --- |
@@ -11,7 +11,7 @@
 | [Stanford gnss_lib_py](https://github.com/Stanford-NavLab/gnss_lib_py) | 使用公开 GSDC 解析测试文件，参考字段与教程 | 未声称复现完整定位算法；数据条款单独适用 |
 | [Stanford deep_gnss](https://github.com/Stanford-NavLab/deep_gnss) | 下载两个公开 GSDC 观测/参考例子 | 用于历元定位失准流程，缺少 NLOS 真值 |
 | [scikit-learn](https://scikit-learn.org/stable/) | 直接使用 Pipeline、填充、LR、RF 与评估实现 | 项目依赖；不重新实现通用算法 |
-| [PyTorch TransformerEncoderLayer](https://docs.pytorch.org/docs/2.14/generated/torch.nn.TransformerEncoderLayer.html) | 直接使用注意力/前馈层；本项目实现单卫星因果窗口、位置编码、训练与评估 | 库依赖；没有复制 MMTNet 或其他研究项目源码 |
+| [PyTorch TransformerEncoderLayer](https://docs.pytorch.org/docs/2.14/generated/torch.nn.TransformerEncoderLayer.html) | 直接使用注意力/前馈层；本项目实现单卫星因果窗口、位置编码、训练与评估 | 库依赖；单卫星历史分类，未复现论文联合网络 |
 | [DeepNLOSDetection](https://github.com/rwth-irt/DeepNLOSDetection)及[论文](https://arxiv.org/abs/2309.00480) | 参考卫星级任务、天空掩膜、特征与域外评估思想 | 核查时仓库仅有说明/展示资料；未获取训练代码或数据，不声称完成复现 |
 
 本项目主 Python 包使用 MIT 许可。[独立 KLT 预处理工具](../tools/klt/README.md)使用 GPL-3.0-or-later。上游 GPL 数值数据、其派生表和训练产物留在本地忽略目录，不作为 MIT 原创数据打包发布。以后分发上游源码、衍生实现、数据或模型时，需保留相应许可和署名并核对具体分发条件。

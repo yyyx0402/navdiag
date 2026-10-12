@@ -38,7 +38,7 @@ def test_chunks_are_bounded_traceable_and_from_allowlisted_docs():
     sources = {item['path'] for item in corpus['sources']}
     assert all(item['source_url'] in sources and 0 < item['start_line'] <= item['end_line'] and len(item['content']) <= 480
                for item in corpus['chunks'])
-    assert not any('raw' in source or '.navdiag' in source for source in sources)
+    assert not any('raw' in source or '.navdiag' in source or 'private/' in source for source in sources)
     from pathlib import Path
     root = Path(__file__).resolve().parents[1]
     for item in corpus['chunks']:

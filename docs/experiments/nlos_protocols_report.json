@@ -2330,71 +2330,6 @@
     "excluded_unreliable_runs": [
       "1116_KLT3_649"
     ],
-    "alignment": {
-      "0610_KLT1_203": {
-        "epochs": 203,
-        "max_time_difference_ms": 5.345582962036133,
-        "first_utc": 1623296137.005,
-        "last_utc": 1623296339.005,
-        "label_source": "original KLT fisheye labels"
-      },
-      "0610_KLT2_209": {
-        "epochs": 209,
-        "max_time_difference_ms": 5.611896514892578,
-        "first_utc": 1623296900.006,
-        "last_utc": 1623297108.006,
-        "label_source": "original KLT fisheye labels"
-      },
-      "0610_KLT3_404": {
-        "epochs": 404,
-        "max_time_difference_ms": 5.763769149780273,
-        "first_utc": 1623297134.006,
-        "last_utc": 1623297537.006,
-        "label_source": "original KLT fisheye labels"
-      },
-      "1109_KLT1_421": {
-        "epochs": 421,
-        "max_time_difference_ms": 0.0,
-        "first_utc": 1699520742.005,
-        "last_utc": 1699521162.005,
-        "label_source": "pinned published numeric table"
-      },
-      "1109_KLT2_294": {
-        "epochs": 294,
-        "max_time_difference_ms": 0.0,
-        "first_utc": 1699523001.006,
-        "last_utc": 1699523294.006,
-        "label_source": "pinned published numeric table"
-      },
-      "1109_KLT2_301": {
-        "epochs": 301,
-        "max_time_difference_ms": 0.0,
-        "first_utc": 1699522671.006,
-        "last_utc": 1699522971.006,
-        "label_source": "pinned published numeric table"
-      },
-      "1109_KLT3_666": {
-        "epochs": 666,
-        "max_time_difference_ms": 0.0,
-        "first_utc": 1699521171.005,
-        "last_utc": 1699521836.005,
-        "label_source": "pinned published numeric table"
-      },
-      "1116_KLT1_184": {
-        "epochs": 184,
-        "max_time_difference_ms": 4.213571548461914,
-        "first_utc": 1700128393.004,
-        "last_utc": 1700128576.004,
-        "label_source": "original KLT fisheye labels"
-      },
-      "1116_KLT2_169": {
-        "epochs": 169,
-        "max_time_difference_ms": 4.128217697143555,
-        "first_utc": 1700128217.004,
-        "last_utc": 1700128385.004,
-        "label_source": "original KLT fisheye labels"
-      }
-    },
     "source_annotation_count_discrepancy": {
       "run": "0610_KLT3_404",
       "readme_nlos": 2391,
@@ -2402,17 +2337,5 @@
       "policy": "Preserve source labels; no manual correction"
     }
   },
-  "previous_four_run_feature_verification": {
-    "rows": 26522,
-    "feature_names": [
-      "cn0_dbhz",
-      "elevation_deg",
-      "residual_normalized",
-      "pr_rate_consistency_mps",
-      "cn0_std_dbhz"
-    ],
-    "equal_including_missing": true,
-    "absolute_tolerance": 1e-06,
-    "label_policy": "Old four acquisitions retain pinned published labels; not an independent annotation verification"
-  }
+  "report_scope": "Current fixed-parameter suite; full local reports contain training traces."
 }

@@ -5,770 +5,210 @@
   "sources": [
     {
       "path": "docs/OBSTRUCTION_LABELS.md",
-      "sha256": "0ad582c39150f80a06dc623e97bea23f2baf20692976f063dc447ef0d0153420"
+      "sha256": "faddbf2264610a93bc7a2331591428799bfb8cedc3ce8511615637bdcba4a809"
     },
     {
       "path": "docs/MODEL_CARD.md",
-      "sha256": "ee0a87a3c944e503658af7a311c1ac06c753fac9effa2d3d871cba82212bf03d"
+      "sha256": "81181583c98635f9791d3e92c3f8b9f9f42db5067ed1421a1268af75f3faaa54"
     },
     {
-      "path": "docs/lessons/05_nlos_zhang2023.md",
-      "sha256": "a0785ee028683251c7d4bb7d1d00d71999a9a38adc61adeb9746ae25fccfff72"
+      "path": "docs/knowledge/nlos.md",
+      "sha256": "a23b879bf5a87cc2f6ecc97c081e01868d390c63961eec97fd8fe94f525d6eea"
     },
     {
-      "path": "docs/lessons/06_generalization.md",
-      "sha256": "422e8e21b688972cd20d414ff0a03d13f56e1a4a6b04e4a0e5cc41947585642c"
+      "path": "docs/knowledge/generalization.md",
+      "sha256": "8327dbb8fefa94fa939df1c6283a6496a22030fde22adfcb969e45f6e0797aaf"
     },
     {
       "path": "docs/research/zhang2023_reproduction.md",
-      "sha256": "36f98a3c241b457de48ee8da08607808cd0167c35f978aecca2080e993ad497e"
+      "sha256": "187fce55db980f824466510c6092389b5f2736c0c9ccb8eb58f3755a3b9f0386"
     },
     {
       "path": "docs/OPEN_SOURCE_REFERENCES.md",
-      "sha256": "f50c245f5ec4560fa8912e80e8573406b42655478909f3bcc3741c942dc30648"
+      "sha256": "ace896306ad46ef6afdf959ca4d39613638f109211cf5aa7833b351ec7adae5b"
     },
     {
       "path": "docs/experiments/nlos_domain_audit.md",
-      "sha256": "30ac4f03d65d24fd53503dbf2e458eea0d0341bdc992a8af3f2576b003c0a2a3"
+      "sha256": "32872f21211f8c2e4cad91e70c7bbddb2b0cfb2371b167ac339e988c3d5ae66f"
     },
     {
       "path": "docs/experiments/nlos_protocols.md",
-      "sha256": "e3262c636f15cf711894d1dc4d36d38af9b6dfe895596d192046c22a3af4fd28"
+      "sha256": "370c3fed67a9fde320d69da85ab86b7a329b6065c5f2d96f86517e5a0e3be23d"
     },
     {
       "path": "docs/experiments/urbannav_generalization.md",
-      "sha256": "9822323c20d61b37a5864e77952ad2baaa628026bcebb5c4efcf2d04009c10da"
+      "sha256": "206db3157a9a67c53010a401fdb94837c5d1d8d8e206d91fbd547d304dddb6de"
     },
     {
       "path": "docs/research/positioning_methods.md",
-      "sha256": "111d88092d8c6376ad183df888846f3fab620ce8e75ded114f0e2a119c1604ee"
+      "sha256": "11841cc398556592bc4e7d6f486ad53f7c3244a3a5af24d9d96e0066b0edf349"
     }
   ],
   "chunks": [
     {
-      "id": "D01-d994c31c657d",
+      "id": "D01-bb8b1996f476",
       "document_id": "D01",
-      "title": "遮挡、信号接收与定位失准标签",
-      "heading": "遮挡、信号接收与定位失准标签",
+      "title": "标签与参考",
+      "heading": "标签与参考",
       "keywords": [
-        "遮挡、信号接收与定位失准标签"
+        "标签与参考"
       ],
-      "content": "这三层标签回答不同的问题，必须分别保存。本地开发版新增了真实 KLT 数据上的卫星级 LOS/NLOS 识别，尚未实现高楼/树木/车辆的物体分类。\n\n| 层次 | 样本单位 | 字段与取值 | 需要的参考证据 | 当前状态 |\n| --- | --- | --- | --- | --- |\n| 环境场景 | 行程片段 | scene_label：open_sky / urban_canyon / tree_cover / overpass / tunnel / urban_unspecified / unknown | 同步影像、地图或数据集场景标注 | KLT 仅有 urban_unspecified；未标注具体场景类型 |\n| 信号接收 | 时间 × 卫星 | signal_label：los / nlos / unknown | 鱼眼相机天空掩膜、LiDAR 天空掩膜或独立数据集标注 | KLT 相机 LOS/NLOS 标签已接入 |",
+      "content": "卫星可见性、环境、遮挡物和定位失准是不同标签。当前实现逐卫星LOS/NLOS和历元位置告警，尚无物体分类模型。\n\n| 层次 | 样本 | 字段 | 当前依据 |\n| --- | --- | --- | --- |\n| 环境 | 采集片段 | `scene_label` | `urban_unspecified`，未标注细分场景 |\n| 信号 | 时间×卫星 | `signal_label=los/nlos/unknown` | KLT鱼眼相机、UrbanNav静态建筑几何 |\n| 遮挡物 | 时间×卫星 | `obstruction_type` | 当前unknown，无楼/树/车辆真值 |\n| 位置告警 | 接收机历元 | `is_unreliable` | 独立参考下基线水平误差 >10m |\n\n`scene_id`为区域分组，`signal_label_source`记录来源，均不作为学习输入。NLOS为正类，LOS为负类；unknown不参与监督或评分，但可用观测可进入因果历史。",
       "source_url": "docs/OBSTRUCTION_LABELS.md",
       "source_type": "project_document",
       "start_line": 3,
-      "end_line": 8
-    },
-    {
-      "id": "D01-4fce577267fd",
-      "document_id": "D01",
-      "title": "遮挡、信号接收与定位失准标签",
-      "heading": "遮挡、信号接收与定位失准标签",
-      "keywords": [
-        "遮挡、信号接收与定位失准标签"
-      ],
-      "content": "| 信号接收 | 时间 × 卫星 | signal_label：los / nlos / unknown | 鱼眼相机天空掩膜、LiDAR 天空掩膜或独立数据集标注 | KLT 相机 LOS/NLOS 标签已接入 |\n| 遮挡物类型 | 时间 × 卫星 | obstruction_type：building / tree / vehicle / bridge / unknown | 卫星方向与物体分割/三维几何对应 | 当前全部 unknown |\n| 定位结果 | 定位历元 | is_unreliable：参考水平误差 > 10 m | 独立参考轨迹 | 原 GSDC/模拟实验已有 |\n\n`scene_id` 是区域分组 ID（KLT1/2/3），不是预测的环境类别。`signal_label_source` 保留标签来源。未知信号标签不作为 LOS，也不参与监督训练和准确率计算；具体遮挡物未知时不强行推断。场景/物体取值是后续标注协议，尚无对应分类模型。",
-      "source_url": "docs/OBSTRUCTION_LABELS.md",
-      "source_type": "project_document",
-      "start_line": 8,
       "end_line": 13
     },
     {
-      "id": "D01-e413e4a33edd",
+      "id": "D01-8afa81cd1a7c",
       "document_id": "D01",
-      "title": "遮挡、信号接收与定位失准标签",
-      "heading": "遮挡、信号接收与定位失准标签",
+      "title": "标签与参考",
+      "heading": "标签与参考",
       "keywords": [
-        "遮挡、信号接收与定位失准标签"
+        "标签与参考"
       ],
-      "content": "LOS 表示直达路径可见，仍可能收到反射而产生多径。NLOS 表示直达路径被遮挡；观测到的反射信号仍可能很强。完全丢失、未被跟踪的卫星不在观测表中，当前模型无法评估这类不可用事件。定位误差大还可能涉及几何、时钟、噪声或参考对齐，不能用“误差 > 10 m”充当 NLOS 真值。",
+      "content": "LOS仍可能有多径，强信号仍可能是NLOS。完全未跟踪卫星不在表中；位置误差还受几何、时钟、噪声与参考对齐影响，不能用误差阈值替代NLOS真值。",
       "source_url": "docs/OBSTRUCTION_LABELS.md",
       "source_type": "project_document",
       "start_line": 14,
       "end_line": 15
     },
     {
-      "id": "D01-9589c57058b9",
+      "id": "D01-b858349fdd45",
       "document_id": "D01",
-      "title": "遮挡、信号接收与定位失准标签",
-      "heading": "当前数据与特征",
+      "title": "标签与参考",
+      "heading": "KLT",
       "keywords": [
-        "当前数据与特征"
+        "KLT"
       ],
-      "content": "[KLT 原始数据](https://github.com/ebhrz/KLTDataset)提供 GPS/BeiDou 相机 LOS/NLOS 标签。当前消费 [Fossett Laboratory 发布的数值特征表](https://github.com/fossettlab/gnss-nlos-notebook)，固定 commit、字节数和 SHA-256；未复制其 GPL 实现源码，也未声称重新提取 RINEX 特征或独立验证相机标注。\n\n五项特征为单星 C/N0、仰角、归一化 SPP 伪距残差、伪距变化率与 Doppler 变化率的一致性、历史 C/N0 标准差。上游说明这些是观测与 SPP 派生特征，滚动窗口使用当前及过去。标签、区域 ID、卫星 ID 和参考位置不作为学习输入；缺测保留 NaN，填充仅在训练集拟合。",
+      "content": "九段可靠采集统一调用固定版Fossett/RTKLIB特征提取器，按实际时间与卫星ID核对相机标签；原作者标注不可靠段被排除。四段标签来自固定公开数值表，五段来自原始相机文件，未独立人工重标。共2851历元、45228卫星行；采集段与区域协议见[KLT结果](experiments/nlos_protocols.md)。",
       "source_url": "docs/OBSTRUCTION_LABELS.md",
       "source_type": "project_document",
       "start_line": 18,
-      "end_line": 21
+      "end_line": 19
     },
     {
-      "id": "D01-fa6ede833faa",
+      "id": "D01-3d21859f76cf",
       "document_id": "D01",
-      "title": "遮挡、信号接收与定位失准标签",
-      "heading": "分组和评估",
+      "title": "标签与参考",
+      "heading": "UrbanNav",
       "keywords": [
-        "分组和评估"
+        "UrbanNav"
       ],
-      "content": "当前特征表只有 2023-11-09 的四个短采集段。训练为两个 KLT2 段，验证为 KLT1，测试为 KLT3。同一区域的连续采集段不跨集合。分类阈值及模型仅依据验证 F1 选择；测试成绩更好的模型不会因此替换选定模型。\n\n26,522 条卫星观测并非 26,522 个独立场景。测试仅一段、一个区域，设备为 u-blox F9P，尚不能证明跨日期、城市或手机泛化。已查看的测试结果应作为开发实验；后续迭代需要新增未参与选择的最终留出采集。",
+      "content": "使用独立SPAN位置与当天广播星历计算方位/仰角，和建筑skymask比较。时间差≤50ms、Q≤2、网格≤2m、邻域3m/最多四网格、高度差≤3m，边界间隔5°；未通过保护保持unknown。它是`static_3d_sky_mask`几何参考，不是人工逐卫星接收标签。77744行中27839行可评分，旺角覆盖19.9%；静态建筑图不覆盖临时物体，保护间隔未经人工校准。详见[UrbanNav结果](experiments/urbannav_generalization.md)。",
       "source_url": "docs/OBSTRUCTION_LABELS.md",
       "source_type": "project_document",
-      "start_line": 24,
-      "end_line": 27
-    },
-    {
-      "id": "D01-6b7cae8e2f20",
-      "document_id": "D01",
-      "title": "遮挡、信号接收与定位失准标签",
-      "heading": "下一步",
-      "keywords": [
-        "下一步"
-      ],
-      "content": "1. 获取 KLT 其他日期的完整采集、核对标签可靠性，尤其排除原作者指出的极低照度不可靠标签。\n2. 以新日期和区域建立最终留出集，再进行模型选择；不按当前测试短板反复调到高分。\n3. 获取同步影像或可靠地图，补充环境与物体标签，才开展高楼/树木类别识别。\n4. 在同一份原始观测上比较 NLOS 排除/降权前后的定位误差、可用率和几何退化，验证是否真正改善导航。\n\n方法背景：[基于 LiDAR 掩膜的 NLOS 标注与观测特征论文](https://arxiv.org/abs/2309.00480)。KLT 标签来源及限制以数据发布方说明为准。\n\n数值清洗：源表 927 条 C/N0=0 记录按缺测保留；历史 C/N0 标准差由本地适配器重算，五个过去/当前观测、至少两条有效值、超过 5 秒间隔重置。原始特征表仍保持下载时的 SHA-256。",
-      "source_url": "docs/OBSTRUCTION_LABELS.md",
-      "source_type": "project_document",
-      "start_line": 30,
-      "end_line": 37
-    },
-    {
-      "id": "D02-abfd167e6610",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Model card — NavDiag local v0.3",
-      "keywords": [
-        "Model card — NavDiag local v0.3"
-      ],
-      "content": "The primary branch is satellite LOS/NLOS classification on KLT and UrbanNav. The current experiments are paired same-domain/area holdouts on KLT, frozen source transfer to UrbanNav, and six UrbanNav district-disjoint directions. Five neural models plus three traditional references are compared; validation controls selection. See [current results](experiments/urbannav_generalization.md), [protocols](experiments/nlos_protocols.md) and [project review](PROJECT_REVIEW.md). Cross-",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 3,
-      "end_line": 3
-    },
-    {
-      "id": "D02-dbd55e4d1a1d",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Model card — NavDiag local v0.3",
-      "keywords": [
-        "Model card — NavDiag local v0.3"
-      ],
-      "content": "city performance and positioning benefits remain unverified.\n\nUpdated 2026-10-12: the separate positioning/alarm branch now includes three full UrbanNav drives and a Doppler-velocity KF comparison. GSDC parser samples, the four-run KLT comparison and tuning results below remain dated development records. Their datasets, labels and metrics must not be interchanged. Learning guidance is in [LEARNING_PATH](LEARNING_PATH.md).",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 3,
-      "end_line": 6
-    },
-    {
-      "id": "D02-662c1dbc10f1",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Task and intended use",
-      "keywords": [
-        "Task and intended use"
-      ],
-      "content": "Predict whether the current GNSS baseline horizontal error exceeds a configurable threshold (default 10 m). This default is a coarse learning/demo alarm definition, with no application-specific requirement established; it is not an achieved or acceptable positioning accuracy. Continuous Median/P95/RMSE and within-1/2/5/10 m fractions separately assess positions. This is a research/learning pipeline, not a navigation safety or integrity monitor. No real deployment performance",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 9,
-      "end_line": 9
-    },
-    {
-      "id": "D02-bcec695a5597",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Task and intended use",
-      "keywords": [
-        "Task and intended use"
-      ],
-      "content": "has been established.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 9,
-      "end_line": 10
-    },
-    {
-      "id": "D02-b53fc84d11ae",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Observations and labels",
-      "keywords": [
-        "Observations and labels"
-      ],
-      "content": "Allowed features: satellite count, mean/minimum C/N0, unweighted geometry HDOP, WLS pseudorange residual RMS and causal estimated speed. Trip IDs, timestamps, reference coordinates and reference errors do not become learned input features. Speed uses current/previous WLS positions with a 70 m/s cap. Ground truth is used only to create labels and evaluate trajectories.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 13,
-      "end_line": 14
-    },
-    {
-      "id": "D02-d07615956f86",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Observations and labels",
-      "keywords": [
-        "Observations and labels"
-      ],
-      "content": "GSDC 2021 derived examples lack C/N0. Unavailable measurements remain NaN. Features with less than 50% training coverage are dropped; remaining median imputation and standardization are fitted only on training data. The fixed rule treats an unavailable C/N0 comparison as false, so its signal-based branch is unavailable on these files.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 15,
-      "end_line": 16
-    },
-    {
-      "id": "D02-d6d08282c72e",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Models and selection",
-      "keywords": [
-        "Models and selection"
-      ],
-      "content": "- Fixed thresholds on C/N0, HDOP and residuals; its binary score is not a probability.\n- Median imputation, StandardScaler and balanced logistic regression.\n- Median imputation and balanced RF: 150 trees, depth 8, minimum leaf 6.\n- Optional unidirectional GRU: hidden size 24, 10 past/current epochs, weighted BCE, Adam, validation early stopping. Windows reset across trips, devices and gaps over 5 seconds. Ten epochs are not necessarily ten seconds.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 19,
+      "start_line": 22,
       "end_line": 23
     },
     {
-      "id": "D02-4b7b3fb32bf3",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Models and selection",
+      "id": "D01-e8aad6046a51",
+      "document_id": "D01",
+      "title": "标签与参考",
+      "heading": "输入与评价",
       "keywords": [
-        "Models and selection"
+        "输入与评价"
       ],
-      "content": "Whole trips, including all phones from one drive, remain in one split. The default random split is approximately 60/20/20; a complete explicit manifest can override it. Thresholds maximize validation F1 on a fixed grid; the model with highest validation F1 wins, even if it is the rule baseline. No test metric selects a model or threshold. Repeated routes and devices still require separate generalization experiments.",
-      "source_url": "docs/MODEL_CARD.md",
+      "content": "五项输入为C/N0、SPP仰角、归一化伪距残差、伪距变化率/Doppler一致性、历史C/N0标准差。相机、参考位置、建筑图、标签和区域ID不作输入。非正C/N0按缺测处理；历史标准差使用过去/当前五次观测，至少两有效值，>5秒重置；填充与标准化只拟合训练集。\n\n完整采集段保持在一个集合，检查点、分类阈值与模型依据验证集，测试仅报告。大量卫星行相关，不能当作独立场景数。当前全部区域在香港，未验证跨城市或NLOS预测带来的定位收益。来源与许可见[复用记录](OPEN_SOURCE_REFERENCES.md)。",
+      "source_url": "docs/OBSTRUCTION_LABELS.md",
       "source_type": "project_document",
-      "start_line": 24,
-      "end_line": 25
-    },
-    {
-      "id": "D02-d07d13f0ea2c",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Positioning and filtering",
-      "keywords": [
-        "Positioning and filtering"
-      ],
-      "content": "The historical GSDC adapter uses supplied satellite states and satellite clock, inter-signal, ionospheric and tropospheric corrections; it does not derive ephemerides or perform carrier-phase/RTK processing. Its own LS estimates ECEF and one clock per constellation, with Earth rotation correction; Huber failures fall back to WLS and are counted. GSDC reference interpolation remains within support and the configured maximum gap. The current UrbanNav standalone adapter instead",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 28,
+      "start_line": 26,
       "end_line": 28
     },
     {
-      "id": "D02-80d630efcc00",
+      "id": "D02-fa5ffee5b1bf",
       "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Positioning and filtering",
+      "title": "模型卡",
+      "heading": "模型卡",
       "keywords": [
-        "Positioning and filtering"
+        "模型卡"
       ],
-      "content": "calls RTKLIB broadcast single-frequency GPS/BeiDou SPP, with a 10-degree mask and independent SPAN time/quality scoring guards.",
+      "content": "版本 0.3。NavDiag 用于离线信号分类、定位分析与有依据的问答。当前实测数据为香港 KLT 和 UrbanNav；未验证跨城市部署或导航安全性能。",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
-      "start_line": 28,
-      "end_line": 29
+      "start_line": 3,
+      "end_line": 4
     },
     {
-      "id": "D02-3adeca164e20",
+      "id": "D02-b9ceaa3e6b52",
       "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Positioning and filtering",
+      "title": "模型卡",
+      "heading": "卫星 LOS/NLOS 识别",
       "keywords": [
-        "Positioning and filtering"
+        "卫星 LOS/NLOS 识别"
       ],
-      "content": "The causal planar Kalman baseline estimates east/north position and velocity, resets across large gaps and rejects extreme innovations. Fixed observation sigma/process noise are selected by validation RMSE. Adaptive observation variance uses monotone risk bins and validation reference errors; it is an empirical mapping, not probability calibration. Both are then frozen for testing. The filter accepts optional calibrated, gravity-removed acceleration already expressed in ENU.",
+      "content": "一条样本为采集段、设备、时间、卫星的组合。正类 NLOS=1，负类 LOS=0；unknown 不参与监督和评分，可用观测仍可保留在因果历史中。参考位置、相机/建筑图、标签和区域 ID 不作为学习输入。\n\n五项特征为 `cn0_dbhz`、`elevation_deg`、`residual_normalized`、`pr_rate_consistency_mps`、`cn0_std_dbhz`。非正 C/N0 转为缺测；填充与标准化仅拟合训练集。\n\n| 模型 | 输入与固定配置 |\n| --- | --- |\n| C/N0 规则 | 当前 C/N0 <30 dB-Hz，无训练参数 |\n| LR | 当前五特征，balanced，C=1 |\n| RF | 当前五特征，200 树、深度12、最小叶8、balanced |\n| MLP、CNN、LSTM、GRU、Transformer | 同星过去及当前32次观测；宽64、两层、dropout 0.1 |",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
-      "start_line": 30,
-      "end_line": 30
+      "start_line": 7,
+      "end_line": 17
     },
     {
-      "id": "D02-33130fd832dc",
+      "id": "D02-5b5502e4bbf6",
       "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Positioning and filtering",
+      "title": "模型卡",
+      "heading": "卫星 LOS/NLOS 识别",
       "keywords": [
-        "Positioning and filtering"
+        "卫星 LOS/NLOS 识别"
       ],
-      "content": "Only the simulator supplies this input in the included experiments; public GSDC runs use no IMU. Raw IMU calibration, attitude estimation and a full strapdown INS are outside v0.2.",
+      "content": "五网络统一 AdamW，学习率0.0005、weight decay0.01、batch128，最多30轮，验证 BCE 早停 patience6；CNN 核5，Transformer 四头。窗口跨采集段/设备/卫星或 >5 秒间隔重置，无未来观测。树模型与神经网络的历史输入不同，因此是完整分类器对比。\n\n分类阈值最大化验证 F1；验证损失选择神经网络检查点；平均验证 F1 选择汇总模型族。测试分数只用于报告。KLT 六折使用配对验证/测试段，UrbanNav 六方向使用完整城区互斥，另有冻结源模型外部迁移。\n\nKLT 九段共2851历元、45228卫星行；UrbanNav 77744行中27839行通过几何参考保护。香港相邻区域、单次采集、日期混杂与 unknown 筛选限制结论，部分测试记录在开发中已查看。详见[标签](OBSTRUCTION_LABELS.md)、[KLT](experiments/nlos_protocols.md)、[UrbanNav](experiments/urbannav_generalization.md)。",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
-      "start_line": 30,
+      "start_line": 18,
+      "end_line": 23
+    },
+    {
+      "id": "D02-f235c845a5aa",
+      "document_id": "D02",
+      "title": "模型卡",
+      "heading": "定位失准告警",
+      "keywords": [
+        "定位失准告警"
+      ],
+      "content": "一条样本为接收机定位历元，正类为基线 SPP 水平误差 >10 m。10 m 是任务定义，精度另用 Median/P95/RMSE 与误差内比例评估；告警不表示已识别 NLOS 或滤波后失准。\n\n输入为卫星数、C/N0 均值/最小值、HDOP、残差 RMS 和因果估计速度。比较固定规则、balanced LR、150树/深度8/最小叶6的 RF，以及 hidden24、10次历史的 GRU。GRU 使用 Adam0.002、batch128、最多20轮、patience5；历史间隔 >5 秒重置。训练覆盖不足50%的特征剔除，其余训练侧填充和标准化。\n\n三条完整路线轮流留出，阈值与模型只由各轮验证段选择。参考位置只用于标签与评分；全部成功 SPP 点进入滤波/GRU 历史，无参考仍保留输入。主实验为尖沙咀训练、黄埔验证、旺角测试。[定位报告](experiments/positioning_expansion.md)同时报告误差、误报/漏报和可用率。",
+      "source_url": "docs/MODEL_CARD.md",
+      "source_type": "project_document",
+      "start_line": 26,
       "end_line": 31
     },
     {
-      "id": "D02-8cf061a694c1",
+      "id": "D02-b1b7bf2bef4b",
       "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Evaluation and limitations",
+      "title": "模型卡",
+      "heading": "定位与滤波",
       "keywords": [
-        "Evaluation and limitations"
+        "定位与滤波"
       ],
-      "content": "Classification metrics include Precision, Recall, F1, false-positive rate, AP, ROC AUC, Brier score and `[[TN, FP], [FN, TP]]`. Recall/F1 are null without reference positives; Precision is null without positive predictions; AP/AUC are null for a single class. Risk scores are not calibrated. Individual reports weight scored observations equally; KLT/UrbanNav regional summaries and the positioning rotation use explicitly declared equal-area/equal-drive averages.",
+      "content": "UrbanNav 使用 pyrtklib0.2.7 调用广播 GPS/北斗单频 SPP，10°仰角，BRDC 电离层/SAAS 对流层改正。ENU 原点来自首个成功 SPP。固定与自适应平面 KF 的 sigma/过程噪声从八组候选按验证 RMSE 选择；风险五箱方差映射是经验权重，未标定为失准概率。\n\nDoppler KF 加入 RTKLIB 速度与正定协方差，旋转至 ENU；位置/速度 NIS 门限100/25，速度协方差下限0.04 (m/s)²，间隔 >10 秒重置。位置/速度相关性近似为零，不等价于 FGO、TDCP 或完整 GNSS/IMU。仅原有成功 SPP 点输出，未验证跨断解定位。参见[方法来源](research/positioning_methods.md)。",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 34,
-      "end_line": 35
-    },
-    {
-      "id": "D02-bcdccfe10afd",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Evaluation and limitations",
-      "keywords": [
-        "Evaluation and limitations"
-      ],
-      "content": "After the 2026-10-11 GSDC 2021 timestamp/reference-height correction, the public experiment contains 2,824 training epochs, 1,737 validation epochs and 11 test epochs from parser examples. The previous real validation F1 (GRU 0.991) is invalid and withdrawn because the old parser generated incorrect labels. Corrected validation has only five >10 m positives; selected GRU validation F1 is 0.308 and the test has zero positives. This checks an engineering path, not representativ",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 36,
-      "end_line": 36
-    },
-    {
-      "id": "D02-36864820d0dc",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Evaluation and limitations",
-      "keywords": [
-        "Evaluation and limitations"
-      ],
-      "content": "e detection performance. See [correction record](experiments/gsdc2021_correction.md). Device, year and route shift are confounded; more complete independent drives are needed.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 36,
       "end_line": 37
     },
     {
-      "id": "D02-db25b831924f",
+      "id": "D02-4f6bdf11e549",
       "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Evaluation and limitations",
+      "title": "模型卡",
+      "heading": "使用边界",
       "keywords": [
-        "Evaluation and limitations"
+        "使用边界"
       ],
-      "content": "The historical navigation simulation contains 15 simplified generated trips. Running LS on synthetic pseudoranges does not make it real data. Fixed filtering outperformed adaptive filtering there. In the corrected GSDC 11-point sample, adaptive RMSE was 6.383 m versus WLS 6.391 m; this 0.008 m difference is not reliable evidence of benefit. Current full-drive results remain mixed, as recorded under Full-drive positioning and alarm expansion.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 38,
-      "end_line": 39
-    },
-    {
-      "id": "D02-c8537b146143",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Evaluation and limitations",
-      "keywords": [
-        "Evaluation and limitations"
-      ],
-      "content": "Signal statistics and model risk alone cannot establish an NLOS cause. Diagnostics distinguish facts, hypotheses and missing evidence. A small 17-request live GLM-5.3 evidence-answer audit is recorded in [quality checks](experiments/glm_quality.md); failures and revisions are preserved. It is not a blind or representative answer-correctness evaluation, and tool-Agent generation quality remains unverified.",
+      "content": "当前位置分支尚无“逐卫星 NLOS 预测 → 观测加权 → 定位收益”的实测闭环；Zhang 2023 完整联合网络未复现。旺角 SPP 可用率17.2%，RMSE15.481 m，当前滤波不能保证持续改善。静态建筑标签不能区分树木、车辆等遮挡物，LOS 也可能有多径。\n\n历史 GSDC 适配器保留作解析示例：修正时间与高度后4572匹配历元，短留出仅11点且无正类，旧验证 F1=0.991 已撤回。其结果不计入当前主实验。密钥、数据与可信本地模型产物不进入发布包；joblib 仅加载可信文件。",
       "source_url": "docs/MODEL_CARD.md",
       "source_type": "project_document",
       "start_line": 40,
-      "end_line": 41
+      "end_line": 42
     },
     {
-      "id": "D02-288ee8d522f0",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Separate satellite LOS/NLOS task (local v0.3)",
-      "keywords": [
-        "Separate satellite LOS/NLOS task (local v0.3)"
-      ],
-      "content": "This section records the historical four-run KLT comparison: 26,522 GPS/BeiDou observations on 2023-11-09 from the pinned Fossett numeric table, with fisheye sky-mask labels. Later paired main experiments re-extract nine runs as described under Reproducibility. Camera-label accuracy is not independently established. Scene IDs and reference labels are excluded from inputs; imputation fits training only.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 44,
-      "end_line": 45
-    },
-    {
-      "id": "D02-bd313c3e8ab8",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Separate satellite LOS/NLOS task (local v0.3)",
-      "keywords": [
-        "Separate satellite LOS/NLOS task (local v0.3)"
-      ],
-      "content": "In the historical four-run comparison, KLT2 supplies 9,830 train rows, KLT1 6,607 validation rows and KLT3 10,085 test rows. Five neural classifiers plus C/N0, LR and RF are compared, with no component ablations. Historical RF Precision/Recall/F1 are 0.672/0.778/0.721; neural F1 values are 0.705/0.719/0.708/0.710/0.712 and GRU is validation-preferred among networks. Current paired/UrbanNav results are recorded separately. Constant sanity baselines remain in reports but are hi",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 46,
-      "end_line": 46
-    },
-    {
-      "id": "D02-490a06c38c4c",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Separate satellite LOS/NLOS task (local v0.3)",
-      "keywords": [
-        "Separate satellite LOS/NLOS task (local v0.3)"
-      ],
-      "content": "dden in the UI. See [historical five-network experiment](experiments/five_neural_nlos.md).",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 46,
-      "end_line": 47
-    },
-    {
-      "id": "D02-077582adaa02",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Separate satellite LOS/NLOS task (local v0.3)",
-      "keywords": [
-        "Separate satellite LOS/NLOS task (local v0.3)"
-      ],
-      "content": "All five neural networks consume the same 32 past/current satellite observations with train-only imputation/scaling and the same AdamW/BCE/early-stopping budget. The MLP flattens history; the CNN uses left-padded convolutions and mean/last-token summaries; LSTM/GRU are two-layer unidirectional networks of hidden size 64. Different parameter counts and inductive biases remain, and no architecture-specific hyperparameter search has been completed. One seed and one held-out area",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 48,
-      "end_line": 48
-    },
-    {
-      "id": "D02-a632ccb8bd83",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Separate satellite LOS/NLOS task (local v0.3)",
-      "keywords": [
-        "Separate satellite LOS/NLOS task (local v0.3)"
-      ],
-      "content": "do not establish a statistically reliable ranking. LR/RF consume current features, so neural-versus-tree comparisons include different history access.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 48,
-      "end_line": 49
-    },
-    {
-      "id": "D02-cbb7a4ee5a51",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Separate satellite LOS/NLOS task (local v0.3)",
-      "keywords": [
-        "Separate satellite LOS/NLOS task (local v0.3)"
-      ],
-      "content": "The Transformer uses five features over 32 past/current observations of one satellite, resetting across trips, receivers and gaps >5 seconds. Short history repeats the first observation. A 64-wide, four-head, two-layer causal encoder with sinusoidal positions and last-token classification has 67,521 parameters. Train-only imputation/scaling, weighted BCE and AdamW are used. In the historical four-run experiment, the best checkpoint was epoch 1 of 7 and the validation threshol",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 50,
-      "end_line": 50
-    },
-    {
-      "id": "D02-d5c0ad410e0a",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Separate satellite LOS/NLOS task (local v0.3)",
-      "keywords": [
-        "Separate satellite LOS/NLOS task (local v0.3)"
-      ],
-      "content": "d was 0.65; these are not current per-fold settings. Unknown labels may supply observed history but never supervision. See [historical Transformer experiment](experiments/transformer_nlos.md).",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 50,
-      "end_line": 51
-    },
-    {
-      "id": "D02-c54a6ed8ab75",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Separate satellite LOS/NLOS task (local v0.3)",
-      "keywords": [
-        "Separate satellite LOS/NLOS task (local v0.3)"
-      ],
-      "content": "The historical four-run selected RF had 1,366 false positives and 801 false negatives; in C/N0 (35,45] dB-Hz it found only 67 of 395 NLOS labels. These counts belong to that development test, not current regional totals. Per-system/C/N0/elevation slices expose failures without retuning. A single test area cannot support independent-drive confidence intervals or city/device generalization.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 52,
-      "end_line": 53
-    },
-    {
-      "id": "D02-b221edce3cdc",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Separate satellite LOS/NLOS task (local v0.3)",
-      "keywords": [
-        "Separate satellite LOS/NLOS task (local v0.3)"
-      ],
-      "content": "LOS may include multipath. Building/tree/vehicle labels and completely untracked satellites are absent; object labels remain unknown. This is not an object detector or proof of improved positioning, and KLT is not joined to unrelated GSDC samples. Further tuning needs an additional untouched final holdout. See [labels](OBSTRUCTION_LABELS.md), [experiment](experiments/v0_3_nlos.md), and [reuse](OPEN_SOURCE_REFERENCES.md).",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 54,
-      "end_line": 55
-    },
-    {
-      "id": "D02-435e6a324d11",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "The KLT experiment is a paired in-domain/cross-region comparison across three target areas, with nine acquisitions, three dates, 2,851 epochs and 45,228 observations. Each pair shares validation/test acquisitions; cross-region training removes all target-area training acquisitions. Fixed original defaults are used, without continuing the earlier hyperparameter search. In-domain training fractions are 59–65%; acquisition integrity takes precedence over exact 6:2:2 ratios. See",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 58,
-      "end_line": 58
-    },
-    {
-      "id": "D02-0149c4da00be",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "[protocol design and results](experiments/nlos_protocols.md).",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 58,
-      "end_line": 59
-    },
-    {
-      "id": "D02-9f6de4b52ea6",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "All nine acquisitions are re-extracted with the same pinned RTKLIB/Fossett pipeline. The four historical acquisitions match all original labels and numeric features within 1e-6, including missingness. New camera-label times match receiver epochs one-to-one within 50 ms; the June 2021 receiver has a roughly 5 ms fractional offset. KLT3-649 is excluded as unreliable. The raw KLT3-404 label file contains 2,461 NLOS observations rather than the source README's 2,391; actual sourc",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 60,
-      "end_line": 60
-    },
-    {
-      "id": "D02-96457a26be9e",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "e labels are preserved. The optional standalone GPL preprocessing adapter is outside the MIT main package.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 60,
-      "end_line": 61
-    },
-    {
-      "id": "D02-8d545e72d473",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "Equal-weight target-area means describe observed model advantages; no test score chooses hyperparameters or checkpoints. Three nearby areas and one seed do not establish statistically stable rankings. Some test acquisitions were inspected during earlier development. Removing target-area training changes both area exposure and sample size; same-day adjacent acquisitions and date/illumination differences remain limitations. This is exploratory comparison, not a new untouched fi",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 62,
-      "end_line": 62
-    },
-    {
-      "id": "D02-148f4cc7c458",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "nal benchmark.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 62,
-      "end_line": 63
-    },
-    {
-      "id": "D02-45e4dea5fd2b",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "The historical bounded search used eight predefined candidates per family (56 total). Validation selected CNN (F1 0.7637), with development-holdout test F1 0.7215 against RF 0.7212. This tiny difference is not stable improvement; the holdout was already repeatedly inspected. This search remains stopped and its winners are not transferred into current fixed-default main experiments. Full trials and other model outcomes remain in the [historical search record](experiments/nlos_",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 64,
-      "end_line": 64
-    },
-    {
-      "id": "D02-a2ba52eecca2",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "hyperparameter_search.md).",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 64,
-      "end_line": 65
-    },
-    {
-      "id": "D02-e05f6c6c630f",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "Reports record dataset SHA-256, seed, features/coverage, exact trip memberships, validation thresholds, history and metrics. Public source URLs are commit-pinned with size and SHA-256 in `config/public_sources.json`; preprocessing records alignment/drop/fallback counts. `requirements-lock.txt` is the tested Python 3.12 dependency snapshot excluding platform-specific PyTorch; CPU PyTorch version is installed separately as documented. This is not a cross-platform hash lock.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 66,
-      "end_line": 67
-    },
-    {
-      "id": "D02-2b50fe26d3e8",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "Published current results are in [paired protocols](experiments/nlos_protocols.md), [UrbanNav NLOS](experiments/urbannav_generalization.md) and [full-drive positioning](experiments/positioning_expansion.md); v0.2 remains a historical record. Third-party raw data and binaries are excluded from Git. Load only model files you generated or trust, since joblib is pickle-based.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 68,
-      "end_line": 69
-    },
-    {
-      "id": "D02-fbb3d7363290",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Reproducibility",
-      "keywords": [
-        "Reproducibility"
-      ],
-      "content": "C/N0 zero placeholders (927 rows) are converted to NaN. The local adapter recomputes C/N0 standard deviation over five trailing per-satellite observations, requiring two observed values and resetting after gaps above five seconds. Other published features are retained.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 70,
-      "end_line": 71
-    },
-    {
-      "id": "D02-fd2ebadad0f9",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Unseen UrbanNav districts",
-      "keywords": [
-        "Unseen UrbanNav districts"
-      ],
-      "content": "The fixed KLT source bundle is evaluated without changing validation thresholds on TST, WP and MK, followed by six whole-drive train/validation/test district permutations inside UrbanNav. There are 5,671 raw epochs and 77,744 satellite rows, but only 27,839 accepted static-building reference labels. These references use independent SPAN positions and building masks, not classifier features; dynamic obstacles and uncertain geometry remain unknown. MK coverage is 19.9%. Source/",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 74,
-      "end_line": 74
-    },
-    {
-      "id": "D02-15459a960a0b",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Unseen UrbanNav districts",
-      "keywords": [
-        "Unseen UrbanNav districts"
-      ],
-      "content": "target antenna, acquisition dates and camera/map reference methods differ; within UrbanNav the antenna and reference method match, but dates remain confounded with areas. Three drives in Hong Kong do not establish cross-city performance. See [results](experiments/urbannav_generalization.md) and [measured domain audit](experiments/nlos_domain_audit.md).",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 74,
-      "end_line": 75
-    },
-    {
-      "id": "D02-ea6f9abf9a96",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Unseen UrbanNav districts",
-      "keywords": [
-        "Unseen UrbanNav districts"
-      ],
-      "content": "A fixed C/N0 rule must have identical scores when paired protocols share the same test observations and labels; this invariance does not diagnose geographic distribution shift. KLT C/N0 distributions are close, while UrbanNav class-conditional distributions differ in the observed accepted references. Distribution distances are descriptive, without independent-drive significance claims. No further tuning was performed.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 76,
-      "end_line": 77
-    },
-    {
-      "id": "D02-b0eaa152c09b",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Full-drive positioning and alarm expansion",
-      "keywords": [
-        "Full-drive positioning and alarm expansion"
-      ],
-      "content": "The exploratory rotation evaluates each of TST, WP and MK once, with fixed train/validation roles: 5,671 raw epochs over about 94.5 minutes, 1,193 reference-scored fixes, only three acquisitions. The primary split trains TST, validates WP and tests MK. MK has 3,350 raw epochs, 577 successful SPP fixes, 1,270 quality-eligible references and 139 scored fixes. Its raw SPP availability is 17.2%; reference coverage is partial and the longest solution outage is about 464 seconds. P",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 80,
-      "end_line": 80
-    },
-    {
-      "id": "D02-2217c47cd026",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Full-drive positioning and alarm expansion",
-      "keywords": [
-        "Full-drive positioning and alarm expansion"
-      ],
-      "content": "reviously explored data and area/date confounding preclude an untouched or cross-city claim.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 80,
-      "end_line": 81
-    },
-    {
-      "id": "D02-043dc7ae49da",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Full-drive positioning and alarm expansion",
-      "keywords": [
-        "Full-drive positioning and alarm expansion"
-      ],
-      "content": "All successful observation epochs enter causal filtering and GRU history; reference guards only select supervision and scoring rows. The origin is the first successful SPP fix. Failed SPP epochs are not credited with a valid position or alert output. The primary MK alert winner is validation-selected RF, threshold 0.25, test Precision/Recall/F1 0.529/0.818/0.643 on 139 scored fixes; this is baseline error >10 m, not satellite NLOS or post-filter alarm quality.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 82,
-      "end_line": 83
-    },
-    {
-      "id": "D02-7c77e67aad81",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Full-drive positioning and alarm expansion",
-      "keywords": [
-        "Full-drive positioning and alarm expansion"
-      ],
-      "content": "The added causal planar Doppler KF consumes RTKLIB velocity/qv rotated into ENU. It approximates position/velocity correlation as zero; velocity covariance is not empirically calibrated. Existing sigma/process candidates are selected only on each validation drive. It keeps the same scored population and does not retrain alert/NLOS models. This is a method-inspired baseline, not TDCP, FGO or full GNSS/IMU reproduction.",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 84,
-      "end_line": 85
-    },
-    {
-      "id": "D02-ac582432432b",
-      "document_id": "D02",
-      "title": "Model card — NavDiag local v0.3",
-      "heading": "Full-drive positioning and alarm expansion",
-      "keywords": [
-        "Full-drive positioning and alarm expansion"
-      ],
-      "content": "Test RMSE for SPP/Doppler is 7.881/8.531 m on TST, 12.153/11.170 m on WP and 15.481/14.610 m on MK. MK Doppler Median/P95 worsen despite lower RMSE. Accuracy is conditional on reference-scored successful fixes; joint availability/accuracy uses all quality-eligible reference epochs. Full denominators, parameters, provenance and failures are in [expanded results](experiments/positioning_expansion.md) and [method sources](research/positioning_methods.md).",
-      "source_url": "docs/MODEL_CARD.md",
-      "source_type": "project_document",
-      "start_line": 86,
-      "end_line": 86
-    },
-    {
-      "id": "D03-9ba501702615",
+      "id": "D03-5bf39da739f7",
       "document_id": "D03",
-      "title": "第五课：从 Zhang 2023 理解 NLOS",
-      "heading": "第五课：从 Zhang 2023 理解 NLOS",
+      "title": "NLOS 技术背景",
+      "heading": "NLOS 技术背景",
       "keywords": [
-        "第五课：从 Zhang 2023 理解 NLOS"
+        "NLOS 技术背景"
       ],
-      "content": "先读概念和图，再看公式。本文是对 [Zhang 等 2023 论文](https://arxiv.org/abs/2309.00480v2)的原创学习解读；[复现核对](../research/zhang2023_reproduction.md)说明数据与代码缺口。当前实现还不是该论文复现。",
-      "source_url": "docs/lessons/05_nlos_zhang2023.md",
+      "content": "基于 [Zhang 等 2023](https://arxiv.org/abs/2309.00480v2) 的方法解读；当前模型与论文的对应关系见[方法对照](../research/zhang2023_reproduction.md)。",
+      "source_url": "docs/knowledge/nlos.md",
       "source_type": "project_document",
       "start_line": 3,
       "end_line": 4
@@ -776,13 +216,13 @@
     {
       "id": "D03-8d32ce7b09f8",
       "document_id": "D03",
-      "title": "第五课：从 Zhang 2023 理解 NLOS",
+      "title": "NLOS 技术背景",
       "heading": "直达、多径和 NLOS",
       "keywords": [
         "直达、多径和 NLOS"
       ],
       "content": "LOS 表示卫星到天线的直达路径可用。多径表示还有经建筑、地面等反射的路径；即使直达路径存在，也可能受到多径干扰。NLOS 表示直达路径被阻挡，接收机可能仍收到反射/绕射信号。完全没有跟踪到信号是另一种情况，现有 KLT 表没有相应标签。\n\n假设卫星直接到天线的距离为 r，经过楼面反射的路径比 r 长 30 m。传播时间多出约 100 ns，码伪距也可能带来约 30 m 额外偏差。定位器同时解算位置与接收机钟差，多颗卫星几何还会放大或相互影响误差，因此“伪距偏差 30 m”不等于“水平位置偏差 30 m”。\n\n强反射信号的 C/N0 可能很高；弱 LOS 信号可能很低。所以一个 C/N0 阈值无法稳定分开所有 LOS/NLOS。高楼是可能的遮挡来源，但一条 NLOS 标签本身不能确定是楼、树还是车辆。",
-      "source_url": "docs/lessons/05_nlos_zhang2023.md",
+      "source_url": "docs/knowledge/nlos.md",
       "source_type": "project_document",
       "start_line": 7,
       "end_line": 12
@@ -790,13 +230,13 @@
     {
       "id": "D03-abceca87c8bd",
       "document_id": "D03",
-      "title": "第五课：从 Zhang 2023 理解 NLOS",
+      "title": "NLOS 技术背景",
       "heading": "为什么是这些特征",
       "keywords": [
         "为什么是这些特征"
       ],
       "content": "| 特征 | 可以提供的线索 | 无法单独证明什么 |\n| --- | --- | --- |\n| 仰角 | 低仰角更易遇到周边障碍 | 高仰角必然 LOS |\n| 方位角 | 同方向卫星可能共享遮挡环境 | 某个方向永远有楼 |\n| C/N0 | 信号强弱与干扰状态 | 强信号必然可靠 |\n| LS 伪距残差 | 观测与 GNSS 自身解算的一致性 | 残差小必然没有 NLOS |\n| 历史残差 RSS | 一段时间的异常规模与持续性 | 异常一定由遮挡造成 |\n\n最小二乘会调整位置和钟差去适应全部观测，因此坏观测也可能被解算“吸收”。残差来自当前 GNSS 解，不能当作独立真值。\n\n论文 RSS 的定义是 `sqrt(sum(residual_t ** 2))`，单位仍为米。若三个历史残差为 3、4、0 m，RSS=5 m。它与残差 RMS、残差标准差、C/N0 标准差不同，也随窗口长度变化；不能互换命名。",
-      "source_url": "docs/lessons/05_nlos_zhang2023.md",
+      "source_url": "docs/knowledge/nlos.md",
       "source_type": "project_document",
       "start_line": 15,
       "end_line": 26
@@ -804,13 +244,13 @@
     {
       "id": "D03-b595217fdfec",
       "document_id": "D03",
-      "title": "第五课：从 Zhang 2023 理解 NLOS",
+      "title": "NLOS 技术背景",
       "heading": "为什么是这些特征",
       "keywords": [
         "为什么是这些特征"
       ],
       "content": "论文伪距模型包含几何距离、接收机/卫星钟差、电离层、对流层、多径与噪声。预处理尽可能校正可建模项，让剩余信号更突出环境影响。实际校正不完美，不应把所有剩余误差都标成 NLOS。",
-      "source_url": "docs/lessons/05_nlos_zhang2023.md",
+      "source_url": "docs/knowledge/nlos.md",
       "source_type": "project_document",
       "start_line": 27,
       "end_line": 28
@@ -818,55 +258,55 @@
     {
       "id": "D03-3a79883e4f70",
       "document_id": "D03",
-      "title": "第五课：从 Zhang 2023 理解 NLOS",
+      "title": "NLOS 技术背景",
       "heading": "标签怎样获得",
       "keywords": [
         "标签怎样获得"
       ],
       "content": "鱼眼相机或 LiDAR 天空图能判断某个方位/仰角是否被物体遮住。它们主要用于训练标签，运行时的分类器可以只读取 GNSS 特征。论文 Aachen 标注还结合独立多传感器参考下的伪距残差阈值；当前 KLT 表是鱼眼相机标签，两者定义并不完全相同。\n\n应始终区分：观测生成的输入特征、相机/地图产生的可见性标签、独立参考产生的伪距误差目标。用输入残差自己生成目标，再说模型识别了真实遮挡，会把一致性检测和独立遮挡识别混在一起。",
-      "source_url": "docs/lessons/05_nlos_zhang2023.md",
+      "source_url": "docs/knowledge/nlos.md",
       "source_type": "project_document",
       "start_line": 31,
       "end_line": 34
     },
     {
-      "id": "D03-d1429e5ef63f",
+      "id": "D03-9997a53d5b3b",
       "document_id": "D03",
-      "title": "第五课：从 Zhang 2023 理解 NLOS",
+      "title": "NLOS 技术背景",
       "heading": "论文网络为什么同时看时间和其他卫星",
       "keywords": [
         "论文网络为什么同时看时间和其他卫星"
       ],
-      "content": "一颗卫星穿过建筑边缘时，信号/残差通常会随时间改变。LSTM 记录这种变化。若附近方向的几颗卫星也异常，其他卫星提供了环境上下文，注意力用目标卫星的 query 对所有上下文 key/value 分配权重。它是学习到的组合规则，权重本身不能作为物理原因证明。\n\n\n论文分类与回归共同训练：分类头用 MSE，误差头用 L1。我们的初版 Transformer 是单颗卫星 32 项历史分类、加权 BCE，无其他卫星上下文和误差真值头。两种结构有实质差别。\n\nBiLSTM 会正向和反向遍历给定序列。若给定序列只包含截至当前时刻已有的历史，它不自动意味着读取了当前之后的新观测；若窗口包含未来时间，就有在线泄漏。复现时要先核实其序列轴、窗口末端和输出对应时间，而不是只检查网络名字。",
-      "source_url": "docs/lessons/05_nlos_zhang2023.md",
+      "content": "一颗卫星穿过建筑边缘时，信号/残差通常会随时间改变。LSTM 记录这种变化。若附近方向的几颗卫星也异常，其他卫星提供了环境上下文，注意力用目标卫星的 query 对所有上下文 key/value 分配权重。它是学习到的组合规则，权重本身不能作为物理原因证明。\n\n\n论文分类与回归共同训练：分类头用 MSE，误差头用 L1。当前 Transformer 是单颗卫星 32 项历史分类、加权 BCE，无其他卫星上下文和误差真值头。两种结构有实质差别。\n\nBiLSTM 会正向和反向遍历给定序列。若给定序列只包含截至当前时刻已有的历史，它不自动意味着读取了当前之后的新观测；若窗口包含未来时间，就有在线泄漏。复现时要先核实其序列轴、窗口末端和输出对应时间，而不是只检查网络名字。",
+      "source_url": "docs/knowledge/nlos.md",
       "source_type": "project_document",
       "start_line": 37,
       "end_line": 57
     },
     {
-      "id": "D03-1dff852a341f",
+      "id": "D03-e0f43856b4b0",
       "document_id": "D03",
-      "title": "第五课：从 Zhang 2023 理解 NLOS",
+      "title": "NLOS 技术背景",
       "heading": "怎样读 Precision、Recall 和 Accuracy",
       "keywords": [
         "怎样读 Precision、Recall 和 Accuracy"
       ],
-      "content": "用 NLOS 作为正类。100 条实际 NLOS 中找到 70 条，Recall=70%。如果这 70 条正确报警之外还误报 30 条 LOS，Precision=70%。漏报反映风险，误报则可能让定位器错误排除好卫星、降低冗余和几何质量；两者都要看。\n\n`F1 = 2*Precision*Recall/(Precision+Recall)`，对两者取调和平均。总体 Accuracy 还包含正确判为 LOS 的数量；如果 NLOS 很少，全判 LOS 也可能有高 Accuracy。用户希望共同考虑 Precision 与 NLOS 检出率，因此当前实验按验证 F1 选模，测试报告两项具体指标，没有要求召回率必须达到 90%。\n\n论文 HK 的作者模型 NLOS F1=0.80，AC 同域 F1=0.46，HK→AC F1=0.48。它说明即使结构复杂，类别比例、接收机和环境差异仍影响成绩。不能拿别的数据上的高分直接给我们的 KLT 结果定目标。Düsseldorf 的 NLOS 预测比例没有真值分母，不是识别正确率。",
-      "source_url": "docs/lessons/05_nlos_zhang2023.md",
+      "content": "用 NLOS 作为正类。100 条实际 NLOS 中找到 70 条，Recall=70%。如果这 70 条正确报警之外还误报 30 条 LOS，Precision=70%。漏报反映风险，误报则可能让定位器错误排除好卫星、降低冗余和几何质量；两者都要看。\n\n`F1 = 2*Precision*Recall/(Precision+Recall)`，对两者取调和平均。总体 Accuracy 还包含正确判为 LOS 的数量；如果 NLOS 很少，全判 LOS 也可能有高 Accuracy。当前实验按验证 F1 选模，测试同时报告 Precision 与 NLOS Recall。\n\n论文 HK 的作者模型 NLOS F1=0.80，AC 同域 F1=0.46，HK→AC F1=0.48。它说明即使结构复杂，类别比例、接收机和环境差异仍影响成绩。不能拿别的数据上的高分直接给我们的 KLT 结果定目标。Düsseldorf 的 NLOS 预测比例没有真值分母，不是识别正确率。",
+      "source_url": "docs/knowledge/nlos.md",
       "source_type": "project_document",
       "start_line": 60,
-      "end_line": 65
+      "end_line": 64
     },
     {
-      "id": "D04-f475c60c2195",
+      "id": "D04-f0f3df63434b",
       "document_id": "D04",
-      "title": "第六课：如何判断泛化实验是否有说服力",
-      "heading": "第六课：如何判断泛化实验是否有说服力",
+      "title": "泛化评估",
+      "heading": "泛化评估",
       "keywords": [
-        "第六课：如何判断泛化实验是否有说服力"
+        "泛化评估"
       ],
-      "content": "先阅读[实验结果与边界](../experiments/urbannav_generalization.md)和[分布审计](../experiments/nlos_domain_audit.md)，再逐步看代码。现有实验只涉及香港；“更多数据”与“更多独立地区”是不同的事情。",
-      "source_url": "docs/lessons/06_generalization.md",
+      "content": "完整采集段和区域留出分别回答不同问题。[UrbanNav 结果](../experiments/urbannav_generalization.md)与[分布审计](../experiments/nlos_domain_audit.md)提供当前证据。",
+      "source_url": "docs/knowledge/generalization.md",
       "source_type": "project_document",
       "start_line": 3,
       "end_line": 4
@@ -874,13 +314,13 @@
     {
       "id": "D04-001d64f5ed88",
       "document_id": "D04",
-      "title": "第六课：如何判断泛化实验是否有说服力",
+      "title": "泛化评估",
       "heading": "相同测试段上的固定规则为何不变",
       "keywords": [
         "相同测试段上的固定规则为何不变"
       ],
       "content": "固定规则 `score = (C/N0 < 30)` 不读取训练数据。输入测试观测与参考标签不变，Precision/Recall/F1 就不会变化。因此它能作为简单参照，却不能通过“同域列－跨区域列”判断训练域偏移。训练过的 RF/神经网络会随训练集合变化；不同测试区域的规则成绩也可以不同。",
-      "source_url": "docs/lessons/06_generalization.md",
+      "source_url": "docs/knowledge/generalization.md",
       "source_type": "project_document",
       "start_line": 7,
       "end_line": 8
@@ -888,13 +328,13 @@
     {
       "id": "D04-9611e6ba315b",
       "document_id": "D04",
-      "title": "第六课：如何判断泛化实验是否有说服力",
+      "title": "泛化评估",
       "heading": "先明确自己要回答的问题",
       "keywords": [
         "先明确自己要回答的问题"
       ],
       "content": "- 完整采集段留出、区域在训练中出现：学习已见环境能否延续到另一段记录。\n- 完整城区留出：学习过的特征关系能否适用于未见城区。\n- 完整城市留出：在新的建筑环境、设备/天线/卫星条件下能否迁移，且哪些变化可以与城市因素分开。\n\n难度不能只由“同城”或“异城”的名字判断；实际条件分布、采集独立性和标签质量更关键。成绩相近不等于实验无效，成绩下降也不能自动证明纯地理影响。",
-      "source_url": "docs/lessons/06_generalization.md",
+      "source_url": "docs/knowledge/generalization.md",
       "source_type": "project_document",
       "start_line": 11,
       "end_line": 16
@@ -902,222 +342,96 @@
     {
       "id": "D04-ddffb373abc0",
       "document_id": "D04",
-      "title": "第六课：如何判断泛化实验是否有说服力",
+      "title": "泛化评估",
       "heading": "C/N0 并不只由城市决定",
       "keywords": [
         "C/N0 并不只由城市决定"
       ],
       "content": "应区分全体分布与 LOS/NLOS 条件分布，检查星座、频率、仰角、天线安装、接收机配置、日期和类别比例。旧 KLT 三处总体曲线接近；UrbanNav 同城三处仍有差异。标签筛选也会改变条件分布，旺角未获准评分的样本占比很高。\n\n不能用目标测试数据的标签调归一化、模型参数或阈值，再称为完全未见域测试。若计划研究无标签域适应，应单独声明适应数据和不参与适应的最终测试；它是另一个研究问题。",
-      "source_url": "docs/lessons/06_generalization.md",
+      "source_url": "docs/knowledge/generalization.md",
       "source_type": "project_document",
       "start_line": 19,
-      "end_line": 22
+      "end_line": 21
     },
     {
-      "id": "D05-d40507463a16",
+      "id": "D05-0b70d75df44a",
       "document_id": "D05",
-      "title": "",
-      "heading": "Material Passport",
+      "title": "Zhang 2023 方法与实现对照",
+      "heading": "Zhang 2023 方法与实现对照",
       "keywords": [
-        "Material Passport"
+        "Zhang 2023 方法与实现对照"
       ],
-      "content": "- Origin Skill: academic-research-suite / experiment-agent\n- Origin Mode: validate\n- Origin Date: 2026-10-11\n- Verification Status: ANALYZED\n- Version Label: zhang2023_validation_v1",
+      "content": "[Zhang、Wang、Vallery，2023](https://arxiv.org/abs/2309.00480v2)，*Learning-based NLOS Detection and Uncertainty Prediction of GNSS Observations with Transformer-Enhanced LSTM Network*，DOI 10.1109/ITSC57777.2023.10422672。\n\n论文逐卫星 LSTM 编码历史，经跨卫星多头注意力、BiLSTM 与 MLP 融合，联合预测可见性和伪距误差。分类采用 MSE、误差回归采用 L1。当前 NavDiag Transformer 仅做单卫星32次因果历史分类，没有跨卫星上下文或误差回归头，**未完成该论文复现**。",
       "source_url": "docs/research/zhang2023_reproduction.md",
       "source_type": "project_document",
       "start_line": 3,
-      "end_line": 8
+      "end_line": 6
     },
     {
-      "id": "D05-a73b42986f66",
+      "id": "D05-4516e7c7233e",
       "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "Zhang 2023：方法核对与复现条件",
+      "title": "Zhang 2023 方法与实现对照",
+      "heading": "特征与标签",
       "keywords": [
-        "Zhang 2023：方法核对与复现条件"
+        "特征与标签"
       ],
-      "content": "结论：当前既没有完成论文核心结构的精确实现，也没有复现作者结果。现有模型是单卫星历史 Transformer 分类器，缺少论文跨卫星注意力、LSTM/BiLSTM 联合结构及误差回归任务。补齐输入后可以开展这些实现与方法复现，这是未来工作，不是已经完成的成果。用户提供的八页 PDF 已阅读，特征公式、Fig. 3 结构图、Tables I–V 和实验讨论已视觉核对。PDF 结构预检 PASS（仅结构，不代表学术正确性），SHA-256 为 15cf6d88baf4d21e1e8cc9e40d2d52b684eeee60e62470f468209215c9ddbccd。",
+      "content": "| 原论文输入/目标 | 当前 KLT 特征表 | 复现需要 |\n| --- | --- | --- |\n| Elevation | elevation_deg 有值 | 核对单位和计算坐标 |\n| Azimuth | 缺失 | 用同源卫星星历、接收机位置重算；不能填常数冒充 |\n| C/N0 | cn0_dbhz 有值，零占位转 NaN | 区分缺测；归一化只拟合训练集 |\n| LS 伪距残差（m） | residual_normalized 为归一化残差 | 获取原始残差及定义；不能直接反推米值 |\n| 残差 RSS | 缺失；cn0_std_dbhz 是信号标准差 | 由原始 LS 残差按声明的历史窗计算；不是 std 的替代名 |\n| 全部卫星的共同时间窗口 | 时间/卫星 ID 已有 | 构造 (N,T,F)、缺失掩膜和稳定卫星映射；遮挡/新升星不得变成旧星历史 |\n| 独立 LOS/NLOS 标签 | 鱼眼相机标签已有 | 与作者 LiDAR+残差标签有定义差异，需披露 |",
       "source_url": "docs/research/zhang2023_reproduction.md",
       "source_type": "project_document",
-      "start_line": 11,
-      "end_line": 12
+      "start_line": 9,
+      "end_line": 17
     },
     {
-      "id": "D05-efdaf541cd98",
+      "id": "D05-bea49f9bef2d",
       "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "Zhang 2023：方法核对与复现条件",
+      "title": "Zhang 2023 方法与实现对照",
+      "heading": "特征与标签",
       "keywords": [
-        "Zhang 2023：方法核对与复现条件"
+        "特征与标签"
       ],
-      "content": "来源：[论文 arXiv v2](https://arxiv.org/abs/2309.00480v2)，Haoming Zhang、Zhanxin Wang、Heike Vallery，*Learning-based NLOS Detection and Uncertainty Prediction of GNSS Observations with Transformer-Enhanced LSTM Network*。学习解读见[第五课](../lessons/05_nlos_zhang2023.md)。原 PDF 与提取全文不复制到发布仓库。",
-      "source_url": "docs/research/zhang2023_reproduction.md",
-      "source_type": "project_document",
-      "start_line": 13,
-      "end_line": 14
-    },
-    {
-      "id": "D05-a47e825b486f",
-      "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "作者代码与数据可用性",
-      "keywords": [
-        "作者代码与数据可用性"
-      ],
-      "content": "2026-10-11 核查作者链接 [DeepNLOSDetection](https://github.com/rwth-irt/DeepNLOSDetection)：仓库首页只有 README 和 materials，materials 中是轨迹图；README 仍显示拟发布代码/数据的信息。没有找到可运行网络、预处理、训练命令、权重或 Aachen 数据下载。结论是“当前链接未提供这些复现材料”，不能据此断言作者从未公开其他版本。没有向作者发送消息。",
+      "content": "| 独立 LOS/NLOS 标签 | 鱼眼相机标签已有 | 与作者 LiDAR+残差标签有定义差异，需披露 |\n| 伪距误差回归真值 | 缺失 | 同源参考轨迹、卫星坐标、钟差/改正项；不能用输入 LS 残差作独立误差真值 |\n\n输入 GNSS 最小二乘残差与独立参考标注残差必须分开；不能用输入残差当作独立误差真值。论文 HK/AC 数据与当前 KLT/UrbanNav 不是同一实验人口。",
       "source_url": "docs/research/zhang2023_reproduction.md",
       "source_type": "project_document",
       "start_line": 17,
-      "end_line": 18
+      "end_line": 21
     },
     {
-      "id": "D05-4e9cf80ea4ff",
+      "id": "D05-c60eeef1238e",
       "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "作者代码与数据可用性",
+      "title": "Zhang 2023 方法与实现对照",
+      "heading": "论文数值",
       "keywords": [
-        "作者代码与数据可用性"
+        "论文数值"
       ],
-      "content": "可用的相关开源资料：[KLT 数据集](https://github.com/ebhrz/KLTDataset)提供数据入口和解析演示；[Fossett Laboratory 教学项目](https://github.com/fossettlab/gnss-nlos-notebook)提供五项特征提取与 RF notebook；[RTDL 作者实现](https://github.com/yandex-research/rtdl-revisiting-models)提供表格模型和预处理参考。后者的 FT-Transformer 对特征列建 token，与本论文跨卫星注意力不是同一种方法。",
+      "content": "| 训练/测试情形 | Precision | Recall | F1 |\n| --- | ---: | ---: | ---: |\n| 作者模型 HK 同域 | 0.80 | 0.79 | 0.80 |\n| 作者模型 AC 同域 | 0.51 | 0.42 | 0.46 |\n| 作者模型 HK 训练、AC 测试 | 0.40 | 0.60 | 0.48 |\n| XGBoost HK 同域 | 0.77 | 0.80 | 0.78 |\n\n以上为作者报告的 NLOS 成绩，不是 NavDiag 测量。AC NLOS 占比18.87%，总体 Accuracy0.81仍可能伴随 Recall0.42。Düsseldorf 无 NLOS 真值，其预测比例不是正确率。",
       "source_url": "docs/research/zhang2023_reproduction.md",
       "source_type": "project_document",
-      "start_line": 19,
-      "end_line": 20
+      "start_line": 24,
+      "end_line": 32
     },
     {
-      "id": "D05-9369ab97905c",
+      "id": "D05-217efaaaa2a0",
       "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "论文实际做了什么",
+      "title": "Zhang 2023 方法与实现对照",
+      "heading": "可复现范围",
       "keywords": [
-        "论文实际做了什么"
+        "可复现范围"
       ],
-      "content": "输入形状为 (B,N,T,5)：批量 B、最多 N 颗卫星、时间窗口 T、每星五特征。每颗卫星用两层 LSTM 编码历史，再由目标卫星生成 query、其他卫星上下文生成 key/value，进行多头注意力。随后 BiLSTM 融合注意力表示，和目标卫星的 MLP 特征拼接，分别输出可见性与伪距误差。MLP 为三个隐藏层、ReLU。\n\n论文训练 DL 使用 Adam、多阶段学习率调度、分类 MSE、伪距误差回归 L1。SVM 使用 RBF、C=1；XGBoost 写明 200 树、学习率 1.0。论文没有在正文给出足以完全重建的窗口长度、LSTM 宽度、注意力头数、完整调度、归一化/填充值、标签残差阈值、精确划分和随机种子；不得按经验补值后声称原样复现。\n\nFig. 3 与文字不足以确定 BiLSTM 的完整张量轴、初始化映射和卫星缺失处理。“detach”也不能仅凭文字确定为 PyTorch 的停止梯度操作。独立实现必须写明这些选择。双向处理若只在当前时刻已收集到的历史/上下文内进行，不必读取未来新观测；是否可在线使用要按实际时间索引验证。",
+      "content": "正文未完整给出窗口长度、宽度/头数、调度、缺失卫星处理、标签阈值、精确划分和种子；完整张量轴与初始化仍需作者实现核对。BiLSTM 是否读取未来取决于实际窗口时间索引。\n\n补齐同源输入、全部卫星掩膜和独立误差目标后可以实现结构适配，但需声明自行选择的参数。现有五特征上的适配不能称为原样复现，也不能用作者分数直接判断实现误差。概念说明见[NLOS 背景](../knowledge/nlos.md)。",
       "source_url": "docs/research/zhang2023_reproduction.md",
       "source_type": "project_document",
-      "start_line": 23,
-      "end_line": 28
+      "start_line": 35,
+      "end_line": 37
     },
     {
-      "id": "D05-555e48aea59c",
-      "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "预处理与标签",
-      "keywords": [
-        "预处理与标签"
-      ],
-      "content": "Aachen 原始 GNSS/星历/RTCM 用于钟差、轨道和大气相关修正；GNSS/IMU/LiDAR 状态估计生成用于标注的参考残差与地图。作者用 LiDAR 天空遮挡掩膜和预定义伪距残差阈值联合判断 NLOS。用于标签的多传感器参考残差，与输入特征中仅由 GNSS 最小二乘计算的残差必须分开。\n\n论文 HK 数据来自其引用 [26] 的 2021 研究；HK 长度 10,573 s、最多 25 星，AC 长度 2,366 s、最多 8 星。它们不是本项目四段 2023 KLT 数值表，不能因都在香港就当作相同数据。\n\n| 原论文输入/目标 | 当前 KLT 特征表 | 复现需要 |\n| --- | --- | --- |\n| Elevation | elevation_deg 有值 | 核对单位和计算坐标 |\n| Azimuth | 缺失 | 用同源卫星星历、接收机位置重算；不能填常数冒充 |\n| C/N0 | cn0_dbhz 有值，零占位转 NaN | 区分缺测；归一化只拟合训练集 |",
-      "source_url": "docs/research/zhang2023_reproduction.md",
-      "source_type": "project_document",
-      "start_line": 31,
-      "end_line": 39
-    },
-    {
-      "id": "D05-4f33952f3887",
-      "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "预处理与标签",
-      "keywords": [
-        "预处理与标签"
-      ],
-      "content": "| C/N0 | cn0_dbhz 有值，零占位转 NaN | 区分缺测；归一化只拟合训练集 |\n| LS 伪距残差（m） | residual_normalized 为归一化残差 | 获取原始残差及定义；不能直接反推米值 |\n| 残差 RSS | 缺失；cn0_std_dbhz 是信号标准差 | 由原始 LS 残差按声明的历史窗计算；不是 std 的替代名 |\n| 全部卫星的共同时间窗口 | 时间/卫星 ID 已有 | 构造 (N,T,F)、缺失掩膜和稳定卫星映射；遮挡/新升星不得变成旧星历史 |\n| 独立 LOS/NLOS 标签 | 鱼眼相机标签已有 | 与作者 LiDAR+残差标签有定义差异，需披露 |\n| 伪距误差回归真值 | 缺失 | 同源参考轨迹、卫星坐标、钟差/改正项；不能用输入 LS 残差作独立误差真值 |\n\n当前额外的 Doppler/伪距变化率一致性与 C/N0 波动是有意义的工程特征，但不是原论文五特征。正文把 Doppler rate consistency 列为未来扩展。",
-      "source_url": "docs/research/zhang2023_reproduction.md",
-      "source_type": "project_document",
-      "start_line": 39,
-      "end_line": 47
-    },
-    {
-      "id": "D05-81970c76d57b",
-      "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "数值核对与解释",
-      "keywords": [
-        "数值核对与解释"
-      ],
-      "content": "以下是原论文 NLOS 类结果，不是本项目成绩：\n\n| 训练/测试情形 | Precision | Recall | F1 |\n| --- | ---: | ---: | ---: |\n| 作者模型 HK 同域 | 0.80 | 0.79 | 0.80 |\n| 作者模型 AC 同域 | 0.51 | 0.42 | 0.46 |\n| 作者模型 HK 训练、AC 测试 | 0.40 | 0.60 | 0.48 |\n| XGBoost HK 同域 | 0.77 | 0.80 | 0.78 |\n\n复杂模型在另一数据集也显著退化；不能用 HK 的 0.80 保证 KLT 或其他设备同样表现。AC 的 NLOS 比例只有 18.87%，作者模型总体 Accuracy 0.81 也不能掩盖 NLOS Recall 0.42。文章没有给出多随机种子的区间或精确同域划分细节，因此分数差距不等于显著优越的统计证明。",
-      "source_url": "docs/research/zhang2023_reproduction.md",
-      "source_type": "project_document",
-      "start_line": 50,
-      "end_line": 60
-    },
-    {
-      "id": "D05-e8793caf5f4f",
-      "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "数值核对与解释",
-      "keywords": [
-        "数值核对与解释"
-      ],
-      "content": "Düsseldorf 无 NLOS 真值；Table VII 是预测比例，不是正确率。其排除观测后的轨迹改善提供定位一致性证据，正文仍说明位置精度不能保证。不能从预测排除比例推算漏报率，也不能把轨迹视觉效果当作完整定位精度指标。",
-      "source_url": "docs/research/zhang2023_reproduction.md",
-      "source_type": "project_document",
-      "start_line": 61,
-      "end_line": 62
-    },
-    {
-      "id": "D05-ce6a4b59c7d4",
-      "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "当前可执行边界与下一步",
-      "keywords": [
-        "当前可执行边界与下一步"
-      ],
-      "content": "本项目已经运行的单星因果 Transformer 测试 F1=0.712，见[本地实验](../experiments/transformer_nlos.md)。它没有跨卫星注意力、BiLSTM 和独立伪距误差头，因此不属于这篇论文的复现。\n\n最合适的实施顺序是先从同源 KLT 原始 RINEX、星历、参考轨迹与标签生成论文所需特征，再建立全部卫星的历史张量。随后按论文结构实现一个完整模型，保存未明确超参数的独立选择；LR/RF 与 SVM/XGBoost 可作为同协议基线。用户当前不要求组件消融，也不要求 MMTNet。\n\n若先在已有五特征上开发跨卫星 LSTM/注意力，只能命名为“Zhang2023-inspired 分类适配版”，并明确无伪距误差监督；不能与论文原结果作复现差值比较。论文原样结果复现需要作者代码/超参数、HK/AC 原数据和确切划分。当前 Reproducibility verdict 为 **CANNOT_VERIFY**，不是断言论文不能复现。",
-      "source_url": "docs/research/zhang2023_reproduction.md",
-      "source_type": "project_document",
-      "start_line": 65,
-      "end_line": 70
-    },
-    {
-      "id": "D05-36f4f0bc76f6",
-      "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "当前可执行边界与下一步",
-      "keywords": [
-        "当前可执行边界与下一步"
-      ],
-      "content": "选模继续使用验证 Precision/Recall/F1，测试只报告冻结方法。当前 KLT 测试已查看，用于后续方法开发时应称开发阶段留出评估；进一步调优和最终成绩需要新增未查看数据。多星误报排除会削弱几何与观测冗余，未来同源定位验证也要检查可用卫星数、DOP、失解比例和 Median/P95，不能只追求高 NLOS Recall。",
-      "source_url": "docs/research/zhang2023_reproduction.md",
-      "source_type": "project_document",
-      "start_line": 71,
-      "end_line": 72
-    },
-    {
-      "id": "D05-a33cbb7988da",
-      "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "方法解释检查（11/11）",
-      "keywords": [
-        "方法解释检查（11/11）"
-      ],
-      "content": "| 检查 | 此次判断 |\n| --- | --- |\n| Simpson 聚合反转 | 未提供充分逐段数据，无法检验；HK/AC 不混成一个分数 |\n| 生态谬误 | 区域总体成绩不外推每颗卫星/每种遮挡 |\n| 选择偏差 | 仅可跟踪且有标签观测，不能外推完全失锁 |\n| Collider 控制偏差 | 未进行因果控制分析；没有建立因果模型 |\n| 基准率忽略 | 明列 AC NLOS 18.87%，区分 Accuracy 与 Recall |\n| 回归均值 | 没有把重新评估低分样本当成算法提升证据 |\n| 幸存者偏差 | 跟踪与标注筛选可能影响覆盖，全文不足以量化 |\n| 多重搜索 | 未提供全部调参轨迹；不能声称差异显著 |\n| 分析路径选择 | 训练协议缺项，独立实现需逐项声明，不能伪称精确复现 |\n| 相关当因果 | 注意力权重/特征重要性不直接证明遮挡原因；定位收益需同源实验 |\n| 反向因果 | RSS/残差是观测结果指标，不能由模型得分确认物体类型 |",
-      "source_url": "docs/research/zhang2023_reproduction.md",
-      "source_type": "project_document",
-      "start_line": 75,
-      "end_line": 88
-    },
-    {
-      "id": "D05-02a2ec0c1699",
-      "document_id": "D05",
-      "title": "Zhang 2023：方法核对与复现条件",
-      "heading": "方法解释检查（11/11）",
-      "keywords": [
-        "方法解释检查（11/11）"
-      ],
-      "content": "这是来源和可复现条件分析，无成功重跑作者命令，因此状态为 ANALYZED。没有新增论文模型训练结果、置信区间或显著性检验。",
-      "source_url": "docs/research/zhang2023_reproduction.md",
-      "source_type": "project_document",
-      "start_line": 89,
-      "end_line": 89
-    },
-    {
-      "id": "D06-f2c55d23e9bd",
+      "id": "D06-d216b72c72f4",
       "document_id": "D06",
       "title": "开源参考与复用记录",
       "heading": "开源参考与复用记录",
       "keywords": [
         "开源参考与复用记录"
       ],
-      "content": "用户授权参考其他开源项目完善 NavDiag。当前复用已有数据、特征表和成熟库，把实现重点放在标签、无泄漏评估、错误分析与导航验证。\n\n| 来源 | 本项目实际使用方式 | 许可与边界 |\n| --- | --- | --- |\n| [KLTDataset](https://github.com/ebhrz/KLTDataset) | 九段可靠标签采集、三个日期；下载五段新增原始标签、RINEX 与广播星历；按时间戳及卫星 ID 核查 | 上游 GPL-3.0；原始数据留在本地，排除原作者声明不可靠的 KLT3-649 |\n| [UrbanNav](https://github.com/IPNL-POLYU/UrbanNavDataset) | 三城区 F9P splitter 观测、SPAN 参考位置和静态建筑图；生成独立几何参考并执行新城区测试 | README 没有明确数据再分发许可；原始/派生表与模型留在本地，不声称人工 NLOS 真值或跨城市验证 |",
+      "content": "数据、提取工具与算法依赖的来源、使用方式及许可如下。\n\n| 来源 | 本项目实际使用方式 | 许可与边界 |\n| --- | --- | --- |\n| [KLTDataset](https://github.com/ebhrz/KLTDataset) | 九段可靠标签采集、三个日期；下载五段新增原始标签、RINEX 与广播星历；按时间戳及卫星 ID 核查 | 上游 GPL-3.0；原始数据留在本地，排除原作者声明不可靠的 KLT3-649 |\n| [UrbanNav](https://github.com/IPNL-POLYU/UrbanNavDataset) | 三城区 F9P splitter 观测、SPAN 参考位置和静态建筑图；生成独立几何参考并执行新城区测试 | README 没有明确数据再分发许可；原始/派生表与模型留在本地，不声称人工 NLOS 真值或跨城市验证 |",
       "source_url": "docs/OPEN_SOURCE_REFERENCES.md",
       "source_type": "project_document",
       "start_line": 3,
@@ -1152,14 +466,14 @@
       "end_line": 13
     },
     {
-      "id": "D06-67647c53f0d7",
+      "id": "D06-62ca86c4537b",
       "document_id": "D06",
       "title": "开源参考与复用记录",
       "heading": "开源参考与复用记录",
       "keywords": [
         "开源参考与复用记录"
       ],
-      "content": "| [scikit-learn](https://scikit-learn.org/stable/) | 直接使用 Pipeline、填充、LR、RF 与评估实现 | 项目依赖；不重新实现通用算法 |\n| [PyTorch TransformerEncoderLayer](https://docs.pytorch.org/docs/2.14/generated/torch.nn.TransformerEncoderLayer.html) | 直接使用注意力/前馈层；本项目实现单卫星因果窗口、位置编码、训练与评估 | 库依赖；没有复制 MMTNet 或其他研究项目源码 |\n| [DeepNLOSDetection](https://github.com/rwth-irt/DeepNLOSDetection)及[论文](https://arxiv.org/abs/2309.00480) | 参考卫星级任务、天空掩膜、特征与域外评估思想 | 核查时仓库仅有说明/展示资料；未获取训练代码或数据，不声称完成复现 |",
+      "content": "| [scikit-learn](https://scikit-learn.org/stable/) | 直接使用 Pipeline、填充、LR、RF 与评估实现 | 项目依赖；不重新实现通用算法 |\n| [PyTorch TransformerEncoderLayer](https://docs.pytorch.org/docs/2.14/generated/torch.nn.TransformerEncoderLayer.html) | 直接使用注意力/前馈层；本项目实现单卫星因果窗口、位置编码、训练与评估 | 库依赖；单卫星历史分类，未复现论文联合网络 |\n| [DeepNLOSDetection](https://github.com/rwth-irt/DeepNLOSDetection)及[论文](https://arxiv.org/abs/2309.00480) | 参考卫星级任务、天空掩膜、特征与域外评估思想 | 核查时仓库仅有说明/展示资料；未获取训练代码或数据，不声称完成复现 |",
       "source_url": "docs/OPEN_SOURCE_REFERENCES.md",
       "source_type": "project_document",
       "start_line": 13,
@@ -1194,606 +508,312 @@
       "end_line": 23
     },
     {
-      "id": "D07-198838d931ca",
+      "id": "D07-adf4bb464a09",
       "document_id": "D07",
-      "title": "同城区域留出是否构成有用的泛化测试？",
-      "heading": "同城区域留出是否构成有用的泛化测试？",
+      "title": "C/N0 区域分布审计",
+      "heading": "C/N0 区域分布审计",
       "keywords": [
-        "同城区域留出是否构成有用的泛化测试？"
+        "C/N0 区域分布审计"
       ],
-      "content": "判断：同城未见区域留出是有效但范围有限的实验；旧 KLT 数据对强 C/N0 域偏移的检验偏弱，不能据此推出跨城市可用。新 UrbanNav 三城区体现更明显的经验信号分布差异，仍全部在香港，尚未完成跨城市独立检验。",
+      "content": "KLT共享测试段上的固定规则得分相同是协议结果，不能证明区域分布相同。这里直接比较观测分布，非正C/N0缺测值剔除；LOS/NLOS条件统计仅使用参考合格标签。\n\n| 区域 | 全部有效 C/N0 中位数 | 参考 LOS 中位数 | 参考 NLOS 中位数 |\n|---|---:|---:|---:|\n| KLT1 | 32 | 33 | 27 |\n| KLT2 | 31 | 33 | 27 |\n| KLT3 | 31 | 33 | 27 |\n| TST | 34 | 36 | 23 |\n| WP | 37 | 39 | 24 |\n| MK | 36 | 43 | 27 |\n\n\nKLT全体两两KS距离0.029–0.042，Wasserstein0.35–0.49 dB-Hz；按标签/星座/仰角匹配后加权距离0.87–0.92。UrbanNav对应全体KS0.207–0.265，Wasserstein1.48–2.74，条件加权距离2.26–5.57。当前同城三城区存在经验差异。",
       "source_url": "docs/experiments/nlos_domain_audit.md",
+      "source_type": "project_document",
+      "start_line": 3,
+      "end_line": 17
+    },
+    {
+      "id": "D07-ea2314305423",
+      "document_id": "D07",
+      "title": "C/N0 区域分布审计",
+      "heading": "C/N0 区域分布审计",
+      "keywords": [
+        "C/N0 区域分布审计"
+      ],
+      "content": "C/N0还受仰角、天线、安装、跟踪、日期和标签筛选影响，不能归因于城市本身。大量卫星行相关，单次区域采集不足以支持IID显著性或跨城市结论。旺角标签覆盖19.9%，条件分布受筛选影响明显。\n\n[Zhang2023](https://arxiv.org/abs/2309.00480)将HK/AC分布差异讨论为泛化因素；[García Crespillo2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10416230/)提出开阔场景预归一化，需独立校准，不能用测试标签重新归一化。\n\n统计与指纹见[JSON](nlos_domain_audit.json)。`python scripts/audit_nlos_domains.py` 读取本地处理表，不训练。KLT是小尺度迁移比较，UrbanNav是同城未见城区测试；跨城市仍需独立原始观测及NLOS参考。",
+      "source_url": "docs/experiments/nlos_domain_audit.md",
+      "source_type": "project_document",
+      "start_line": 18,
+      "end_line": 22
+    },
+    {
+      "id": "D08-de5713a3dd72",
+      "document_id": "D08",
+      "title": "KLT 同域与跨区域识别",
+      "heading": "KLT 同域与跨区域识别",
+      "keywords": [
+        "KLT 同域与跨区域识别"
+      ],
+      "content": "九段可靠采集、三个日期，共2851历元、45228条 GPS/北斗观测。排除作者标注不可靠的 `1116_KLT3_649`。九段统一调用固定版 Fossett/RTKLIB 提取器，按时间与卫星ID对齐相机标签；C/N0缺测与因果历史处理一致，训练侧拟合填充/标准化。",
+      "source_url": "docs/experiments/nlos_protocols.md",
       "source_type": "project_document",
       "start_line": 3,
       "end_line": 4
     },
     {
-      "id": "D07-1d47f10f250a",
-      "document_id": "D07",
-      "title": "同城区域留出是否构成有用的泛化测试？",
-      "heading": "固定规则成绩相同的原因",
+      "id": "D08-10472aa4614b",
+      "document_id": "D08",
+      "title": "KLT 同域与跨区域识别",
+      "heading": "配对协议",
       "keywords": [
-        "固定规则成绩相同的原因"
+        "配对协议"
       ],
-      "content": "KLT 同域/跨区域配对使用完全相同的测试采集段。`C/N0 < 30 dB-Hz` 规则没有训练参数，因此即使训练集合改变，测试预测、标签、混淆矩阵和成绩都不会改变。这是确定性的协议结果，不是区域之间信号分布相同的证据。UrbanNav 外部/城区互斥两列的规则也因使用相同三个目标采集段而一样。\n\n比较区域分布应检查不同区域的观测，而不是这个不经过训练的模型在共享测试段上的两列差值。固定规则仍适合作为物理直觉基线：在新 UrbanNav 不同目标区，其 F1 分别是 TST 0.6468、WP 0.8353、MK 0.7135，确实不相同。",
-      "source_url": "docs/experiments/nlos_domain_audit.md",
+      "content": "同域训练含目标区域的其他完整采集段；跨区域排除目标区域全部非测试采集。每对共用验证/测试、种子与配置。比例以6:2:2为目标，完整段不拆散。\n\n| 目标测试区域 | 共同测试采集段 | 共同验证采集段 |\n|---|---|---|\n| KLT1 | `1109_KLT1_421` | `0610_KLT3_404`, `1116_KLT2_169` |\n| KLT2 | `1109_KLT2_301`, `1116_KLT2_169` | `0610_KLT3_404`, `1116_KLT1_184` |\n| KLT3 | `1109_KLT3_666` | `0610_KLT1_203`, `1109_KLT2_301` |\n\n| 目标区域 | 同域 train/val/test 历元 | 同域比例 | 跨区域 train/val/test 历元 | 跨区域比例 |\n|---|---|---|---|---|",
+      "source_url": "docs/experiments/nlos_protocols.md",
       "source_type": "project_document",
       "start_line": 7,
-      "end_line": 10
+      "end_line": 16
     },
     {
-      "id": "D07-b2e3694aeffc",
-      "document_id": "D07",
-      "title": "同城区域留出是否构成有用的泛化测试？",
-      "heading": "对实际数据的检查",
-      "keywords": [
-        "对实际数据的检查"
-      ],
-      "content": "[审计脚本](../../scripts/audit_nlos_domains.py)只分析记录，不重新训练、调参或修改参考标签。[结果 JSON](nlos_domain_audit.json)列出分位数、低于 30 的比例、经验 KS 距离和 Wasserstein 距离。C/N0≤0 缺测哨兵不进入分布。表中条件分布仅采用有参考标签且 C/N0 有效的样本；中位数单位 dB-Hz。\n\n| 区域 | 全部有效 C/N0 中位数 | 参考 LOS 中位数 | 参考 NLOS 中位数 |\n|---|---:|---:|---:|\n| KLT1 | 32 | 33 | 27 |\n| KLT2 | 31 | 33 | 27 |\n| KLT3 | 31 | 33 | 27 |\n| TST | 34 | 36 | 23 |\n| WP | 37 | 39 | 24 |\n| MK | 36 | 43 | 27 |",
-      "source_url": "docs/experiments/nlos_domain_audit.md",
-      "source_type": "project_document",
-      "start_line": 13,
-      "end_line": 25
-    },
-    {
-      "id": "D07-f00971197e9d",
-      "document_id": "D07",
-      "title": "同城区域留出是否构成有用的泛化测试？",
-      "heading": "对实际数据的检查",
-      "keywords": [
-        "对实际数据的检查"
-      ],
-      "content": "KLT 三处全体分布的两两经验 KS 距离为 0.029～0.042，Wasserstein 距离约 0.35～0.49 dB-Hz，曲线接近。相同中位数不意味着分布完全一样；按标签、GPS/北斗和仰角分组后，加权 Wasserstein 约 0.87～0.92 dB-Hz。旧实验是较弱的信号分布迁移检查，这个限制确实需要明确。\n\nUrbanNav 三处全体分布的两两经验 KS 距离为 0.207～0.265，Wasserstein 约 1.48～2.74 dB-Hz。按参考 LOS/NLOS、星座与四个 SPP 仰角区间匹配、剔除两边少于 30 行的组后，加权 Wasserstein 约 2.26～5.57 dB-Hz。因此同城不必然意味着相同信号分布；当前三个 UrbanNav 区域也并非没有经验域偏移。",
-      "source_url": "docs/experiments/nlos_domain_audit.md",
-      "source_type": "project_document",
-      "start_line": 26,
-      "end_line": 29
-    },
-    {
-      "id": "D07-ca7447b8a527",
-      "document_id": "D07",
-      "title": "同城区域留出是否构成有用的泛化测试？",
-      "heading": "对实际数据的检查",
-      "keywords": [
-        "对实际数据的检查"
-      ],
-      "content": "这些距离只描述已观测的样本，不做 IID p 值检验。大量卫星行高度相关，没有每区独立驾驶重复，不能把距离当成总体显著性证据。SPP 仰角分组只控制了粗略几何差异；条件分布仍受质量/边缘标签筛选、日期、道路和可见星集合影响，尤其旺角只对 19.9% 原始观测有获准评分的参考。KLT 与 UrbanNav 的天线和标签方法不同，不能把两个数据集之间的差异解释成城市效应。",
-      "source_url": "docs/experiments/nlos_domain_audit.md",
-      "source_type": "project_document",
-      "start_line": 30,
-      "end_line": 31
-    },
-    {
-      "id": "D07-5d060598c3f1",
-      "document_id": "D07",
-      "title": "同城区域留出是否构成有用的泛化测试？",
-      "heading": "文献能够支持什么",
-      "keywords": [
-        "文献能够支持什么"
-      ],
-      "content": "用户提供的 [Zhang 等 2023 论文](https://arxiv.org/abs/2309.00480) Table V 记录 HK/AC 数据的平均 C/N0 为 34/49 dB-Hz，并将分布偏移讨论为域外表现下降的可能原因。文中还有 NLOS 比例、卫星数量和数据来源差异。这是跨数据集观察，不能独立证明“城市因素造成全部 C/N0 差异”，更不能推出“同城一定没有泛化难点”。本报告的中位数也不能与论文的均值直接作同一种统计量比较。\n\n[García Crespillo 等 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10416230/)讨论了卫星仰角、天线增益、安装和接收机跟踪配置对 C/N0 的影响，并提出以开阔场景名义分布预归一化。该方法需要独立、可靠的开阔场景校准数据；当前不能根据目标测试城区的标签或分布重新归一化，再把结果称为未见城市泛化。",
-      "source_url": "docs/experiments/nlos_domain_audit.md",
-      "source_type": "project_document",
-      "start_line": 34,
-      "end_line": 37
-    },
-    {
-      "id": "D07-4c29f0c1dda7",
-      "document_id": "D07",
-      "title": "同城区域留出是否构成有用的泛化测试？",
-      "heading": "文献能够支持什么",
-      "keywords": [
-        "文献能够支持什么"
-      ],
-      "content": "[Suzuki 与 Amano 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8038365/)在同一城市的不同位置进行留出实验，并明确把不同城市测试列为尚需补充的验证。它说明同城位置留出与跨城市验证可以作为不同层次，不能相互替代。",
-      "source_url": "docs/experiments/nlos_domain_audit.md",
-      "source_type": "project_document",
-      "start_line": 38,
-      "end_line": 39
-    },
-    {
-      "id": "D07-029a6f18d2f4",
-      "document_id": "D07",
-      "title": "同城区域留出是否构成有用的泛化测试？",
-      "heading": "对项目的重新定位",
-      "keywords": [
-        "对项目的重新定位"
-      ],
-      "content": "1. KLT 配对实验保留为小尺度、较弱域偏移的开发比较；验证区域经验对同一固定测试段的影响，训练量变化也是混杂因素。\n2. UrbanNav 保留为真实未见城区测试：完整城区互斥、源验证阈值固定、逐城区成绩与标签覆盖率共同报告。它能检查同城迁移，而非跨城市结论。\n3. 真正跨城市验证仍未完成，需要不同城市的原始观测和独立 NLOS 参考，明确接收机/天线/频率及标签方法。应使用冻结的源模型、源预处理与源阈值，另报未知标签覆盖和 LOS/NLOS 条件分布；不能只凭来自不同城市的位置真值替代 NLOS 标注。\n\n实验有效性取决于划分和证据能否回答所声明的问题，性能下降不是有效泛化实验的必要条件。现有结果不支持“所有城市泛化良好”，也不支持“同城留出毫无意义”。",
-      "source_url": "docs/experiments/nlos_domain_audit.md",
-      "source_type": "project_document",
-      "start_line": 42,
-      "end_line": 46
-    },
-    {
-      "id": "D08-269dd601ea9a",
+      "id": "D08-c8c393d70076",
       "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "同域与跨区域 NLOS 实验",
+      "title": "KLT 同域与跨区域识别",
+      "heading": "配对协议",
       "keywords": [
-        "同域与跨区域 NLOS 实验"
+        "配对协议"
       ],
-      "content": "目的：比较相同测试采集段上，不同模型在“训练见过该区域的其他采集段”和“训练完全没见过该区域”两种条件下的表现。暂停超参数搜索，使用原始固定默认配置；分类阈值和早停检查点仍只由验证集决定。\n\n六个固定参数实验已完成。完整训练与逐卫星预测保存在本地 `artifacts/klt_protocols`，可公开的结果摘要见 [结果 JSON](nlos_protocols_report.json)。",
+      "content": "|---|---|---|---|---|\n| KLT1 | 1,857 / 573 / 421 | 65.1 / 20.1 / 14.8% | 1,470 / 573 / 421 | 59.7 / 23.3 / 17.1% |\n| KLT2 | 1,793 / 588 / 470 | 62.9 / 20.6 / 16.5% | 1,290 / 588 / 470 | 54.9 / 25.0 / 20.0% |\n| KLT3 | 1,681 / 504 / 666 | 59.0 / 17.7 / 23.4% | 1,277 / 504 / 666 | 52.2 / 20.6 / 27.2% |\n\n跨区域同时改变训练量和日期分布，差值不是纯地理因果效应；部分同日采集相邻，旧测试记录已在开发中查看。模型/早停/阈值规则见[模型卡](../MODEL_CARD.md)与[固定计划](../../config/nlos_protocols.json)。",
       "source_url": "docs/experiments/nlos_protocols.md",
       "source_type": "project_document",
-      "start_line": 3,
-      "end_line": 6
+      "start_line": 16,
+      "end_line": 22
     },
     {
-      "id": "D08-c1d314c7fe24",
+      "id": "D08-6388b0bee0cd",
       "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "数据与预处理",
+      "title": "KLT 同域与跨区域识别",
+      "heading": "本次运行结果",
       "keywords": [
-        "数据与预处理"
+        "本次运行结果"
       ],
-      "content": "[原始 KLT 数据](https://github.com/ebhrz/KLTDataset)公开十段、三个日期的采集。作者明确标注 `1116_KLT3_649` 的标签不可靠，该段排除。其余九段官方清单合计 2,851 个历元、45,228 条 GPS/BeiDou 卫星观测；比此前四段的 1,682 / 26,522 增加约 70%。实际导入数量和逐段对齐检查保存在预处理报告中。",
+      "content": "以下为三个目标区域等权均值，逐区F1先计算后平均；测试排名不用于重新选模。\n\n| 模型 | 同域 Precision | 同域 Recall | 同域 F1 | 跨区域 Precision | 跨区域 Recall | 跨区域 F1 | F1 变化 |\n|---|---:|---:|---:|---:|---:|---:|---:|\n| LR | 0.7089 | 0.7779 | 0.7388 | 0.7330 | 0.7681 | 0.7431 | +0.0043 |\n| RF | 0.7725 | 0.7481 | 0.7558 | 0.7756 | 0.7320 | 0.7494 | -0.0064 |\n| MLP | 0.7256 | 0.8051 | 0.7612 | 0.7278 | 0.7813 | 0.7533 | -0.0079 |\n| CNN | 0.7083 | 0.8226 | 0.7560 | 0.7093 | 0.8119 | 0.7528 | -0.0032 |",
       "source_url": "docs/experiments/nlos_protocols.md",
       "source_type": "project_document",
-      "start_line": 9,
-      "end_line": 10
-    },
-    {
-      "id": "D08-64acb20842f5",
-      "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "数据与预处理",
-      "keywords": [
-        "数据与预处理"
-      ],
-      "content": "所有九段用同一个固定版本的 [Fossett Laboratory 特征提取器](https://github.com/fossettlab/gnss-nlos-notebook/blob/b13aa856f723a472bd35d45171017580642054cf/extract_features.py)重新计算，避免新增段和旧段使用不同的残差定义。通过 RTKLIB SPP 得到仰角、归一化伪距残差，结合 C/N0、伪距变化与多普勒一致性及过去五次观测的 C/N0 标准差。C/N0 非正值视为缺失，超过五秒的间隔重置历史；缺失值填补和标准化只拟合训练集。SPP 不使用相机标签排除卫星，也不使用定位真值计算特征。",
-      "source_url": "docs/experiments/nlos_protocols.md",
-      "source_type": "project_document",
-      "start_line": 11,
-      "end_line": 12
-    },
-    {
-      "id": "D08-f5d0fb4068ee",
-      "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "数据与预处理",
-      "keywords": [
-        "数据与预处理"
-      ],
-      "content": "四段旧数据的标签使用固定版本公开数值表，五段新增数据使用原始鱼眼相机标注。每一条标签按实际时间戳与卫星 ID 核对。原始配置的结束时刻会包含多一个观测历元，因此以标签的真实首尾时刻为提取窗口，并要求窗口长度和标签完全一致，不能靠截断较长数组“对齐”。外部 GPL 提取器和这个项目的独立 GPL 预处理工具见 [工具说明](../../tools/klt/README.md)；它们不打包到 MIT 主 Python 包中。",
-      "source_url": "docs/experiments/nlos_protocols.md",
-      "source_type": "project_document",
-      "start_line": 13,
-      "end_line": 14
-    },
-    {
-      "id": "D08-1db86ac958c7",
-      "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "两种实验与比例",
-      "keywords": [
-        "两种实验与比例"
-      ],
-      "content": "标签计数核对：`0610_KLT3_404` 的原始文件实际含 2,461 条 NLOS、3,848 条 LOS，与原作者 README 表中的 2,391 / 3,918 相差 70 条。本项目保留原始文件标签并记录其 SHA-256，未为了吻合摘要计数而改变标签；相机标签准确度仍未独立人工复核。其他八段的计数与原始清单一致。\n\n每种实验分别评估 KLT1、KLT2、KLT3，共三对、六次固定参数实验。区域是九龙塘内部的三个区域，不是三个城市。\n\n| 目标测试区域 | 共同测试采集段 | 共同验证采集段 |\n|---|---|---|\n| KLT1 | `1109_KLT1_421` | `0610_KLT3_404`, `1116_KLT2_169` |\n| KLT2 | `1109_KLT2_301`, `1116_KLT2_169` | `0610_KLT3_404`, `1116_KLT1_184` |\n| KLT3 | `1109_KLT3_666` | `0610_KLT1_203`, `1109_KLT2_301` |",
-      "source_url": "docs/experiments/nlos_protocols.md",
-      "source_type": "project_document",
-      "start_line": 17,
-      "end_line": 26
-    },
-    {
-      "id": "D08-f83cf72a89a3",
-      "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "两种实验与比例",
-      "keywords": [
-        "两种实验与比例"
-      ],
-      "content": "同域训练覆盖三处区域，包含测试区域的其他完整采集段；跨区域训练和验证仅覆盖另外两处区域，目标区域的非测试采集段也全部排除。每对实验的验证段、测试段、网络参数、种子和训练规则相同。移除目标区域训练段后，跨区域训练样本也减少，因此差值包含区域经验与训练量的共同影响，不能解释为单一因素的因果效应。\n\n| 目标区域 | 同域 train/val/test 历元 | 同域比例 | 跨区域 train/val/test 历元 | 跨区域比例 |\n|---|---|---|---|---|\n| KLT1 | 1,857 / 573 / 421 | 65.1 / 20.1 / 14.8% | 1,470 / 573 / 421 | 59.7 / 23.3 / 17.1% |\n| KLT2 | 1,793 / 588 / 470 | 62.9 / 20.6 / 16.5% | 1,290 / 588 / 470 | 54.9 / 25.0 / 20.0% |",
-      "source_url": "docs/experiments/nlos_protocols.md",
-      "source_type": "project_document",
-      "start_line": 27,
+      "start_line": 25,
       "end_line": 32
     },
     {
-      "id": "D08-12b87b4b6de8",
+      "id": "D08-dc6ebf1052d3",
       "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "两种实验与比例",
+      "title": "KLT 同域与跨区域识别",
+      "heading": "本次运行结果",
       "keywords": [
-        "两种实验与比例"
+        "本次运行结果"
       ],
-      "content": "| KLT2 | 1,793 / 588 / 470 | 62.9 / 20.6 / 16.5% | 1,290 / 588 / 470 | 54.9 / 25.0 / 20.0% |\n| KLT3 | 1,681 / 504 / 666 | 59.0 / 17.7 / 23.4% | 1,277 / 504 / 666 | 52.2 / 20.6 / 27.2% |\n\n6∶2∶2 是目标，实际比例按完整采集段略有偏差。不能拆相邻历元或随机打散同一历元的卫星来凑比例。以上按历元统计，卫星观测行比例另行报告。两种实验均是跨采集段划分，不是严格的时间预测或整日期留出；部分同日 KLT2 采集段相邻，这可能使同域任务更容易。",
+      "content": "| CNN | 0.7083 | 0.8226 | 0.7560 | 0.7093 | 0.8119 | 0.7528 | -0.0032 |\n| LSTM | 0.7317 | 0.7856 | 0.7554 | 0.7069 | 0.8112 | 0.7504 | -0.0051 |\n| GRU | 0.7361 | 0.7896 | 0.7600 | 0.7107 | 0.8081 | 0.7542 | -0.0057 |\n| Transformer | 0.7184 | 0.8069 | 0.7574 | 0.7200 | 0.7965 | 0.7557 | -0.0017 |\n| C/N0 rule | 0.6355 | 0.6189 | 0.6270 | 0.6355 | 0.6189 | 0.6270 | +0.0000 |",
       "source_url": "docs/experiments/nlos_protocols.md",
       "source_type": "project_document",
       "start_line": 32,
-      "end_line": 36
+      "end_line": 39
     },
     {
-      "id": "D08-8afa596769ee",
+      "id": "D08-350c700e89d3",
       "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "模型与比较方法",
-      "keywords": [
-        "模型与比较方法"
-      ],
-      "content": "MLP、1D CNN、LSTM、GRU、Transformer 均使用同一卫星过去及当前的 32 次观测，网络宽度 64、两层、dropout 0.1，AdamW 学习率 0.0005、weight decay 0.01、batch 128；最多训练 30 轮，验证 BCE 早停 patience 6。Transformer 四头；CNN 卷积核 5。完整参数来自 [固定计划](../../config/nlos_protocols.json)和运行前冻结的 `experiment_plan.json`。\n\nLR、RF 和 C/N0 规则使用当前观测特征。RF 固定为 200 棵树、最大深度 12、叶子至少 8 个样本、类别均衡；LR 固定 C=1、类别均衡。这是完整分类器对比，神经网络与树模型的历史输入不同。此前 56 组搜索的获胜参数没有迁移到这次主实验，也没有继续搜索。",
-      "source_url": "docs/experiments/nlos_protocols.md",
-      "source_type": "project_document",
-      "start_line": 39,
-      "end_line": 42
-    },
-    {
-      "id": "D08-fc3b135d94ed",
-      "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "模型与比较方法",
-      "keywords": [
-        "模型与比较方法"
-      ],
-      "content": "分别报告每个目标区域的 Test Precision、NLOS Recall、F1、误报、漏报和验证集确定的阈值，再计算三个区域等权平均。平均 F1 是逐区域 F1 的平均，不是先平均 Precision/Recall 再算其调和平均。网页可切换六个具体实验，查看每次划分、全部模型、逐卫星预测和错误切片。\n\n测试排名用于描述这次观察结果。每折选模使用验证 F1，两种协议的汇总选模使用平均验证 F1；不能再按最高测试分选择部署模型。仅一次种子、三个相邻区域，微小差异不能证明稳定优势。2023-11-09 的若干采集段在早期开发中已被查看，因此这是探索性比较，不能声称全新的最终盲测。相机标签质量、低光条件、日期变化、卫星几何和样本量都可能影响结果。",
-      "source_url": "docs/experiments/nlos_protocols.md",
-      "source_type": "project_document",
-      "start_line": 43,
-      "end_line": 46
-    },
-    {
-      "id": "D08-76fca043de1b",
-      "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
+      "title": "KLT 同域与跨区域识别",
       "heading": "本次运行结果",
       "keywords": [
         "本次运行结果"
       ],
-      "content": "六个固定参数实验已完成，使用原始默认配置；汇总见 [结果 JSON](nlos_protocols_report.json)。下表为三个目标区域的等权测试均值，**测试领先者用于描述结果，不用于重新选模**。\n\n| 模型 | 同域 Precision | 同域 Recall | 同域 F1 | 跨区域 Precision | 跨区域 Recall | 跨区域 F1 | F1 变化 |\n|---|---:|---:|---:|---:|---:|---:|---:|\n| LR | 0.7089 | 0.7779 | 0.7388 | 0.7330 | 0.7681 | 0.7431 | +0.0043 |\n| RF | 0.7725 | 0.7481 | 0.7558 | 0.7756 | 0.7320 | 0.7494 | -0.0064 |\n| MLP | 0.7256 | 0.8051 | 0.7612 | 0.7278 | 0.7813 | 0.7533 | -0.0079 |",
+      "content": "平均验证 F1 选择同域 GRU、跨区域 Transformer；测试均值领先者分别为 MLP、Transformer。差距较小且仅单种子，不能认定稳定优势。共享测试段的固定 C/N0 规则必然得分相同，不能据此判断无域偏移。\n\n标签计数以原始文件为准：`0610_KLT3_404` NLOS2461，比作者 README 多70，未人工改标签。汇总与来源指纹见[JSON](nlos_protocols_report.json)。",
       "source_url": "docs/experiments/nlos_protocols.md",
       "source_type": "project_document",
-      "start_line": 49,
-      "end_line": 55
+      "start_line": 40,
+      "end_line": 43
     },
     {
-      "id": "D08-4c0a5ddf6808",
+      "id": "D08-a40eb603ddce",
       "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "本次运行结果",
-      "keywords": [
-        "本次运行结果"
-      ],
-      "content": "| MLP | 0.7256 | 0.8051 | 0.7612 | 0.7278 | 0.7813 | 0.7533 | -0.0079 |\n| CNN | 0.7083 | 0.8226 | 0.7560 | 0.7093 | 0.8119 | 0.7528 | -0.0032 |\n| LSTM | 0.7317 | 0.7856 | 0.7554 | 0.7069 | 0.8112 | 0.7504 | -0.0051 |\n| GRU | 0.7361 | 0.7896 | 0.7600 | 0.7107 | 0.8081 | 0.7542 | -0.0057 |\n| Transformer | 0.7184 | 0.8069 | 0.7574 | 0.7200 | 0.7965 | 0.7557 | -0.0017 |\n| C/N0 rule | 0.6355 | 0.6189 | 0.6270 | 0.6355 | 0.6189 | 0.6270 | +0.0000 |",
-      "source_url": "docs/experiments/nlos_protocols.md",
-      "source_type": "project_document",
-      "start_line": 55,
-      "end_line": 63
-    },
-    {
-      "id": "D08-d2a7c197fc44",
-      "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "本次运行结果",
-      "keywords": [
-        "本次运行结果"
-      ],
-      "content": "同域测试均值中 MLP F1 最高（0.7612），跨区域 Transformer 最高（0.7557）。两个协议中 RF 的平均 Precision 最高，CNN 的平均 NLOS Recall 最高。按平均验证 F1 选择的模型族分别为 GRU 和 Transformer；同域测试最高的 MLP 没有因测试成绩被重新选中。模型差距较小，尚不足以认定稳定优势。\n\n跨区域没有出现全模型的大幅下降，LR 的平均 F1 甚至略升；KLT3 的多种模型也略升。这里三处区域相邻、接收机相同、输入是同源的信号与几何特征，移除目标区域训练段还改变了日期分布和训练量，验证早停与阈值也随训练模型改变。因此这个结果不能证明跨城市 NLOS 容易泛化，也不能将每个差值都解释为纯区域效应。\n\n各区域的测试 F1 领先者如下（同样仅为观察排名）：\n\n| 目标区域 | 同域 | 跨区域 |\n|---|---|---|\n| KLT1 | GRU 0.7728 | RF 0.7695 |\n| KLT2 | RF 0.7759 | Transformer 0.7654 |",
-      "source_url": "docs/experiments/nlos_protocols.md",
-      "source_type": "project_document",
-      "start_line": 64,
-      "end_line": 73
-    },
-    {
-      "id": "D08-667bdd2fccd3",
-      "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
-      "heading": "本次运行结果",
-      "keywords": [
-        "本次运行结果"
-      ],
-      "content": "| KLT2 | RF 0.7759 | Transformer 0.7654 |\n| KLT3 | Transformer 0.7483 | GRU 0.7538 |\n\n两种协议的测试采集段逐条核对一致：KLT1 6,607 行、KLT2 7,551 行、KLT3 10,085 行；五项输入特征在全部六个实验中保留。每种神经网络上限 30 轮，实际运行 7～20 轮，由验证 BCE 早停。所有阈值来自验证集；数据和固定参数计划在运行前已冻结。",
-      "source_url": "docs/experiments/nlos_protocols.md",
-      "source_type": "project_document",
-      "start_line": 73,
-      "end_line": 77
-    },
-    {
-      "id": "D08-30d20e577d28",
-      "document_id": "D08",
-      "title": "同域与跨区域 NLOS 实验",
+      "title": "KLT 同域与跨区域识别",
       "heading": "复现",
       "keywords": [
         "复现"
       ],
-      "content": "计划、数据校验和、实现文件校验和和参数先冻结，再运行六个实验。两个独立进程只负责并行执行固定实验，彼此隔离随机种子；不是调参。已完成的同一计划可以续跑，发生数据、实现或配置变化时需要新的产物目录。数据、外部代码和模型文件继续留在本地，当前不上传 GitHub。",
+      "content": "先安装 [KLT 工具依赖](../../tools/klt/README.md)。计划、输入与实现先冻结；变更后用新目录。原始数据、模型和逐星预测不随仓库分发，详见[许可](../OPEN_SOURCE_REFERENCES.md)。",
       "source_url": "docs/experiments/nlos_protocols.md",
       "source_type": "project_document",
-      "start_line": 89,
-      "end_line": 89
+      "start_line": 53,
+      "end_line": 53
     },
     {
-      "id": "D09-b776ac5cf66f",
+      "id": "D09-a4e95ddfe5fe",
       "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "UrbanNav 未见城区泛化实验",
+      "title": "UrbanNav 未见城区识别",
+      "heading": "UrbanNav 未见城区识别",
       "keywords": [
-        "UrbanNav 未见城区泛化实验"
+        "UrbanNav 未见城区识别"
       ],
-      "content": "已实际下载和处理尖沙咀 TST、黄埔 WP、旺角 MK 的公开记录，并完成冻结 KLT 模型外部测试和六个 UrbanNav 城区互斥实验。这里验证的是**同一城市中的未见城区**，不声称跨城市泛化，也不把静态建筑图参考标签称为人工逐卫星真值。代码、数据清单和汇总报告已在本地准备；尚未上传 GitHub。\n\n[结果 JSON](urbannav_generalization_report.json)记录全部模型的 Precision、NLOS Recall、F1、混淆矩阵、阈值和逐区成绩。训练日志、模型与逐卫星预测保存在忽略的 `artifacts/urbannav_generalization`。",
+      "content": "公开 F9P splitter、SPAN 参考与建筑图用于尖沙咀TST、黄埔WP、旺角MK。全部在香港，各区仅一次采集，不能代表跨城市泛化。标签为 `static_3d_sky_mask` 几何参考，非人工逐星接收真值。",
       "source_url": "docs/experiments/urbannav_generalization.md",
+      "source_type": "project_document",
+      "start_line": 3,
+      "end_line": 4
+    },
+    {
+      "id": "D09-d34cc817a944",
+      "document_id": "D09",
+      "title": "UrbanNav 未见城区识别",
+      "heading": "数据与标签覆盖",
+      "keywords": [
+        "数据与标签覆盖"
+      ],
+      "content": "| 城区 | 日期 | 原始观测历元 | 可评分历元 | 卫星观测 | 可评分观测 | unknown | 标签覆盖率 |\n|---|---|---:|---:|---:|---:|---:|---:|\n| 尖沙咀 TST | 2021-05-17 | 786 | 637 | 10,385 | 6,087 | 4,298 | 58.6% |\n| 黄埔 WP | 2021-05-21 | 1,535 | 1,284 | 20,951 | 12,494 | 8,457 | 59.6% |\n| 旺角 MK | 2021-05-18 | 3,350 | 1,030 | 46,408 | 9,258 | 37,150 | 19.9% |\n| 合计 | 三次采集 | 5,671 | 2,951 | 77,744 | 27,839 | 49,905 | 35.8% |",
+      "source_url": "docs/experiments/urbannav_generalization.md",
+      "source_type": "project_document",
+      "start_line": 7,
+      "end_line": 13
+    },
+    {
+      "id": "D09-33c86675e89d",
+      "document_id": "D09",
+      "title": "UrbanNav 未见城区识别",
+      "heading": "数据与标签覆盖",
+      "keywords": [
+        "数据与标签覆盖"
+      ],
+      "content": "独立位置/星历计算可见性；时间差≤50ms、Q≤2、最近网格≤2m、3m内最多四网格、高度差≤3m、边界间隔5°。边界、缺星历或参考覆盖不足保持unknown；原始0°/360°不一致值共同进入包络。保护参数固定于评分前，未经人工真值校准。\n\n模型仍用同源五项无线电/SPP特征，参考位置/建筑图/标签不作输入。unknown不参与评分，未跟踪卫星无标签；静态图不能覆盖树木或车辆，LOS可含多径。新记录距KLT最近约2666/2196/996m，没有路线重合，但仍同城。",
+      "source_url": "docs/experiments/urbannav_generalization.md",
+      "source_type": "project_document",
+      "start_line": 14,
+      "end_line": 17
+    },
+    {
+      "id": "D09-5870a7782c6b",
+      "document_id": "D09",
+      "title": "UrbanNav 未见城区识别",
+      "heading": "协议",
+      "keywords": [
+        "协议"
+      ],
+      "content": "冻结外部迁移使用 KLT `cross_region_klt3` 全部源模型和源验证阈值；UrbanNav不参与选模，源验证选中LSTM。城区互斥以一个完整城区训练、另一区验证、第三个测试，交换源角色形成六方向。默认固定参数、种子42、最多30轮，阈值和检查点只使用该折验证区。\n\n六方向复用三条路线，不是六个独立地区。先平均同城区两方向，再等权平均三城区；汇总验证赢家不是额外部署模型。域差异同时包含设备、日期、参考方法、标签比例和筛选效应。",
+      "source_url": "docs/experiments/urbannav_generalization.md",
+      "source_type": "project_document",
+      "start_line": 20,
+      "end_line": 23
+    },
+    {
+      "id": "D09-b4f647f5911f",
+      "document_id": "D09",
+      "title": "UrbanNav 未见城区识别",
+      "heading": "结果",
+      "keywords": [
+        "结果"
+      ],
+      "content": "| 模型 | 冻结外部 Precision | 外部 NLOS Recall | 外部 F1 | 城区互斥 Precision | 互斥 NLOS Recall | 互斥 F1 |\n|---|---:|---:|---:|---:|---:|---:|\n| LR | 0.8148 | 0.7235 | 0.7535 | 0.7377 | 0.8017 | 0.7284 |\n| RF | 0.8107 | 0.7995 | 0.7884 | 0.7471 | 0.8784 | 0.7852 |\n| MLP | 0.7506 | 0.8375 | 0.7779 | 0.6867 | 0.8209 | 0.7095 |\n| CNN | 0.7819 | 0.7953 | 0.7771 | 0.6855 | 0.8269 | 0.7152 |\n| LSTM | 0.7695 | 0.7951 | 0.7721 | 0.7043 | 0.8770 | 0.7539 |",
+      "source_url": "docs/experiments/urbannav_generalization.md",
+      "source_type": "project_document",
+      "start_line": 26,
+      "end_line": 32
+    },
+    {
+      "id": "D09-2127f031f2a4",
+      "document_id": "D09",
+      "title": "UrbanNav 未见城区识别",
+      "heading": "结果",
+      "keywords": [
+        "结果"
+      ],
+      "content": "| LSTM | 0.7695 | 0.7951 | 0.7721 | 0.7043 | 0.8770 | 0.7539 |\n| GRU | 0.7761 | 0.8183 | 0.7856 | 0.6957 | 0.8860 | 0.7513 |\n| Transformer | 0.7567 | 0.8409 | 0.7852 | 0.6811 | 0.8942 | 0.7489 |\n| C/N0 规则 | 0.8402 | 0.6573 | 0.7319 | 0.8402 | 0.6573 | 0.7319 |\n\n| 城区 | 冻结 RF F1 | 冻结 Transformer F1 | 互斥 RF F1 | 互斥 Transformer F1 |\n|---|---:|---:|---:|---:|\n| TST | 0.7184 | 0.6664 | 0.6269 | 0.5577 |\n| WP | 0.8583 | 0.8397 | 0.8720 | 0.8103 |",
+      "source_url": "docs/experiments/urbannav_generalization.md",
+      "source_type": "project_document",
+      "start_line": 32,
+      "end_line": 40
+    },
+    {
+      "id": "D09-1a0bf1f995e6",
+      "document_id": "D09",
+      "title": "UrbanNav 未见城区识别",
+      "heading": "结果",
+      "keywords": [
+        "结果"
+      ],
+      "content": "| WP | 0.8583 | 0.8397 | 0.8720 | 0.8103 |\n| MK | 0.7885 | 0.8495 | 0.8567 | 0.8786 |\n\n\n总体F1为RF领先，旺角Transformer更高；单城区优势不能推广。旺角仅19.9%卫星观测获准评分。泛化有效性取决于目标是否留出、标签与阈值是否独立，性能下降不是必要条件。[分布审计](nlos_domain_audit.md)另报告C/N0差异。",
+      "source_url": "docs/experiments/urbannav_generalization.md",
+      "source_type": "project_document",
+      "start_line": 40,
+      "end_line": 46
+    },
+    {
+      "id": "D09-f89350e849c9",
+      "document_id": "D09",
+      "title": "UrbanNav 未见城区识别",
+      "heading": "复现与来源",
+      "keywords": [
+        "复现与来源"
+      ],
+      "content": "先准备KLT源模型和[可选依赖](../README.md)。固定输入见[源清单](../../config/urbannav_sources.json)，配置见[计划](../../config/nlos_generalization.json)，当前汇总见[JSON](urbannav_generalization_report.json)。冻结目录拒绝覆盖。",
+      "source_url": "docs/experiments/urbannav_generalization.md",
+      "source_type": "project_document",
+      "start_line": 56,
+      "end_line": 57
+    },
+    {
+      "id": "D09-04e6cd81e1de",
+      "document_id": "D09",
+      "title": "UrbanNav 未见城区识别",
+      "heading": "复现与来源",
+      "keywords": [
+        "复现与来源"
+      ],
+      "content": "来源：[UrbanNav](https://github.com/IPNL-POLYU/UrbanNavDataset)，Hsu等2023，DOI10.33012/navi.602；[NOAA](https://ngs.noaa.gov/CORS/data.shtml)、[SatRef](https://www.geodetic.gov.hk/en/rinex/downv.aspx)当天星历。UrbanNav缺少明确数据再分发许可，SatRef限个人非商业内部使用；原始/派生表与权重不发布。独立GPL适配器见[工具说明](../../tools/urbannav/README.md)。",
+      "source_url": "docs/experiments/urbannav_generalization.md",
+      "source_type": "project_document",
+      "start_line": 58,
+      "end_line": 58
+    },
+    {
+      "id": "D10-94a839095c2e",
+      "document_id": "D10",
+      "title": "定位方法来源",
+      "heading": "定位方法来源",
+      "keywords": [
+        "定位方法来源"
+      ],
+      "content": "| 来源 | 当前使用方式 |\n| --- | --- |\n| [RTKLIB pntpos](https://github.com/tomojitakasu/RTKLIB/blob/rtklib_2.4.3/src/pntpos.c) / [pyrtklib](https://github.com/IPNL-POLYU/pyrtklib) | 直接调用 pyrtklib0.2.7 的广播伪距 SPP、Doppler 速度与协方差；浏览分支不代表本机二进制编译提交 |\n| [Fossett 提取器](https://github.com/fossettlab/gnss-nlos-notebook/blob/b13aa856f723a472bd35d45171017580642054cf/extract_features.py) | GPL 独立工具调用固定提交的 RINEX/时间/观测辅助函数 |",
+      "source_url": "docs/research/positioning_methods.md",
       "source_type": "project_document",
       "start_line": 3,
       "end_line": 6
     },
     {
-      "id": "D09-dbfa41e877d6",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "新采集记录与评分覆盖",
-      "keywords": [
-        "新采集记录与评分覆盖"
-      ],
-      "content": "使用作者公开的同型 F9P splitter 接收机，包含 GPS/北斗原始 RINEX、SPAN-CPT 位置参考与三维建筑 skymask。下载的是已经公开的实测记录，没有进行现场采集。为避开作者确认的普通 F9P TST 缺记录问题，三个城区一致采用 splitter 文件。\n\n| 城区 | 日期 | 原始观测历元 | 可评分历元 | 卫星观测 | 可评分观测 | unknown | 标签覆盖率 |\n|---|---|---:|---:|---:|---:|---:|---:|\n| 尖沙咀 TST | 2021-05-17 | 786 | 637 | 10,385 | 6,087 | 4,298 | 58.6% |\n| 黄埔 WP | 2021-05-21 | 1,535 | 1,284 | 20,951 | 12,494 | 8,457 | 59.6% |\n| 旺角 MK | 2021-05-18 | 3,350 | 1,030 | 46,408 | 9,258 | 37,150 | 19.9% |",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 9,
-      "end_line": 15
-    },
-    {
-      "id": "D09-f0272098f9e8",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "新采集记录与评分覆盖",
-      "keywords": [
-        "新采集记录与评分覆盖"
-      ],
-      "content": "| 旺角 MK | 2021-05-18 | 3,350 | 1,030 | 46,408 | 9,258 | 37,150 | 19.9% |\n| 合计 | 三次采集 | 5,671 | 2,951 | 77,744 | 27,839 | 49,905 | 35.8% |\n\n原始观测历元按实际解析文件计数，与作者描述的采集持续秒数不同。可评分历元至少含一条通过检查的参考标签；三处城区都只有一次独立采集。卫星行数、重复训练方向和多个历元不能当成更多独立地区。\n\n根据原始参考轨迹的平面距离审计，新记录与九段 KLT 轨迹最近距离分别约 2,666m、2,196m、996m。没有路线重合，范围大于原先三个相邻 KLT 小区域，但仍全部位于香港。距离是记录点间的近似局部 WGS84 距离，不是行政区边界距离。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 15,
-      "end_line": 21
-    },
-    {
-      "id": "D09-b5214a540df1",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "标签和特征分开",
-      "keywords": [
-        "标签和特征分开"
-      ],
-      "content": "作者提供的是建筑仰角边界，不是现成的 NLOS 列。[UrbanNav 论文](https://ira.lib.polyu.edu.hk/bitstream/10397/109598/1/navi.602.full.pdf)说明每行三个 WGS84 坐标，加 0°～360° 的 361 个建筑边界仰角。我们使用独立 SPAN 参考位置与当天广播星历计算卫星方位角/仰角，再与附近建筑边界比较，来源明确为 `static_3d_sky_mask`。模型五项输入仍为 C/N0、SPP 仰角、归一化伪距残差、伪距变化率一致性和历史 C/N0 波动，均通过与 KLT 同一固定版本的提取器生成。\n\n在查看模型得分前固定以下评分规则，工程范围未根据测试结果优化：\n\n- 观测和位置参考按真实时间一对一匹配，最大允许差 50ms。三份数据最大实测差分别 6ms、2ms、1ms，GPS/UTC 的 18 秒偏差单独核对。旺角只有 2,312 个位置参考历元，余下观测标为 unknown。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 24,
-      "end_line": 28
-    },
-    {
-      "id": "D09-8e57a52e02d7",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "标签和特征分开",
-      "keywords": [
-        "标签和特征分开"
-      ],
-      "content": "- 观测和位置参考按真实时间一对一匹配，最大允许差 50ms。三份数据最大实测差分别 6ms、2ms、1ms，GPS/UTC 的 18 秒偏差单独核对。旺角只有 2,312 个位置参考历元，余下观测标为 unknown。\n- 只接受位置参考 Q≤2；这是质量筛选，不能据此保证每个位置达到某个厘米精度。质量较低的样本保持 unknown。\n- 最近建筑网格不超过 2m，使用半径 3m 内最多四个网格和相邻方位角组成仰角包络，减少网格与水平杆臂误差的影响。\n- 建筑图观察高度为 5m；与位置参考高度差大于 3m的样本不评分。没有擅自修正高程基准或假设已精确完成天线杆臂变换。\n- 卫星仰角低于整个包络至少 5° 才标为 NLOS，高于至少 5° 才标为 LOS；包络边缘附近为 unknown。5° 是保守工程间隔，不是经人工标注校准的误差上界。\n- 部分公开网格的 0°/360°值不相等，与论文的闭合描述存在差异。保留两个值进入包络。黄埔文件的一行坐标缺失被剔除，未补造坐标。缺星历、地平线以下或覆盖不足也不产生监督标签。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 28,
-      "end_line": 34
-    },
-    {
-      "id": "D09-f55b314e330b",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "标签和特征分开",
-      "keywords": [
-        "标签和特征分开"
-      ],
-      "content": "参考位置、建筑图、方位角、质量、区域 ID 和标签包络均不作为模型输入；模型预处理只拟合训练侧。未跟踪的卫星不在观测表中。这些标签只能表达静态建筑几何可见性，无法覆盖临时车辆、树木或复杂建筑模型误差，LOS 仍可含多径。标签覆盖率较低意味着本报告不能声称评估了全部路线上的 NLOS。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 35,
-      "end_line": 36
-    },
-    {
-      "id": "D09-ebd85c7db9ef",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "两个实验回答不同问题",
-      "keywords": [
-        "两个实验回答不同问题"
-      ],
-      "content": "**冻结 KLT 模型外部测试**：沿用已经完成的 `cross_region_klt3` 全部模型及各自源验证集阈值。源训练/验证只含 KLT1/KLT2 的完整采集段，源测试为 KLT3。TST/WP/MK 没有参与训练、验证、阈值或检查点选择。源验证集选中 LSTM，此次外部 RF 测试领先不触发重新选模。外部源模型和报告 SHA-256 在预测前冻结。\n\n**UrbanNav 城区互斥实验**：一个完整城区采集用于训练，另一个用于验证，第三个用于测试；交换两个源城区的训练/验证角色，三个目标城区共六个方向。每折使用原始默认参数、种子 42、神经网络最多 30 轮，检查点和阈值只由该折另一个城区的验证数据确定。没有随机拆散卫星行，也没有为了凑 6∶2∶2 把同一路线拆入多个集合。此时没有每区多日期记录，不能构造独立采集层面的同域新实验。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 39,
-      "end_line": 42
-    },
-    {
-      "id": "D09-814608253f4b",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "两个实验回答不同问题",
-      "keywords": [
-        "两个实验回答不同问题"
-      ],
-      "content": "六个方向复用三条轨迹，不是六个独立测试城区。先平均每个城区两个方向的指标，再等权平均三城区；宏平均 F1 不是平均 Precision/Recall 的调和平均。汇总报告的平均验证领先模型字段仅描述这些折，不对应一个额外训练并部署的全局模型；每折自己的验证选择才是该折的选模依据。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 43,
-      "end_line": 44
-    },
-    {
-      "id": "D09-b577c266f6bf",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "实际结果",
-      "keywords": [
-        "实际结果"
-      ],
-      "content": "| 模型 | 冻结外部 Precision | 外部 NLOS Recall | 外部 F1 | 城区互斥 Precision | 互斥 NLOS Recall | 互斥 F1 |\n|---|---:|---:|---:|---:|---:|---:|\n| LR | 0.8148 | 0.7235 | 0.7535 | 0.7377 | 0.8017 | 0.7284 |\n| RF | 0.8107 | 0.7995 | 0.7884 | 0.7471 | 0.8784 | 0.7852 |\n| MLP | 0.7506 | 0.8375 | 0.7779 | 0.6867 | 0.8209 | 0.7095 |\n| CNN | 0.7819 | 0.7953 | 0.7771 | 0.6855 | 0.8269 | 0.7152 |\n| LSTM | 0.7695 | 0.7951 | 0.7721 | 0.7043 | 0.8770 | 0.7539 |",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 47,
-      "end_line": 53
-    },
-    {
-      "id": "D09-d4be4b84ffa9",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "实际结果",
-      "keywords": [
-        "实际结果"
-      ],
-      "content": "| LSTM | 0.7695 | 0.7951 | 0.7721 | 0.7043 | 0.8770 | 0.7539 |\n| GRU | 0.7761 | 0.8183 | 0.7856 | 0.6957 | 0.8860 | 0.7513 |\n| Transformer | 0.7567 | 0.8409 | 0.7852 | 0.6811 | 0.8942 | 0.7489 |\n| C/N0 规则 | 0.8402 | 0.6573 | 0.7319 | 0.8402 | 0.6573 | 0.7319 |\n\n\n| 城区 | 冻结 RF F1 | 冻结 Transformer F1 | 互斥 RF F1 | 互斥 Transformer F1 |\n|---|---:|---:|---:|---:|\n| TST | 0.7184 | 0.6664 | 0.6269 | 0.5577 |\n| WP | 0.8583 | 0.8397 | 0.8720 | 0.8103 |",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 53,
-      "end_line": 63
-    },
-    {
-      "id": "D09-369f58ea053e",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "实际结果",
-      "keywords": [
-        "实际结果"
-      ],
-      "content": "| WP | 0.8583 | 0.8397 | 0.8720 | 0.8103 |\n| MK | 0.7885 | 0.8495 | 0.8567 | 0.8786 |\n\n整体 F1 是 RF 领先；旺角则 Transformer 的 F1 更高。不能只看总平均认为各地区一样，也不能把一个地区的领先归纳为稳定的模型优势。旺角只评估约五分之一的原始卫星记录，筛选对评价对象有明显影响。\n\n**泛化测试不要求性能一定下降。**划分是否有效取决于目标区域是否留出、标签是否独立、模型和阈值是否没有使用目标测试信息，而不是能否观察到一个预期差值。跨数据集外部得分还受天线、标签方法、日期、NLOS 比例和未知标签排除影响，因此外部 F1 高于旧 KLT3 成绩不等于更好的普适泛化。UrbanNav 内部保持同接收机和同地图标签方法，仍无法分离城区与采集日期效应。当前没有独立驾驶重复，也没有可支持跨城市或显著性结论的置信区间。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 63,
-      "end_line": 69
-    },
-    {
-      "id": "D09-75f5f1c5866a",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "复现与检查",
-      "keywords": [
-        "复现与检查"
-      ],
-      "content": "对同城操作范围和 C/N0 域偏移的进一步审视见[分布审计](nlos_domain_audit.md)。共享测试段的固定 C/N0 规则必然得到相同成绩，不能用它的两列差值衡量泛化难度。\n\n\n固定公开输入、字节数、SHA-256 和下载链接见 [源清单](../../config/urbannav_sources.json)。实验配置见 [固定计划](../../config/nlos_generalization.json)。已经存在的冻结计划与代码或输入不一致时程序拒绝覆盖，修改实验应使用新的输出目录。可公开结果摘要剔除了原始逐历元记录；绘图脚本只读取记录的成绩，不重新训练。\n\n验证包含方位角四个方向和天顶几何、18 秒时间偏差拒绝、匹配重复/缺失、网格缺坐标、遮挡边界/高度/质量拒绝、城区泄漏检查、unknown 不进入分母、冻结阈值保持和网页接口。没有声称标签经过人工重新标注，也未验证分类带来的定位改善。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 72,
-      "end_line": 86
-    },
-    {
-      "id": "D09-8ba18c8a9e0e",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "来源和许可",
-      "keywords": [
-        "来源和许可"
-      ],
-      "content": "- [UrbanNav 作者公开仓库](https://github.com/IPNL-POLYU/UrbanNavDataset)及[时间/数据使用说明](https://github.com/IPNL-POLYU/UrbanNavDataset/blob/master/docs/GETTING_STARTED.md)。Hsu 等，2023，*Hong Kong UrbanNav: An Open-Source Multisensory Dataset for Benchmarking Urban Navigation Algorithms*，NAVIGATION 70(4)，DOI 10.33012/navi.602。\n- [TST 普通 F9P 缺记录的作者讨论](https://github.com/IPNL-POLYU/UrbanNavDataset/issues/11)。三个区域一致使用 splitter。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 89,
-      "end_line": 90
-    },
-    {
-      "id": "D09-45b66bda6a70",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "来源和许可",
-      "keywords": [
-        "来源和许可"
-      ],
-      "content": "- [TST 普通 F9P 缺记录的作者讨论](https://github.com/IPNL-POLYU/UrbanNavDataset/issues/11)。三个区域一致使用 splitter。\n- [NOAA 广播星历](https://ngs.noaa.gov/CORS/data.shtml)，[SatRef 原始 GNSS 数据](https://www.geodetic.gov.hk/en/rinex/downv.aspx)，[SatRef 文件规范](https://www.geodetic.gov.hk/common/data/satref/DataDict_RINEX.pdf)。GPS 与北斗星历来自采集当天，不能用六月或其他年份的星历代替。\n- [NovAtel Waypoint 质量字段说明](https://docs.novatel.com/Waypoint/Content/PDFs/Waypoint_Software_User_Manual_D100513.pdf)。质量数用于筛选，不能代替独立误差验证。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 90,
-      "end_line": 92
-    },
-    {
-      "id": "D09-44a3001db263",
-      "document_id": "D09",
-      "title": "UrbanNav 未见城区泛化实验",
-      "heading": "来源和许可",
-      "keywords": [
-        "来源和许可"
-      ],
-      "content": "- [GPL 独立适配器](../../tools/urbannav/README.md)复用固定版本外部提取器；主 Python 包不打包该源码。UrbanNav README 未给出明确数据再分发许可证，SatRef 有个人非商业内部使用限制，原始/派生表与模型均留在本地忽略目录。",
-      "source_url": "docs/experiments/urbannav_generalization.md",
-      "source_type": "project_document",
-      "start_line": 93,
-      "end_line": 93
-    },
-    {
-      "id": "D10-693d1bb6dd75",
+      "id": "D10-821831ed4515",
       "document_id": "D10",
-      "title": "定位与告警的方法来源",
-      "heading": "定位与告警的方法来源",
+      "title": "定位方法来源",
+      "heading": "定位方法来源",
       "keywords": [
-        "定位与告警的方法来源"
+        "定位方法来源"
       ],
-      "content": "核对日期：2026-10-12。区分直接调用、方法参考和待复现；引用论文不等于复现它的算法。\n\n| 来源 | 阅读与采用内容 | 当前接入程度 |\n| --- | --- | --- |\n| [RTKLIB pntpos.c](https://github.com/tomojitakasu/RTKLIB/blob/rtklib_2.4.3/src/pntpos.c) / [pyrtklib](https://github.com/IPNL-POLYU/pyrtklib) | 伪距 SPP、广播星历/钟差/大气改正；`estvel` 从 Doppler 估计 ECEF 速度并输出 `qv` | 直接调用本机 pyrtklib 0.2.7；检查成功状态、卫星数量、10°仰角、有限值；速度和协方差旋转到 ENU。所浏览上游分支是方法核对来源，未冒充本机二进制的编译提交 |",
+      "content": "| [GraphGNSSLib](https://github.com/weisongwen/GraphGNSSLib) | 参考历史伪距与 Doppler 联合估计思想，未运行其 FGO；上游依赖 ROS/Ceres |\n| [Suzuki 2023](https://www.mdpi.com/1424-8220/23/3/1205) / [gsdc2023](https://github.com/taroz/gsdc2023) | 参考速度约束；未实现 TDCP、完整 IMU 或两步优化，开源实现年份不同，不构成论文复现 |\n| [Wen/Zhang/Hsu 2022](https://ira.lib.polyu.edu.hk/handle/10397/92728) | 观测级鲁棒 FGO-GNC 研究参照，未接入；论文 MEAN 与本项目 RMSE 不可直接排名 |",
       "source_url": "docs/research/positioning_methods.md",
       "source_type": "project_document",
-      "start_line": 3,
-      "end_line": 7
-    },
-    {
-      "id": "D10-c79a5b4cabf0",
-      "document_id": "D10",
-      "title": "定位与告警的方法来源",
-      "heading": "定位与告警的方法来源",
-      "keywords": [
-        "定位与告警的方法来源"
-      ],
-      "content": "| [Fossett GNSS notebook](https://github.com/fossettlab/gnss-nlos-notebook/blob/b13aa856f723a472bd35d45171017580642054cf/extract_features.py) | RINEX 读取、完整历元分组、rover 观测、GPS/北斗与时间适配 | 独立 GPL 工具调用固定 SHA 的上游辅助函数；不随 MIT wheel 分发 |\n| [GraphGNSSLib](https://github.com/weisongwen/GraphGNSSLib)，Wen/Hsu ICRA 2021 | 历史与当前伪距、Doppler 联合 FGO；README 提醒代码与论文不完全相同 | 参考速度约束和完整历史输入；新增因果平面 KF，**未运行 GraphGNSSLib 或完成 FGO 复现**。原项目依赖 ROS/Ceres |",
-      "source_url": "docs/research/positioning_methods.md",
-      "source_type": "project_document",
-      "start_line": 8,
+      "start_line": 7,
       "end_line": 9
     },
     {
-      "id": "D10-cdb479c02a91",
+      "id": "D10-00671d3856a7",
       "document_id": "D10",
-      "title": "定位与告警的方法来源",
-      "heading": "定位与告警的方法来源",
+      "title": "定位方法来源",
+      "heading": "定位方法来源",
       "keywords": [
-        "定位与告警的方法来源"
+        "定位方法来源"
       ],
-      "content": "| [Suzuki 2023](https://www.mdpi.com/1424-8220/23/3/1205)，相关开源 [gsdc2023](https://github.com/taroz/gsdc2023) | 区分速度/位置信息，结合 Doppler、TDCP 与两步优化；公开项目包含 GNSS/IMU FGO | 核对输入、指标与部分表格；当前落实 Doppler 对照，未实现 TDCP、完整 IMU 或两步优化。gsdc2023 是不同年份实现，不能声称复现 2023 论文；依赖 MATLAB/GTSAM/MatRTKLIB |\n| [Wen/Zhang/Hsu TVT 2022](https://ira.lib.polyu.edu.hk/handle/10397/92728) | 观测级鲁棒 FGO-GNC，均值/最大误差与不同接收机 | 研究参照，尚未接入；2D MEAN 不能直接与本项目 RMSE 排名 |",
+      "content": "| [Ozeki/Kubo 2022](https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2022.868608/full) | NLOS 识别结合残差检查的定位闭环参照；当前未完成闭环 |",
       "source_url": "docs/research/positioning_methods.md",
       "source_type": "project_document",
       "start_line": 10,
       "end_line": 11
     },
     {
-      "id": "D10-42ec64733934",
+      "id": "D10-b87530db5644",
       "document_id": "D10",
-      "title": "定位与告警的方法来源",
-      "heading": "定位与告警的方法来源",
+      "title": "定位方法来源",
+      "heading": "当前实现",
       "keywords": [
-        "定位与告警的方法来源"
+        "当前实现"
       ],
-      "content": "| [Ozeki/Kubo 2022](https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2022.868608/full) | SVM 识别结合残差检查，识别到 DGNSS 的连接 | 指导后续同源 NLOS → 加权/受几何约束剔除；当前告警预测位置误差，尚不是逐卫星定位闭环 |\n\n基础平面滤波、LR/RF/GRU 告警及五箱风险方差映射是本项目的可解释基线，并非上述论文原模型。告警仅输入卫星数、C/N0、HDOP、SPP 残差与观测估计速度；参考误差只构造 `>10 m` 标签。阈值与选模在验证采集段完成，测试不调参。",
+      "content": "固定/风险自适应平面 KF、LR/RF/GRU 告警与五箱风险方差是项目基线。告警预测基线水平误差 >10 m；参考误差只用于监督、验证和评分。\n\nDoppler KF 将 RTKLIB ECEF 速度与正定 qv 转至 ENU，速度协方差特征值下限0.04 (m/s)²，位置/速度 NIS 门限100/25，10秒断点重置。八组 sigma/过程噪声候选只按验证 RMSE 选择；这些工程保护值未经独立场景校准。\n\n位置/速度相关性近似为零，qv 未做经验误差校准。全部成功 SPP 进入因果历史，只有原有成功解输出，未计跨断解收益。此实现是轻量速度约束对照，不是 TDCP、FGO 或完整 GNSS/INS。\n\n当前结果与可用率见[完整路线评估](../experiments/positioning_expansion.md)。未来同源 NLOS 加权还需检查观测冗余、几何与失解；完整 GNSS/IMU 需同步、姿态、重力、偏置和杆臂处理。",
       "source_url": "docs/research/positioning_methods.md",
       "source_type": "project_document",
-      "start_line": 12,
-      "end_line": 15
-    },
-    {
-      "id": "D10-d90349e0740b",
-      "document_id": "D10",
-      "title": "定位与告警的方法来源",
-      "heading": "本轮落实",
-      "keywords": [
-        "本轮落实"
-      ],
-      "content": "1. 三条完整 UrbanNav 路线分别测试一次，固定循环轮换训练/验证；记录原始历元、解算可用率、参考覆盖与断解，避免历元随机划分。\n2. 滤波与 GRU 历史保留全部成功观测；参考匹配/质量仅选择监督和评分点，不能让真值可用性改变历史。\n3. 新增位置 + Doppler 速度因果 KF。`qv` 正定检查并转 ENU；速度 NIS 门限 25、位置门限 100、10 秒断点重置、速度协方差特征值下限 0.04 `(m/s)²`。这些冻结工程值未经独立场景校准。\n4. Doppler 只在原有成功 SPP 点输出，不补报断解定位；八个既有 sigma/过程噪声候选仅按验证 RMSE 选择。没有因新增 Doppler 再训练告警或 NLOS 模型。\n\n位置/速度相关性近似为零，RTKLIB `qv` 也不是已验证的经验误差校准。这是有方法依据的新增基线，不能称为完整紧耦合 GNSS、INS 或 FGO。改善和退步均保留，见[完整路线实验](../experiments/positioning_expansion.md)。",
-      "source_url": "docs/research/positioning_methods.md",
-      "source_type": "project_document",
-      "start_line": 18,
-      "end_line": 24
-    },
-    {
-      "id": "D10-c9fb0bb6c5ad",
-      "document_id": "D10",
-      "title": "定位与告警的方法来源",
-      "heading": "本轮落实",
-      "keywords": [
-        "本轮落实"
-      ],
-      "content": "后续优先做同源观测级闭环，再考虑 Doppler/TDCP 因子图、周跳与弧段管理。完整 GNSS/IMU 还需时间同步、姿态/重力/偏置/杆臂，不能接入加速度字段便称完成。\n\n作者 gsdc2023 README 另提供约 2.7 GB 预处理数据入口，可继续核查。本轮未下载，尚未确认其中训练真值、路线数和再分发条件，不计入当前测试规模。",
-      "source_url": "docs/research/positioning_methods.md",
-      "source_type": "project_document",
-      "start_line": 25,
-      "end_line": 27
+      "start_line": 14,
+      "end_line": 20
     }
   ]
 }

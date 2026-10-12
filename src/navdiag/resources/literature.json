@@ -1,7 +1,7 @@
 {
   "version": 2,
   "policy": "Original bounded research summaries with primary-source metadata; no full articles or PDFs. Author findings are not NavDiag measurements.",
-  "verification_scope": "Primary metadata and listed reading scopes; includes selected PDF table-page visual checks by an AI source-verification subagent for L03, L14 and L20. Not full-paper reading or independent human review.",
+  "verification_scope": "Primary metadata and listed reading scopes, including selected table pages. Not full-paper reading or independent human review.",
   "records": [
     {
       "id": "L01",

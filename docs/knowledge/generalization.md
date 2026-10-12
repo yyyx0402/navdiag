@@ -1,6 +1,6 @@
-# 第六课：如何判断泛化实验是否有说服力
+# 泛化评估
 
-先阅读[实验结果与边界](../experiments/urbannav_generalization.md)和[分布审计](../experiments/nlos_domain_audit.md)，再逐步看代码。现有实验只涉及香港；“更多数据”与“更多独立地区”是不同的事情。
+完整采集段和区域留出分别回答不同问题。[UrbanNav 结果](../experiments/urbannav_generalization.md)与[分布审计](../experiments/nlos_domain_audit.md)提供当前证据。
 
 ## 相同测试段上的固定规则为何不变
 
@@ -19,12 +19,3 @@
 应区分全体分布与 LOS/NLOS 条件分布，检查星座、频率、仰角、天线安装、接收机配置、日期和类别比例。旧 KLT 三处总体曲线接近；UrbanNav 同城三处仍有差异。标签筛选也会改变条件分布，旺角未获准评分的样本占比很高。
 
 不能用目标测试数据的标签调归一化、模型参数或阈值，再称为完全未见域测试。若计划研究无标签域适应，应单独声明适应数据和不参与适应的最终测试；它是另一个研究问题。
-
-## 阅读代码的顺序
-
-1. `src/navdiag/visibility.py`：时间匹配、方位角几何、网格覆盖和 unknown 保护。理解为什么真值仅用于标注。
-2. `tools/urbannav/prepare.py`：原始观测如何产生五项特征，再与独立参考连接。此工具采用单独 GPL 许可。
-3. `src/navdiag/nlos_external.py`：怎样固定源阈值，怎样用完整城区互斥的六个方向评估。
-4. `scripts/audit_nlos_domains.py`：为什么不对大量相关卫星行做 IID 显著性检验，如何描述分布差异。
-
-练习：在不训练模型的前提下，计算三个城区 NLOS 中高 C/N0 样本的比例；同时报告有效 C/N0 行数与未知标签行数。再解释为什么某城区高 C/N0 NLOS 更多，会使同一个 30 dB-Hz 阈值漏报增加。最后核对分布差异是否只是 NLOS 比例、星座或仰角组成变化。

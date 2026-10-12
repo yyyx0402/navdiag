@@ -38,5 +38,5 @@ def evaluate(output):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
-    parser.add_argument('--out',type=Path,default=Path('docs/experiments/reading_retrieval_report.json'))
+    parser.add_argument('--out',type=Path,default=Path('artifacts/reading_retrieval_report.json'))
     evaluate(parser.parse_args().out)

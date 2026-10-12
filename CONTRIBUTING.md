@@ -1,7 +1,7 @@
 # Contributing
 
-Install with `python -m pip install -e ".[dev]"` inside a virtual environment. Run `python -m pytest -q` and `python -m navdiag demo` before submitting a change.
+Install `python -m pip install -c requirements-lock.txt -e ".[dev]"` in a virtual environment. Run `python -m pytest -q`, `python -m navdiag demo`, and `python scripts/check_release.py` before submitting a change.
 
-For an algorithm change, explain the problem, include a comparison against existing baselines, and save validation settings before inspecting final test results. Keep every drive in one split, including devices from the same collection. Document data sources and licenses. Do not commit local environments, API keys, or third-party raw data.
+For algorithm changes, compare existing baselines under the same protocol. Keep complete acquisitions in one split, fit preprocessing on training data, and freeze thresholds/settings using validation before evaluating test data. Report label coverage, availability and failures alongside scores.
 
-Beginner contributions are welcome: clarify a lesson, write an experiment note, investigate a failure case, or improve raw-data validation. Discuss substantial changes in an issue before implementation.
+Document sources and licenses. Do not commit raw data, weights, environments, credentials or personal materials. Changes to allowlisted knowledge documents require rebuilding the corpus and running retrieval checks; source hits do not establish answer correctness.

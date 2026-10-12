@@ -1,0 +1,1333 @@
+{
+  "version": 2,
+  "top_k": 5,
+  "methods": {
+    "notes_only_char_tfidf": {
+      "development": {
+        "positive_cases": 9,
+        "hit_at_5": 0.8888888888888888,
+        "mrr_at_5": 0.7222222222222222,
+        "negative_cases": 6,
+        "negative_rejections": 3
+      },
+      "literature_smoke": {
+        "positive_cases": 7,
+        "hit_at_5": 0.0,
+        "mrr_at_5": 0.0,
+        "negative_cases": 0,
+        "negative_rejections": 0
+      },
+      "regression": {
+        "positive_cases": 20,
+        "hit_at_5": 0.65,
+        "mrr_at_5": 0.65,
+        "negative_cases": 3,
+        "negative_rejections": 1
+      },
+      "reserved": {
+        "positive_cases": 8,
+        "hit_at_5": 0.625,
+        "mrr_at_5": 0.4625,
+        "negative_cases": 6,
+        "negative_rejections": 2
+      }
+    },
+    "same_corpus_char_tfidf": {
+      "development": {
+        "positive_cases": 9,
+        "hit_at_5": 0.8888888888888888,
+        "mrr_at_5": 0.6203703703703703,
+        "negative_cases": 6,
+        "negative_rejections": 3
+      },
+      "literature_smoke": {
+        "positive_cases": 7,
+        "hit_at_5": 1.0,
+        "mrr_at_5": 1.0,
+        "negative_cases": 0,
+        "negative_rejections": 0
+      },
+      "regression": {
+        "positive_cases": 20,
+        "hit_at_5": 0.95,
+        "mrr_at_5": 0.8516666666666668,
+        "negative_cases": 3,
+        "negative_rejections": 1
+      },
+      "reserved": {
+        "positive_cases": 8,
+        "hit_at_5": 0.75,
+        "mrr_at_5": 0.5833333333333334,
+        "negative_cases": 6,
+        "negative_rejections": 0
+      }
+    },
+    "sparse": {
+      "development": {
+        "positive_cases": 9,
+        "hit_at_5": 0.8888888888888888,
+        "mrr_at_5": 0.8888888888888888,
+        "negative_cases": 6,
+        "negative_rejections": 6
+      },
+      "literature_smoke": {
+        "positive_cases": 7,
+        "hit_at_5": 1.0,
+        "mrr_at_5": 0.9285714285714286,
+        "negative_cases": 0,
+        "negative_rejections": 0
+      },
+      "regression": {
+        "positive_cases": 20,
+        "hit_at_5": 0.95,
+        "mrr_at_5": 0.8666666666666666,
+        "negative_cases": 3,
+        "negative_rejections": 3
+      },
+      "reserved": {
+        "positive_cases": 8,
+        "hit_at_5": 0.625,
+        "mrr_at_5": 0.625,
+        "negative_cases": 6,
+        "negative_rejections": 6
+      }
+    },
+    "hybrid": {
+      "development": {
+        "positive_cases": 9,
+        "hit_at_5": 1.0,
+        "mrr_at_5": 1.0,
+        "negative_cases": 6,
+        "negative_rejections": 6
+      },
+      "literature_smoke": {
+        "positive_cases": 7,
+        "hit_at_5": 1.0,
+        "mrr_at_5": 0.9285714285714286,
+        "negative_cases": 0,
+        "negative_rejections": 0
+      },
+      "regression": {
+        "positive_cases": 20,
+        "hit_at_5": 0.95,
+        "mrr_at_5": 0.875,
+        "negative_cases": 3,
+        "negative_rejections": 3
+      },
+      "reserved": {
+        "positive_cases": 8,
+        "hit_at_5": 0.75,
+        "mrr_at_5": 0.6875,
+        "negative_cases": 6,
+        "negative_rejections": 6
+      }
+    }
+  },
+  "actual_methods": {
+    "sparse": {
+      "method": "bm25_char_tfidf_v2",
+      "fallback_reason": null
+    },
+    "hybrid": {
+      "method": "bge_bm25_char_v2",
+      "fallback_reason": null
+    }
+  },
+  "embedding_model": "BAAI/bge-small-zh-v1.5",
+  "embedding_revision": "7999e1d3359715c523056ef9478215996d62a620",
+  "fixed_settings": {
+    "semantic_weight": 0.55,
+    "lexical_weight": 0.45,
+    "min_semantic_cosine": 0.46,
+    "sparse_min_char": 0.065,
+    "sparse_min_bm25_raw": 2.0,
+    "technical_anchor_min_char": 0.035,
+    "technical_anchor_min_bm25_raw": 2.0
+  },
+  "corpus_sha256": "1fe2241adcf79ad51b28981ff429ffb24e778f1dac62759d34dc7ec6b9a6ff12",
+  "literature_sha256": "941892cce1f51c98b34715f9c18a844d3fdfcae9c349740f6ff95061f7a731ff",
+  "queries_v2_sha256": "22ced8acc38b66d5778a5e9d6845f516b2d6ff21e64754308247c158cd25ac8f",
+  "literature_queries_sha256": "7ff21fa51b35bccb230e5a9559f364f2909e9a27ad831328acfe8739159677e0",
+  "scope": "Source/heading regression after public documentation cleanup; developer-authored and previously seen queries, not answer accuracy or blind evaluation.",
+  "limitations": [
+    "Small project-authored queries, not representative user traffic.",
+    "Old 23 queries are regression cases, including their formerly reserved cases.",
+    "Reserved queries have now been seen; final scores are regression checks after technical-term repairs.",
+    "A source hit does not establish passage completeness or answer correctness.",
+    "Char baselines have no relevance gate; rejection and ranking are distinct."
+  ],
+  "corpus": {
+    "project_documents": 10,
+    "chunks": 55,
+    "notes": 11,
+    "literature_records": 20
+  },
+  "case_results": {
+    "sparse": [
+      {
+        "id": "R01",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K2",
+          "D02"
+        ]
+      },
+      {
+        "id": "R02",
+        "passed": true,
+        "reciprocal_rank": 0.5,
+        "returned_document_ids": [
+          "K1",
+          "K3",
+          "D03",
+          "D04",
+          "D03"
+        ]
+      },
+      {
+        "id": "R03",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K8"
+        ]
+      },
+      {
+        "id": "R04",
+        "passed": true,
+        "reciprocal_rank": 0.3333333333333333,
+        "returned_document_ids": [
+          "D05",
+          "L01",
+          "D03",
+          "D09",
+          "D06"
+        ]
+      },
+      {
+        "id": "R05",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D04",
+          "K9",
+          "D08",
+          "D08",
+          "D07"
+        ]
+      },
+      {
+        "id": "R06",
+        "passed": true,
+        "reciprocal_rank": 0.5,
+        "returned_document_ids": [
+          "K9",
+          "K11",
+          "D08",
+          "L05",
+          "D08"
+        ]
+      },
+      {
+        "id": "R07",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "K5",
+          "D03",
+          "D09",
+          "D05"
+        ]
+      },
+      {
+        "id": "R08",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K10",
+          "D01",
+          "D09",
+          "D01",
+          "D09"
+        ]
+      },
+      {
+        "id": "R09",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K4",
+          "K11",
+          "D02",
+          "L07",
+          "D01"
+        ]
+      },
+      {
+        "id": "R10",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K4",
+          "D09",
+          "D04",
+          "D04",
+          "D01"
+        ]
+      },
+      {
+        "id": "R11",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "D05"
+        ]
+      },
+      {
+        "id": "R12",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D05",
+          "D05",
+          "L01",
+          "D10",
+          "D02"
+        ]
+      },
+      {
+        "id": "R13",
+        "passed": false,
+        "reciprocal_rank": 0,
+        "returned_document_ids": [
+          "D04"
+        ]
+      },
+      {
+        "id": "R14",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "D05",
+          "D05"
+        ]
+      },
+      {
+        "id": "R15",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K10",
+          "D01",
+          "D09",
+          "D01",
+          "D09"
+        ]
+      },
+      {
+        "id": "R16",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K9",
+          "D08",
+          "D08"
+        ]
+      },
+      {
+        "id": "R17",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K11",
+          "L05"
+        ]
+      },
+      {
+        "id": "R18",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "K1"
+        ]
+      },
+      {
+        "id": "R19",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K3",
+          "D01"
+        ]
+      },
+      {
+        "id": "R20",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K9"
+        ]
+      },
+      {
+        "id": "R21",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "R22",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "R23",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D01",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "D03"
+        ]
+      },
+      {
+        "id": "D02",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K9"
+        ]
+      },
+      {
+        "id": "D03",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K4"
+        ]
+      },
+      {
+        "id": "D04",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K5",
+          "D03",
+          "D09",
+          "K10",
+          "D08"
+        ]
+      },
+      {
+        "id": "D05",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K10",
+          "D01",
+          "D09",
+          "D01",
+          "D09"
+        ]
+      },
+      {
+        "id": "D06",
+        "passed": false,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D07",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K11",
+          "D05",
+          "L01",
+          "D08",
+          "L05"
+        ]
+      },
+      {
+        "id": "D08",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K2",
+          "D03"
+        ]
+      },
+      {
+        "id": "D09",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K7"
+        ]
+      },
+      {
+        "id": "D10",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D11",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D12",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D13",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D14",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D15",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H01",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K9"
+        ]
+      },
+      {
+        "id": "H02",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "K1",
+          "D03"
+        ]
+      },
+      {
+        "id": "H03",
+        "passed": false,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H04",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K4"
+        ]
+      },
+      {
+        "id": "H05",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K10",
+          "D09",
+          "D01",
+          "D09",
+          "D01"
+        ]
+      },
+      {
+        "id": "H06",
+        "passed": false,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H07",
+        "passed": false,
+        "reciprocal_rank": 0,
+        "returned_document_ids": [
+          "K8"
+        ]
+      },
+      {
+        "id": "H08",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "D04"
+        ]
+      },
+      {
+        "id": "H09",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H10",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H11",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H12",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H13",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H14",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "LQ01",
+        "passed": true,
+        "reciprocal_rank": 0.5,
+        "returned_document_ids": [
+          "K10",
+          "L01",
+          "D01",
+          "D05",
+          "L10"
+        ]
+      },
+      {
+        "id": "LQ02",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L02",
+          "L05",
+          "D02",
+          "L07",
+          "K11"
+        ]
+      },
+      {
+        "id": "LQ03",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L03"
+        ]
+      },
+      {
+        "id": "LQ04",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L04"
+        ]
+      },
+      {
+        "id": "LQ05",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L05"
+        ]
+      },
+      {
+        "id": "LQ06",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L06",
+          "L01",
+          "D09",
+          "K11",
+          "D08"
+        ]
+      },
+      {
+        "id": "LQ07",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L07"
+        ]
+      }
+    ],
+    "hybrid": [
+      {
+        "id": "R01",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K2",
+          "D02",
+          "D10",
+          "D01",
+          "D10"
+        ]
+      },
+      {
+        "id": "R02",
+        "passed": true,
+        "reciprocal_rank": 0.5,
+        "returned_document_ids": [
+          "K1",
+          "D03",
+          "K3",
+          "D01",
+          "D04"
+        ]
+      },
+      {
+        "id": "R03",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K8",
+          "D03",
+          "K4",
+          "D05",
+          "D02"
+        ]
+      },
+      {
+        "id": "R04",
+        "passed": true,
+        "reciprocal_rank": 0.5,
+        "returned_document_ids": [
+          "D05",
+          "D03",
+          "L01",
+          "D06",
+          "D02"
+        ]
+      },
+      {
+        "id": "R05",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D04",
+          "K9",
+          "D08",
+          "D08",
+          "D07"
+        ]
+      },
+      {
+        "id": "R06",
+        "passed": true,
+        "reciprocal_rank": 0.5,
+        "returned_document_ids": [
+          "K9",
+          "K11",
+          "L05",
+          "D08",
+          "D04"
+        ]
+      },
+      {
+        "id": "R07",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "K5",
+          "D03",
+          "D05",
+          "L06"
+        ]
+      },
+      {
+        "id": "R08",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K10",
+          "D01",
+          "D09",
+          "D01",
+          "L10"
+        ]
+      },
+      {
+        "id": "R09",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K4",
+          "K5",
+          "L07",
+          "D02",
+          "K11"
+        ]
+      },
+      {
+        "id": "R10",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K4",
+          "D08",
+          "K11",
+          "D04",
+          "D06"
+        ]
+      },
+      {
+        "id": "R11",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "D05",
+          "D05",
+          "L03",
+          "K3"
+        ]
+      },
+      {
+        "id": "R12",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D05",
+          "D05",
+          "L01",
+          "D09",
+          "D08"
+        ]
+      },
+      {
+        "id": "R13",
+        "passed": false,
+        "reciprocal_rank": 0,
+        "returned_document_ids": [
+          "D04"
+        ]
+      },
+      {
+        "id": "R14",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "K8",
+          "L01"
+        ]
+      },
+      {
+        "id": "R15",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K10",
+          "D01",
+          "D09",
+          "D01",
+          "D07"
+        ]
+      },
+      {
+        "id": "R16",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K9",
+          "D04",
+          "D08",
+          "D04",
+          "D08"
+        ]
+      },
+      {
+        "id": "R17",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K11",
+          "L05",
+          "D03",
+          "L06",
+          "L01"
+        ]
+      },
+      {
+        "id": "R18",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "K2",
+          "D01",
+          "K1",
+          "D02"
+        ]
+      },
+      {
+        "id": "R19",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K3",
+          "D01",
+          "D01",
+          "K2",
+          "D03"
+        ]
+      },
+      {
+        "id": "R20",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K9",
+          "D09",
+          "L16",
+          "D04",
+          "D07"
+        ]
+      },
+      {
+        "id": "R21",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "R22",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "R23",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D01",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "K1",
+          "D01",
+          "D03",
+          "L04"
+        ]
+      },
+      {
+        "id": "D02",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K9",
+          "D09",
+          "D04",
+          "D07",
+          "L16"
+        ]
+      },
+      {
+        "id": "D03",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K4",
+          "D04",
+          "D08",
+          "D01",
+          "D04"
+        ]
+      },
+      {
+        "id": "D04",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "K5",
+          "D02",
+          "D01",
+          "D03"
+        ]
+      },
+      {
+        "id": "D05",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K10",
+          "D09",
+          "D01",
+          "D01",
+          "L10"
+        ]
+      },
+      {
+        "id": "D06",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "D02",
+          "L05",
+          "L04",
+          "K8"
+        ]
+      },
+      {
+        "id": "D07",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K11",
+          "L05",
+          "L01",
+          "L07",
+          "D08"
+        ]
+      },
+      {
+        "id": "D08",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K2",
+          "D03",
+          "D03",
+          "L11",
+          "D01"
+        ]
+      },
+      {
+        "id": "D09",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K7",
+          "K4",
+          "L18",
+          "D01",
+          "D05"
+        ]
+      },
+      {
+        "id": "D10",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D11",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D12",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D13",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D14",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "D15",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H01",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K9",
+          "D07",
+          "D04",
+          "D08",
+          "D04"
+        ]
+      },
+      {
+        "id": "H02",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "D03",
+          "D01",
+          "K1",
+          "D01"
+        ]
+      },
+      {
+        "id": "H03",
+        "passed": false,
+        "reciprocal_rank": 0,
+        "returned_document_ids": [
+          "L09",
+          "K6",
+          "K5",
+          "D01",
+          "L01"
+        ]
+      },
+      {
+        "id": "H04",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K4",
+          "D08",
+          "K9",
+          "K8",
+          "D04"
+        ]
+      },
+      {
+        "id": "H05",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "K10",
+          "D09",
+          "D01",
+          "D01",
+          "D09"
+        ]
+      },
+      {
+        "id": "H06",
+        "passed": false,
+        "reciprocal_rank": 0,
+        "returned_document_ids": [
+          "D04",
+          "D09",
+          "D08"
+        ]
+      },
+      {
+        "id": "H07",
+        "passed": true,
+        "reciprocal_rank": 0.5,
+        "returned_document_ids": [
+          "K8",
+          "D03",
+          "K4",
+          "D02",
+          "D01"
+        ]
+      },
+      {
+        "id": "H08",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "D03",
+          "D03",
+          "D02",
+          "L05",
+          "D01"
+        ]
+      },
+      {
+        "id": "H09",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H10",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H11",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H12",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H13",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "H14",
+        "passed": true,
+        "reciprocal_rank": 0,
+        "returned_document_ids": []
+      },
+      {
+        "id": "LQ01",
+        "passed": true,
+        "reciprocal_rank": 0.5,
+        "returned_document_ids": [
+          "K10",
+          "L01",
+          "L10",
+          "L13",
+          "D01"
+        ]
+      },
+      {
+        "id": "LQ02",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L02",
+          "K11",
+          "L07",
+          "D02",
+          "L05"
+        ]
+      },
+      {
+        "id": "LQ03",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L03",
+          "L08",
+          "L15",
+          "D03",
+          "K6"
+        ]
+      },
+      {
+        "id": "LQ04",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L04",
+          "D03",
+          "D05",
+          "D07",
+          "D03"
+        ]
+      },
+      {
+        "id": "LQ05",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L05",
+          "L07",
+          "D03",
+          "L06",
+          "L20"
+        ]
+      },
+      {
+        "id": "LQ06",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L06",
+          "L07",
+          "L19",
+          "D08",
+          "L05"
+        ]
+      },
+      {
+        "id": "LQ07",
+        "passed": true,
+        "reciprocal_rank": 1.0,
+        "returned_document_ids": [
+          "L07",
+          "K11",
+          "L05",
+          "D02",
+          "L02"
+        ]
+      }
+    ]
+  },
+  "hybrid_failures": [
+    {
+      "id": "R13",
+      "question": "新城区只改变了建筑环境吗，天线和日期会不会也影响结论？",
+      "expected": [
+        {
+          "document_id": "K9"
+        },
+        {
+          "document_id": "D04",
+          "heading": "C/N0 并不只由城市决定"
+        }
+      ]
+    },
+    {
+      "id": "H03",
+      "question": "把本来正常的观测丢掉太多，会有什么代价？",
+      "expected": [
+        {
+          "document_id": "D03",
+          "heading": "怎样读 Precision、Recall 和 Accuracy"
+        }
+      ]
+    },
+    {
+      "id": "H06",
+      "question": "一次训练赢了，怎么确认换个随机初始化还能赢？",
+      "expected": [
+        {
+          "document_id": "K11"
+        }
+      ]
+    }
+  ]
+}

@@ -377,21 +377,6 @@
           "settings_selected_on": "validation",
           "fixed_sigma_m": 5,
           "acceleration_noise_mps2": 3,
-          "risk_bin_edges": [
-            0.0,
-            0.2,
-            0.4,
-            0.6000000000000001,
-            0.8,
-            1.0
-          ],
-          "risk_bin_variances_m2": [
-            51.73274451416691,
-            77.31751845843448,
-            83.6380133102092,
-            141.42786696578906,
-            151.4591169569917
-          ],
           "uses_imu": false,
           "warning": "Empirical planar-filter baseline. Report failures as well as improvements; this is not a production INS.",
           "coverage_policy": "No position or alert output is credited at failed SPP epochs. Accuracy is conditional on reference-scored fixes; the joint availability/accuracy fraction uses all quality-eligible reference epochs.",
@@ -733,21 +718,6 @@
           "settings_selected_on": "validation",
           "fixed_sigma_m": 2,
           "acceleration_noise_mps2": 3,
-          "risk_bin_edges": [
-            0.0,
-            0.2,
-            0.4,
-            0.6000000000000001,
-            0.8,
-            1.0
-          ],
-          "risk_bin_variances_m2": [
-            12.255629972699133,
-            12.255629972699133,
-            62.87002946713008,
-            222.09362635467406,
-            222.09362635467406
-          ],
           "uses_imu": false,
           "warning": "Empirical planar-filter baseline. Report failures as well as improvements; this is not a production INS.",
           "coverage_policy": "No position or alert output is credited at failed SPP epochs. Accuracy is conditional on reference-scored fixes; the joint availability/accuracy fraction uses all quality-eligible reference epochs.",
@@ -1089,21 +1059,6 @@
           "settings_selected_on": "validation",
           "fixed_sigma_m": 2,
           "acceleration_noise_mps2": 1,
-          "risk_bin_edges": [
-            0.0,
-            0.2,
-            0.4,
-            0.6000000000000001,
-            0.8,
-            1.0
-          ],
-          "risk_bin_variances_m2": [
-            4.631868713383248,
-            14.768582746890054,
-            14.768582746890054,
-            27.988529544733964,
-            50.2106955519425
-          ],
           "uses_imu": false,
           "warning": "Empirical planar-filter baseline. Report failures as well as improvements; this is not a production INS.",
           "coverage_policy": "No position or alert output is credited at failed SPP epochs. Accuracy is conditional on reference-scored fixes; the joint availability/accuracy fraction uses all quality-eligible reference epochs.",
