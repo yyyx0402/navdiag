@@ -1,5 +1,6 @@
 """Loopback-only dashboard for experiment results and evidence-backed diagnostics."""
 import json
+import hashlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib.resources import files
 from pathlib import Path
@@ -9,6 +10,7 @@ import pandas as pd
 
 from navdiag.agent import LLMConfig, ModelResponseError, ask
 from navdiag.llm_connections import ConnectionStore, connection_path
+from navdiag.literature import reading_list
 
 
 def _records(frame: pd.DataFrame) -> list[dict]:
@@ -21,6 +23,23 @@ def make_server(artifacts: Path, port: int = 8765, env_file: Path | None = None,
     artifacts = artifacts.resolve()
     report = json.loads((artifacts / 'report.json').read_text(encoding='utf-8'))
     predictions = pd.read_csv(artifacts / 'predictions.csv', dtype={'trip_id': 'string'})
+    availability_path = artifacts / 'availability.csv'
+    availability = pd.read_csv(availability_path) if availability_path.exists() else None
+    rotation_path = artifacts / 'positioning_rotation_report.json'
+    rotation = json.loads(rotation_path.read_text(encoding='utf-8')) if rotation_path.exists() else None
+    doppler_path = artifacts / 'doppler_report.json'
+    doppler = json.loads(doppler_path.read_text(encoding='utf-8')) if doppler_path.exists() else None
+    if doppler:
+        for fold in doppler['folds']:
+            if fold['test_trip'] in report['splits']['test']['trips']:
+                if fold['source_report_sha256'] != hashlib.sha256((artifacts / 'report.json').read_bytes()).hexdigest():
+                    raise ValueError('Doppler comparison does not match the active positioning report')
+                report['positioning']['methods']['doppler_filter'] = fold['metrics']
+                report['positioning']['doppler_baseline'] = {'policy': doppler['policy'], 'evaluation': fold}
+        additional = pd.read_csv(artifacts / 'doppler_predictions.csv')
+        predictions = predictions.merge(additional, on=['trip_id', 'device_id', 'timestamp_ms'], how='left', validate='one_to_one')
+        if predictions[['doppler_filter_e_m', 'doppler_filter_n_m', 'doppler_filter_error_m']].isna().any().any():
+            raise ValueError('Doppler results do not cover the scored positioning cohort')
     nlos_experiments, nlos_suite = {}, None
     if nlos_artifacts is not None:
         suite_path = nlos_artifacts / 'suite_report.json'
@@ -64,6 +83,27 @@ def make_server(artifacts: Path, port: int = 8765, env_file: Path | None = None,
             parsed, query = urlparse(self.path), parse_qs(urlparse(self.path).query)
             if parsed.path == '/api/report':
                 self.send_json(report)
+            elif parsed.path == '/api/positioning/rotation':
+                summary = None
+                if rotation:
+                    summary = {key: rotation[key] for key in ['task_type', 'protocol', 'models_macro',
+                               'total_raw_test_epochs', 'total_scored_test_epochs', 'distinct_test_acquisitions']}
+                    summary['folds'] = [{key: fold[key] for key in ['id', 'test_trip', 'selected_model', 'coverage', 'positioning']}
+                                         for fold in rotation['folds']]
+                    if doppler:
+                        for fold in summary['folds']:
+                            match = next(item for item in doppler['folds'] if item['id'] == fold['id'])
+                            fold['positioning']['methods']['doppler_filter'] = match['metrics']
+                self.send_json({'available': summary is not None, 'report': summary})
+            elif parsed.path == '/api/positioning/availability':
+                trip = query.get('trip', [sorted(predictions.trip_id.unique())[0]])[0]
+                part = availability[availability.trip_id == trip].sort_values('timestamp_ms').copy() if availability is not None else None
+                if part is None or part.empty:
+                    self.send_json({'available': False})
+                    return
+                part['time_s'] = (part.timestamp_ms - part.timestamp_ms.min()) / 1000
+                self.send_json({'available': True, 'trip_id': trip, 'points': _records(part),
+                                'coverage': report.get('coverage', {}).get('test', {}).get(trip)})
             elif parsed.path == '/api/nlos/report':
                 context = nlos_context(query.get('experiment', [None])[0])
                 if context is None and query.get('experiment'):
@@ -119,8 +159,11 @@ def make_server(artifacts: Path, port: int = 8765, env_file: Path | None = None,
                     self.send_json({'error': 'Unknown trip/device'}, 404)
                     return
                 part = part.sort_values('timestamp_ms')
-                part['time_s'] = (part.timestamp_ms - part.timestamp_ms.min()) / 1000
-                columns = ['time_s', 'predicted_risk', 'horizontal_error_m', 'residual_rms_m', 'hdop',
+                raw_part = availability[availability.trip_id == trip] if availability is not None else None
+                origin_ms = raw_part.timestamp_ms.min() if raw_part is not None and not raw_part.empty else part.timestamp_ms.min()
+                part['time_s'] = (part.timestamp_ms - origin_ms) / 1000
+                part['gap_before_s'] = part.timestamp_ms.diff().fillna(0) / 1000
+                columns = ['time_s', 'gap_before_s', 'predicted_risk', 'horizontal_error_m', 'residual_rms_m', 'hdop',
                            'cn0_mean_dbhz', 'cn0_min_dbhz', 'satellite_count', 'predicted_unreliable']
                 columns += [name for name in part if name.endswith('_e_m') or name.endswith('_n_m') or name.endswith('_error_m')]
                 # Limit rendering size, retaining the first and last epoch.
@@ -172,16 +215,22 @@ def make_server(artifacts: Path, port: int = 8765, env_file: Path | None = None,
         def do_POST(self):
             if not self.valid_local_request():
                 return
-            if self.path not in {'/api/ask', '/api/connections/save', '/api/connections/delete', '/api/connections/models'}:
+            if self.path not in {'/api/ask', '/api/literature/search', '/api/connections/save', '/api/connections/delete', '/api/connections/models'}:
                 self.send_json({'error': 'Not found'}, 404)
                 return
             try:
                 if self.path != '/api/ask' and self.headers.get_content_type() != 'application/json':
-                    raise ValueError('Connection requests require application/json')
+                    raise ValueError('This endpoint requires application/json')
                 length = int(self.headers.get('Content-Length', '0'))
                 if not 0 < length <= 16000:
                     raise ValueError('Request body must contain 1-16000 bytes')
                 payload = json.loads(self.rfile.read(length))
+                if self.path == '/api/literature/search':
+                    if not isinstance(payload, dict) or set(payload) - {'query', 'topic', 'difficulty'}:
+                        raise ValueError('文献检索仅接受问题、主题和阅读难度。')
+                    self.send_json(reading_list(payload.get('query', ''), payload.get('topic', ''),
+                                                payload.get('difficulty', '')))
+                    return
                 if self.path == '/api/connections/save':
                     self.send_json({'connection': connections.save(payload)})
                     return

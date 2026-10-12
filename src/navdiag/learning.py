@@ -64,13 +64,19 @@ def evaluate(labels: np.ndarray, scores: np.ndarray, threshold: float) -> dict:
 def train_and_evaluate(csv_path: Path, output: Path, error_limit_m: float = 10, seed: int = 42,
                        allow_missing_features: bool = False, with_gru: bool = False,
                        gru_epochs: int = 20, split_manifest: dict | None = None,
-                       min_feature_coverage: float = 0.5) -> dict:
+                       min_feature_coverage: float = 0.5,
+                       observation_context: pd.DataFrame | None = None) -> dict:
     if not np.isfinite(error_limit_m) or error_limit_m <= 0:
         raise ValueError("error_limit_m must be finite and positive.")
     frame = load_dataset(csv_path, allow_missing_features=allow_missing_features)
     if not 0 < min_feature_coverage <= 1:
         raise ValueError('min_feature_coverage must be in (0, 1]')
     splits = split_by_trip(frame, seed, split_manifest)
+    from navdiag.context import context_indices
+    contexts = splits if observation_context is None else {
+        name: observation_context[observation_context.trip_id.isin(part.trip_id.unique())].copy()
+        for name, part in splits.items()}
+    alignment = {name: context_indices(part, contexts[name]) for name, part in splits.items()}
     active_features = [name for name in FEATURES if splits['train'][name].notna().mean() >= min_feature_coverage]
     if not active_features:
         raise ValueError("No observed training features.")
@@ -108,6 +114,9 @@ def train_and_evaluate(csv_path: Path, output: Path, error_limit_m: float = 10, 
         "warning": "Synthetic demo results are not real GNSS performance." if frame["data_kind"].iloc[0] == "synthetic"
                    else "Performance applies only to this dataset and split; check unseen routes/devices.",
     }
+    if observation_context is not None:
+        report['observation_context'] = {name: len(part) for name, part in contexts.items()}
+        report['context_policy'] = 'All successful observation epochs enter causal history; reference guards select supervision and scoring only.'
     test = splits["test"].copy()
     test["is_unreliable"] = labels["test"]
     rule_metrics = evaluate(labels["test"], rule_scores(test), 0.5)
@@ -127,11 +136,12 @@ def train_and_evaluate(csv_path: Path, output: Path, error_limit_m: float = 10, 
     if with_gru:
         from navdiag.temporal import train_gru
         model, history = train_gru(splits['train'], splits['validation'], active_features, error_limit_m,
-                                   seed=seed, epochs=gru_epochs)
+                                   seed=seed, epochs=gru_epochs,
+                                   train_context=contexts['train'], validation_context=contexts['validation'])
         models['gru'] = model
-        validation_scores = model.predict_proba(splits['validation'])[:, 1]
+        validation_scores = model.predict_proba(contexts['validation'])[alignment['validation'], 1]
         threshold = choose_threshold(labels['validation'], validation_scores)
-        test_scores = model.predict_proba(test)[:, 1]
+        test_scores = model.predict_proba(contexts['test'])[alignment['test'], 1]
         test['risk_gru'] = test_scores
         report['models']['gru'] = {
             'validation': evaluate(labels['validation'], validation_scores, threshold),
@@ -152,7 +162,8 @@ def train_and_evaluate(csv_path: Path, output: Path, error_limit_m: float = 10, 
     joblib.dump(bundle, output / "models.joblib")
     if all(name in frame for name in ['wls_e_m', 'wls_n_m', 'gt_e_m', 'gt_n_m']):
         from navdiag.fusion import evaluate_positioning
-        report['positioning'] = evaluate_positioning(splits['validation'], test, bundle)
+        report['positioning'] = evaluate_positioning(splits['validation'], test, bundle,
+                                                    contexts['validation'], contexts['test'])
         (output / 'report.json').write_text(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False), encoding='utf-8')
         test.to_csv(output / 'predictions.csv', index=False)
     write_plot(test, report, output / "risk_plot.png")

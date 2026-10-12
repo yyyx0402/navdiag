@@ -911,6 +911,70 @@ button.comparison-label:hover {
   line-height: 1.7;
   margin-top: 7px;
 }
+.reading-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+.reading-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px;
+  overflow-wrap: anywhere;
+}
+.reading-card h3 {
+  margin: 16px 0 10px;
+  line-height: 1.5;
+}
+.reading-tags,
+.reading-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.reading-tags span {
+  background: #edf2e8;
+  color: #48694e;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+.reading-title {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.reading-meta {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.reading-why {
+  font-size: 14px;
+  line-height: 1.7;
+}
+.reading-card details {
+  margin: 15px 0;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.9;
+}
+.reading-card summary {
+  padding: 12px 0;
+  cursor: pointer;
+}
+.reading-card details p {
+  margin: 8px 0;
+}
+#library-query {
+  width: 100%;
+  min-height: 85px;
+  margin: 12px 0;
+}
+.reading-actions a {
+  text-decoration: none;
+}
 .data-detail {
   margin-top: 18px;
   border-top: 1px solid var(--line);
@@ -1287,4 +1351,19 @@ section:not(#overview):not(#obstruction) {
     display: block;
     line-height: 2;
   }
+}
+.legend-line.muted::before {
+  background: #d3d9d5;
+}
+#position-availability {
+  margin: 1rem 0;
+}
+#availability-chart svg {
+  max-height: 130px;
+}
+#position-rotation-panel h3 {
+  margin-top: 1.5rem;
+}
+.legend-line.doppler::before {
+  background: #7b6d9b;
 }

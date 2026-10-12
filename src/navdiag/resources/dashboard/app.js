@@ -13,6 +13,7 @@ const names = {
   robust: "稳健最小二乘",
   fixed_filter: "固定方差滤波",
   adaptive_filter: "自适应方差滤波",
+  doppler_filter: "Doppler 速度约束滤波",
   cn0_rule: "C/N0 固定规则",
   transformer: "Transformer",
 };
@@ -1015,17 +1016,37 @@ function plot(
       );
   }
   valid.forEach((s) => {
-    const line = svgNode("polyline", {
-      points: s.points
-        .map((p) => `${x(p[0])},${s.rightAxis ? riskY(p[1]) : y(p[1])}`)
-        .join(" "),
-      fill: "none",
-      stroke: s.color,
-      "stroke-width": s.width || 1.7,
-      opacity: s.opacity || 1,
+    const segments = [];
+    let segment = [];
+    s.points.forEach((point) => {
+      if (point[2] && segment.length) {
+        segments.push(segment);
+        segment = [];
+      }
+      segment.push(point);
     });
-    if (s.label) line.append(svgNode("title", {}, s.label));
-    svg.append(line);
+    if (segment.length) segments.push(segment);
+    segments.forEach((part) => {
+      const line =
+        part.length === 1
+          ? svgNode("circle", {
+              cx: x(part[0][0]),
+              cy: s.rightAxis ? riskY(part[0][1]) : y(part[0][1]),
+              r: 2.2,
+              fill: s.color,
+            })
+          : svgNode("polyline", {
+              points: part
+                .map((p) => `${x(p[0])},${s.rightAxis ? riskY(p[1]) : y(p[1])}`)
+                .join(" "),
+              fill: "none",
+              stroke: s.color,
+              "stroke-width": s.width || 1.7,
+              opacity: s.opacity || 1,
+            });
+      if (s.label) line.append(svgNode("title", {}, s.label));
+      svg.append(line);
+    });
   });
   svg.append(
     svgNode(
@@ -1059,7 +1080,141 @@ function points(rows, a, b) {
         Number.isFinite(r[a]) &&
         Number.isFinite(r[b]),
     )
-    .map((r) => [r[a], r[b]]);
+    .map((r) => [r[a], r[b], r.gap_before_s > 1.5]);
+}
+function renderAvailability(data) {
+  el("position-availability").hidden = !data.available;
+  if (!data.available) return;
+  const c = data.coverage;
+  const rows = data.points;
+  const width = 900,
+    left = 20,
+    usable = width - left * 2;
+  const cadence = c?.nominal_cadence_s || 1;
+  const duration = rows[rows.length - 1].time_s + cadence;
+  const svg = svgNode("svg", {
+    viewBox: `0 0 ${width} 76`,
+    role: "img",
+    "aria-label": "完整路线单点定位与参考覆盖时间线",
+  });
+  const state = (r) => (!r.solution_available ? 0 : r.scorable ? 2 : 1);
+  const colors = ["#d3d9d5", "#dc9050", "#235b49"];
+  const labels = ["无有效单点解", "有效解但不可评分", "有效解且可评分"];
+  let first = 0;
+  for (let i = 1; i <= rows.length; i++) {
+    if (
+      i < rows.length &&
+      state(rows[i]) === state(rows[first]) &&
+      rows[i].time_s - rows[i - 1].time_s <= cadence * 1.5
+    )
+      continue;
+    const start = rows[first].time_s,
+      end = rows[i - 1].time_s + cadence;
+    const rect = svgNode("rect", {
+      x: left + (usable * start) / duration,
+      y: 12,
+      width: Math.max(0.4, (usable * (end - start)) / duration),
+      height: 27,
+      fill: colors[state(rows[first])],
+      tabindex: 0,
+    });
+    rect.append(
+      svgNode(
+        "title",
+        {},
+        `${labels[state(rows[first])]} · ${number(start / 60, 2)}–${number(end / 60, 2)} 分钟 · ${i - first} 历元`,
+      ),
+    );
+    svg.append(rect);
+    first = i;
+  }
+  for (let i = 0; i <= 4; i++)
+    svg.append(
+      svgNode(
+        "text",
+        {
+          x: left + (usable * i) / 4,
+          y: 61,
+          "text-anchor": i === 0 ? "start" : i === 4 ? "end" : "middle",
+          class: "svg-axis",
+        },
+        `${number((duration * i) / 240, 1)} 分`,
+      ),
+    );
+  el("availability-chart").replaceChildren(svg);
+  el("availability-description").textContent = c
+    ? `整段 ${number(c.raw_time_span_s / 60, 1)} 分钟，${c.raw_epochs} 个原始历元；有效单点解 ${c.solution_epochs} 个（${number(c.solution_availability * 100, 1)}%），可评分 ${c.scored_epochs} 个。最长连续断解约 ${number(c.longest_solution_outage_s, 0)} 秒。下方只画可评分点，滤波的实际历史仍包含其他有效解。`
+    : "单点解与参考覆盖按原始历元显示。";
+}
+async function loadPositionCoverage() {
+  if (!report.coverage) return;
+  el("position-coverage-panel").hidden = false;
+  const roles = { train: "训练", validation: "验证", test: "测试" };
+  table(
+    el("position-coverage-table"),
+    [
+      "用途",
+      "路线",
+      "采集分钟",
+      "原始历元",
+      "有效解",
+      "可评分点",
+      "定位可用率",
+    ],
+    Object.entries(report.coverage).flatMap(([role, routes]) =>
+      Object.entries(routes).map(([trip, c]) => [
+        roles[role],
+        areaNames[trip.split("_")[1]] || trip,
+        number(c.raw_time_span_s / 60, 1),
+        c.raw_epochs,
+        c.solution_epochs,
+        c.scored_epochs,
+        `${number(c.solution_availability * 100, 1)}%`,
+      ]),
+    ),
+  );
+  el("position-coverage-description").textContent =
+    "有效单点解以全部原始历元为分母；可评分还需独立参考在时间和质量上合格。定位误差与告警指标只代表可评分点，不能推及整段轨迹。旺角公开参考只覆盖部分采集时间。";
+  const data = await get("/api/positioning/rotation");
+  el("position-rotation-panel").hidden = !data.available;
+  if (!data.available) return;
+  const r = data.report;
+  table(
+    el("position-rotation-table"),
+    [
+      "测试路线",
+      "可评分点",
+      "告警模型",
+      "SPP RMSE",
+      "固定滤波 RMSE",
+      "自适应 RMSE",
+      "Doppler RMSE",
+      "自适应 ≤2 m / 有解且≤2 m",
+    ],
+    r.folds.map((f) => {
+      const methods = f.positioning.methods,
+        adaptive = methods.adaptive_filter;
+      return [
+        areaNames[f.test_trip.split("_")[1]] || f.test_trip,
+        f.coverage.scored_epochs,
+        names[f.selected_model] || f.selected_model,
+        number(methods.wls.rmse_m),
+        number(methods.fixed_filter.rmse_m),
+        number(adaptive.rmse_m),
+        number(methods.doppler_filter?.rmse_m),
+        `${number(adaptive.within_error_limits_m["2"] * 100, 1)}% / ${number(adaptive.available_and_within_error_limits_m["2"] * 100, 1)}%`,
+      ];
+    }),
+  );
+  comparisonBars(
+    el("position-rotation-bars"),
+    Object.entries(r.models_macro).map(([name, m]) => ({
+      key: name,
+      label: names[name] || name,
+      values: [m.precision, m.recall, m.f1],
+    })),
+    ["Precision", "Recall", "F1"],
+  );
 }
 async function loadTrajectory() {
   try {
@@ -1088,6 +1243,15 @@ async function loadTrajectory() {
           color: "#dc9050",
           width: 2,
         },
+        {
+          points: points(
+            data.points,
+            "doppler_filter_e_m",
+            "doppler_filter_n_m",
+          ),
+          color: "#7b6d9b",
+          width: 2,
+        },
       ],
       "East (m)",
       "North (m)",
@@ -1114,6 +1278,11 @@ async function loadTrajectory() {
     );
     el("sample-info").textContent =
       `${data.total_epochs} 历元 / 显示 ${data.sampled_epochs}`;
+    renderAvailability(
+      await get(
+        `/api/positioning/availability?trip=${encodeURIComponent(el("trip-select").value)}`,
+      ),
+    );
   } catch (error) {
     el("trajectory-chart").textContent = error.message;
   }
@@ -1137,10 +1306,15 @@ async function initializePositioning() {
       ? "SYNTHETIC · 模拟数据"
       : "REAL DATA · 公开数据";
   if (report.data_kind === "real") el("data-badge").classList.add("real");
+  if (report.baseline_solver) names.wls = "RTKLIB 单点定位";
+  el("doppler-legend").hidden = !report.positioning?.methods.doppler_filter;
   el("provenance-warning").textContent =
     report.data_kind === "synthetic"
       ? "当前使用模拟数据验证流程。所有指标只描述这个模拟实验，不代表真实城市定位性能。"
       : "当前使用公开真实观测。请结合独立行程数量、设备差异和样本长度解读指标；小样本只用于流程验证。";
+  if (report.coverage)
+    el("provenance-warning").textContent =
+      "当前查看 UrbanNav 旺角整段留出结果；下方三路线轮流留出对照使用各自的训练与验证段。单点定位频繁断解，当前方案尚不支持连续可靠导航。";
   if (selected.recall === null) {
     el("provenance-warning").textContent +=
       " 当前测试集没有失准正样本，Recall 和 F1 无法评估。";
@@ -1157,6 +1331,7 @@ async function initializePositioning() {
     ? `${number(report.positioning.methods.wls.p95_m, 2)} m`
     : "未计算";
   modelTable();
+  await loadPositionCoverage();
   if (report.positioning) {
     table(
       el("position-table"),
@@ -1571,9 +1746,196 @@ const disclosureIds = [
   "nlos-protocol-panel",
   "nlos-fold-panel",
   "diagnostics-panel",
+  "library-panel",
   "positioning-panel",
   "method-panel",
 ];
+let libraryBusy = false;
+let pendingReadingRequest = null;
+function readingText(parent, tag, text, className = "") {
+  const node = document.createElement(tag);
+  node.textContent = text;
+  if (className) node.className = className;
+  parent.append(node);
+  return node;
+}
+function renderReadingList(data) {
+  el("library-count").textContent = `${data.library_count} 篇 · 原文与阅读重点`;
+  const container = el("library-results");
+  container.replaceChildren();
+  data.papers.forEach((paper, index) => {
+    const card = document.createElement("article");
+    card.className = "reading-card";
+    const tags = document.createElement("div");
+    tags.className = "reading-tags";
+    const edition = {
+      journal: "期刊",
+      conference: "会议",
+      preprint: "预印本",
+      review: "综述",
+    };
+    readingText(
+      tags,
+      "span",
+      `${paper.year} · ${edition[paper.edition] || "文献"}`,
+    );
+    readingText(tags, "span", data.levels[paper.learning.difficulty]);
+    if (data.mode === "recommend")
+      readingText(tags, "span", `推荐 ${index + 1}`);
+    card.append(tags);
+    readingText(card, "h3", paper.heading);
+    readingText(card, "p", paper.title, "reading-title");
+    readingText(
+      card,
+      "p",
+      `${paper.authors.join(", ")} · ${paper.venue}`,
+      "reading-meta",
+    );
+    readingText(card, "p", paper.learning.why, "reading-why");
+    readingText(
+      card,
+      "p",
+      `主题：${paper.learning.topics.map((t) => data.topics[t]).join(" / ")}`,
+      "reading-meta",
+    );
+    if (paper.matched_keywords?.length)
+      readingText(
+        card,
+        "p",
+        `问题匹配：${paper.matched_keywords.join("、")}`,
+        "reading-meta",
+      );
+    const detail = document.createElement("details");
+    readingText(detail, "summary", "阅读重点与项目关系");
+    [
+      ["方法", paper.learning.how],
+      ["观察与限制", paper.learning.what],
+      ["与本项目的关系", paper.learning.project_relation],
+      [
+        "建议阅读顺序",
+        "先核对摘要中的问题与输入，再阅读方法和评估设置，最后检查结论能否迁移到你的数据。",
+      ],
+      [
+        "已核对范围",
+        `${paper.verification.read_scope}；${paper.verification.locator}（${paper.verification.checked_at}）`,
+      ],
+    ].forEach(([label, text]) => {
+      const p = document.createElement("p");
+      readingText(p, "strong", `${label}：`);
+      p.append(document.createTextNode(text));
+      detail.append(p);
+    });
+    card.append(detail);
+    const actions = document.createElement("div");
+    actions.className = "reading-actions";
+    const link = readingText(actions, "a", "打开原文 ↗", "subtle-button");
+    const url = new URL(paper.source_url);
+    if (url.protocol === "https:") link.href = url.href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    if (paper.open_access_url) {
+      const pdf = readingText(actions, "a", "公开全文 PDF ↗", "subtle-button");
+      const pdfUrl = new URL(paper.open_access_url);
+      if (pdfUrl.protocol === "https:") pdf.href = pdfUrl.href;
+      pdf.target = "_blank";
+      pdf.rel = "noopener noreferrer";
+    }
+    const question = readingText(
+      actions,
+      "button",
+      "用这个问题提问",
+      "subtle-button",
+    );
+    question.type = "button";
+    question.onclick = () => {
+      el("question").value = paper.learning.questions[0];
+      openNavigationTarget("#diagnostics");
+      location.hash = "diagnostics";
+      el("question").focus();
+    };
+    card.append(actions);
+    container.append(card);
+  });
+  el("library-status").classList.remove("error");
+  el("library-status").textContent = !data.papers.length
+    ? "未找到匹配的文献。可以缩短问题、使用领域术语或清除筛选条件；这不表示相关研究不存在。"
+    : data.mode === "browse"
+      ? `显示 ${data.papers.length} / ${data.library_count} 篇，按学习难度和年份排列。`
+      : `找到 ${data.papers.length} 篇相关文献 · ${data.retrieval_method.startsWith("bge") ? "本地语义 + 关键词" : "关键词"}检索。排序表示相关性。`;
+  if (data.fallback_reason)
+    el("library-status").textContent += " 本地语义模型未就绪，已使用关键词。";
+}
+async function loadReadingList(browse = false) {
+  if (libraryBusy) {
+    pendingReadingRequest = browse;
+    return;
+  }
+  libraryBusy = true;
+  el("library-search").disabled = el("library-browse").disabled = true;
+  el("library-status").classList.remove("error");
+  el("library-status").textContent = "正在查找相关资料…";
+  el("library-results").replaceChildren();
+  try {
+    const response = await fetch("/api/literature/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: browse ? "" : el("library-query").value.trim(),
+        topic: el("library-topic").value,
+        difficulty: el("library-difficulty").value,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "文献检索失败");
+    if (el("library-topic").options.length === 1) {
+      Object.entries(data.topics).forEach(([key, value]) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = value;
+        el("library-topic").append(option);
+      });
+      Object.entries(data.levels).forEach(([key, value]) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = value;
+        el("library-difficulty").append(option);
+      });
+    }
+    renderReadingList(data);
+  } catch (error) {
+    el("library-status").textContent = error.message;
+    el("library-status").classList.add("error");
+  } finally {
+    libraryBusy = false;
+    el("library-search").disabled = el("library-browse").disabled = false;
+    if (pendingReadingRequest !== null) {
+      const browseNext = pendingReadingRequest;
+      pendingReadingRequest = null;
+      loadReadingList(browseNext);
+    }
+  }
+}
+function initializeLibrary() {
+  el("library-form").onsubmit = (event) => {
+    event.preventDefault();
+    loadReadingList();
+  };
+  el("library-browse").onclick = () => {
+    el("library-query").value = "";
+    loadReadingList(true);
+  };
+  ["library-topic", "library-difficulty"].forEach((id) => {
+    el(id).onchange = () => loadReadingList();
+  });
+  el("recommend-from-question").onclick = () => {
+    el("library-query").value = el("question").value.trim();
+    el("library-topic").value = el("library-difficulty").value = "";
+    openNavigationTarget("#library");
+    location.hash = "library";
+    loadReadingList();
+  };
+  loadReadingList(true);
+}
 function initializeDisclosures() {
   let stored = {};
   try {
@@ -1614,6 +1976,7 @@ function initializeDisclosures() {
 async function initialize() {
   initializeDisclosures();
   initializeConnections();
+  initializeLibrary();
   const results = await Promise.allSettled([
     initializePositioning(),
     initializeNlos(),

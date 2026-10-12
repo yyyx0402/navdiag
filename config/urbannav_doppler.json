@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "method": "Causal planar Kalman filter with SPP position and independent approximate Doppler velocity measurement updates",
+  "position_sigma_candidates_m": [2, 5, 10, 20],
+  "acceleration_noise_candidates_mps2": [1, 3],
+  "settings_selected_on": "validation RMSE only, same eight position/process candidates as the existing filter baseline",
+  "velocity_covariance_eigenvalue_floor_m2ps2": 0.04,
+  "position_gate_nis": 100,
+  "velocity_gate_nis": 25,
+  "reset_gap_s": 10,
+  "uses_future_observations": false,
+  "uses_reference_as_input": false,
+  "uses_nlos_predictions": false,
+  "source_methods": ["RTKLIB pntpos/estvel", "GraphGNSSLib pseudorange and Doppler motion information", "Suzuki 2023 separation of velocity and position information"],
+  "limitations": [
+    "Method-inspired baseline, not GraphGNSSLib FGO or Suzuki TDCP/two-step algorithm reproduction.",
+    "Sequential position/velocity updates approximate their correlation as zero; RTKLIB velocity covariance is a model estimate, not empirical calibration.",
+    "Doppler is extracted only at the unchanged successful SPP population; no outage bridging or extra valid positions are credited.",
+    "Additional development experiment after inspecting baseline results, not a blind final benchmark. No alert/NLOS model retraining."
+  ]
+}

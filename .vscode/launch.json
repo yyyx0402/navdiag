@@ -35,7 +35,7 @@
       "args": [
         "serve",
         "--artifacts",
-        "artifacts/navigation_demo",
+        "artifacts/urbannav_positioning",
         "--nlos-artifacts",
         "artifacts/klt_protocols",
         "--generalization-artifacts",

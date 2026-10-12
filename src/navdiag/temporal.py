@@ -65,7 +65,9 @@ class GRUPredictor:
 
 
 def train_gru(train: pd.DataFrame, validation: pd.DataFrame, features: list[str], error_limit_m: float,
-              seed: int = 42, epochs: int = 20, window: int = 10) -> tuple[GRUPredictor, list[dict]]:
+              seed: int = 42, epochs: int = 20, window: int = 10,
+              train_context: pd.DataFrame | None = None,
+              validation_context: pd.DataFrame | None = None) -> tuple[GRUPredictor, list[dict]]:
     if epochs < 1:
         raise ValueError('GRU epochs must be positive')
     torch.manual_seed(seed)
@@ -73,8 +75,11 @@ def train_gru(train: pd.DataFrame, validation: pd.DataFrame, features: list[str]
     torch.use_deterministic_algorithms(True)
     imputer = SimpleImputer(strategy='median').fit(train[features])
     scaler = StandardScaler().fit(imputer.transform(train[features]))
-    x_train = causal_windows(train, scaler.transform(imputer.transform(train[features])), window)
-    x_val = causal_windows(validation, scaler.transform(imputer.transform(validation[features])), window)
+    from navdiag.context import context_indices
+    train_context = train if train_context is None else train_context
+    validation_context = validation if validation_context is None else validation_context
+    x_train = causal_windows(train_context, scaler.transform(imputer.transform(train_context[features])), window)[context_indices(train, train_context)]
+    x_val = causal_windows(validation_context, scaler.transform(imputer.transform(validation_context[features])), window)[context_indices(validation, validation_context)]
     y_train = (train.horizontal_error_m.to_numpy() > error_limit_m).astype(np.float32)
     y_val = (validation.horizontal_error_m.to_numpy() > error_limit_m).astype(np.float32)
     network = QualityGRU(len(features))

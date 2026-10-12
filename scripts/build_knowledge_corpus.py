@@ -11,6 +11,7 @@ DOCUMENTS = (
     'docs/research/zhang2023_reproduction.md', 'docs/OPEN_SOURCE_REFERENCES.md',
     'docs/experiments/nlos_domain_audit.md', 'docs/experiments/nlos_protocols.md',
     'docs/experiments/urbannav_generalization.md',
+    'docs/research/positioning_methods.md',
 )
 MAX_CHARS = 480
 

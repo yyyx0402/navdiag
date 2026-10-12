@@ -73,27 +73,35 @@ def _apply(frame: pd.DataFrame, variances: np.ndarray, acceleration_noise: float
 
 def position_metrics(errors: np.ndarray) -> dict:
     values = np.asarray(errors, float)
+    counts = {'input_epochs': int(values.size), 'nonfinite_epochs': int((~np.isfinite(values)).sum())}
     values = values[np.isfinite(values)]
     if len(values) == 0:
-        return {'epochs': 0, 'median_m': None, 'p95_m': None, 'rmse_m': None,
+        return {**counts, 'epochs': 0, 'median_m': None, 'p95_m': None, 'rmse_m': None,
                 'within_error_limits_m': {str(limit): None for limit in [1, 2, 5, 10]}}
-    return {'epochs': len(values), 'median_m': float(np.median(values)),
+    return {**counts, 'epochs': len(values), 'median_m': float(np.median(values)),
             'p95_m': float(np.quantile(values, 0.95)), 'rmse_m': float(np.sqrt(np.mean(values ** 2))),
             'within_error_limits_m': {str(limit): float(np.mean(values <= limit)) for limit in [1, 2, 5, 10]}}
 
 
-def evaluate_positioning(validation: pd.DataFrame, test: pd.DataFrame, bundle: dict) -> dict:
+def evaluate_positioning(validation: pd.DataFrame, test: pd.DataFrame, bundle: dict,
+                         validation_context: pd.DataFrame | None = None,
+                         test_context: pd.DataFrame | None = None) -> dict:
     from navdiag.learning import predict_frame
+    from navdiag.context import context_indices
+    validation_context = validation if validation_context is None else validation_context
+    test_context = test if test_context is None else test_context
+    val_ids, test_ids = context_indices(validation, validation_context), context_indices(test, test_context)
     truth_val = validation[['gt_e_m', 'gt_n_m']].to_numpy()
     best_settings, best_rmse = None, float('inf')
     for sigma in [2, 5, 10, 20]:
         for acceleration_noise in [1, 3]:
-            filtered = _apply(validation, np.full(len(validation), sigma ** 2), acceleration_noise)
+            filtered = _apply(validation_context, np.full(len(validation_context), sigma ** 2), acceleration_noise)[val_ids]
             score = np.sqrt(np.mean(np.sum((filtered - truth_val) ** 2, axis=1)))
             if score < best_rmse:
                 best_rmse, best_settings = score, (sigma, acceleration_noise)
     sigma, acceleration_noise = best_settings
-    val_risk, test_risk = predict_frame(bundle, validation), predict_frame(bundle, test)
+    val_risk = predict_frame(bundle, validation_context)[val_ids]
+    test_risk = predict_frame(bundle, test_context)
     edges = np.linspace(0, 1, 6)
     val_errors = validation.horizontal_error_m.to_numpy()
     global_variance = float(np.mean(val_errors ** 2) / 2)
@@ -104,8 +112,8 @@ def evaluate_positioning(validation: pd.DataFrame, test: pd.DataFrame, bundle: d
         variances.append(float(np.clip(estimate, 1, 2500)))
     variances = np.maximum.accumulate(variances)
     bins = np.clip(np.searchsorted(edges, test_risk, side='right') - 1, 0, len(variances) - 1)
-    fixed = _apply(test, np.full(len(test), sigma ** 2), acceleration_noise)
-    adaptive = _apply(test, variances[bins], acceleration_noise)
+    fixed = _apply(test_context, np.full(len(test_context), sigma ** 2), acceleration_noise)[test_ids]
+    adaptive = _apply(test_context, variances[bins], acceleration_noise)[test_ids]
     truth = test[['gt_e_m', 'gt_n_m']].to_numpy()
     test[['fixed_filter_e_m', 'fixed_filter_n_m']] = fixed
     test[['adaptive_filter_e_m', 'adaptive_filter_n_m']] = adaptive

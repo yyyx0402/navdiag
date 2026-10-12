@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "scope": "Exploratory full-acquisition epoch position-error alert and planar-filter evaluation; not NLOS retraining or an untouched benchmark.",
+  "splits": {
+    "train": ["UrbanNav_TST_20210517"],
+    "validation": ["UrbanNav_WP_20210521"],
+    "test": ["UrbanNav_MK_20210518"]
+  },
+  "selection_basis": "Fixed by published scenario identities before computing this branch's positioning errors: medium urban train, deep urban validation, harsh urban test. No random epoch split or test-based selection.",
+  "solver": "RTKLIB broadcast single-frequency GPS/BeiDou SPP weighted least squares",
+  "elevation_mask_deg": 10,
+  "truth_time_tolerance_s": 0.05,
+  "truth_allowed_quality": [1, 2],
+  "seed": 42,
+  "error_limit_m": 10,
+  "with_gru": true,
+  "gru_epochs": 20,
+  "hyperparameter_search": false,
+  "limitations": [
+    "Only three drives, one receiver/antenna configuration and one city; area and date are confounded.",
+    "These acquisitions were already inspected for NLOS classification; this is a new positioning task, not a globally blind final benchmark.",
+    "One whole test acquisition yields more epochs but only one independent test drive.",
+    "SPP solver differs from the GSDC-derived-data adapter; scores must not be pooled without recording that difference.",
+    "SPAN reference quality and time guards affect evaluation coverage; all removed/failed epochs must be reported.",
+    "No raw IMU integration, TDCP, RTK ambiguity resolution or NLOS-prediction-driven positioning in this branch."
+  ]
+}

@@ -1,10 +1,13 @@
 # UrbanNav 跨城区数据适配器
 
+本目录现也包含定位/告警工具：`prepare_positioning.py`生成完整原始可用率表、全部成功观测历史与独立参考评分表；`prepare_velocity.py`从RTKLIB提取Doppler速度及协方差，严格核对已有SPP人口不变。它们仍为独立GPL工具，不随MIT wheel发布。固定实验、结果和方法出处见[完整路线评估](../../docs/experiments/positioning_expansion.md)。
+
 此目录是独立的 GPL-3.0-or-later 工具，不随主 Python 包发布。它调用固定 SHA-256 的外部 [Fossett GNSS 特征提取器](https://github.com/fossettlab/gnss-nlos-notebook)，保持与 KLT 实验相同的五项 GPS/北斗无线电/SPP 特征定义。
 
 ```powershell
 python -m pip install -e ".[gnss,temporal]"
 python scripts/fetch_urbannav.py
+python tools/urbannav/fetch_extractor.py
 python tools/urbannav/prepare.py
 python -m navdiag evaluate-nlos-regions
 ```

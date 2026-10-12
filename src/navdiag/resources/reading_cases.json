@@ -1,0 +1,110 @@
+[
+  {
+    "id": "P01",
+    "query": "Zhang Transformer LSTM 联合 NLOS 与伪距误差",
+    "expected": "L01"
+  },
+  {
+    "id": "P02",
+    "query": "相关器输出波形归一化 SVM 神经网络",
+    "expected": "L02"
+  },
+  {
+    "id": "P03",
+    "query": "Ozeki SVM 残差检查 动态 NLOS 定位",
+    "expected": "L03"
+  },
+  {
+    "id": "P04",
+    "query": "开放天空预归一化 多频缺失 分支逻辑回归",
+    "expected": "L04"
+  },
+  {
+    "id": "P05",
+    "query": "树模型 表格 不规则函数 无关特征 归纳偏置",
+    "expected": "L05"
+  },
+  {
+    "id": "P06",
+    "query": "FT-Transformer ResNet 统一协议 表格基线",
+    "expected": "L06"
+  },
+  {
+    "id": "P07",
+    "query": "TabZilla GBDT 重尾 数据性质 调参预算",
+    "expected": "L07"
+  },
+  {
+    "id": "P08",
+    "query": "三分类 clean multipath NLOS 伪距 Doppler 一致性",
+    "expected": "L08"
+  },
+  {
+    "id": "P09",
+    "query": "删星 几何 高度辅助 C/N0 观测加权",
+    "expected": "L09"
+  },
+  {
+    "id": "P10",
+    "query": "Shadow Matching 三维建筑可见性 横街定位",
+    "expected": "L10"
+  },
+  {
+    "id": "P11",
+    "query": "历史伪距 Doppler 载波相位 FGO RTK",
+    "expected": "L11"
+  },
+  {
+    "id": "P12",
+    "query": "GNSS INS 松耦合 紧耦合 FGO 与 EKF 窗口长度",
+    "expected": "L12"
+  },
+  {
+    "id": "P13",
+    "query": "实时 LiDAR 点云反射点 NLOS 伪距修正 不确定性",
+    "expected": "L13"
+  },
+  {
+    "id": "P14",
+    "query": "Suzuki 手机 TDCP Doppler 两步位置速度优化",
+    "expected": "L14"
+  },
+  {
+    "id": "P15",
+    "query": "GNSS PDR 行人步态 软运动 轨迹平滑",
+    "expected": "L15"
+  },
+  {
+    "id": "P16",
+    "query": "UrbanNav 多传感器 数据集 参考轨迹",
+    "expected": "L16"
+  },
+  {
+    "id": "P17",
+    "query": "Attention-GAN 类别不均衡 合成样本 数据增强",
+    "expected": "L17"
+  },
+  {
+    "id": "P18",
+    "query": "Android 手机天线 持握 噪声 GNSS 综述",
+    "expected": "L18"
+  },
+  {
+    "id": "P19",
+    "query": "GNSS RTK LiDAR 紧耦合 模糊度 浮点解",
+    "expected": "L19"
+  },
+  {
+    "id": "P20",
+    "query": "FGO-GNC Geman McClure 非凸 鲁棒异常权重",
+    "expected": "L20"
+  },
+  { "id": "N01", "query": "苹果派怎么烤", "expect_empty": true },
+  { "id": "N02", "query": "客厅沙发买什么颜色", "expect_empty": true },
+  {
+    "id": "N03",
+    "query": "How can I grow tomatoes in my garden?",
+    "expect_empty": true
+  },
+  { "id": "N04", "query": "帮我写一封请假邮件", "expect_empty": true }
+]

@@ -1,5 +1,6 @@
 """Evidence tools, offline baseline, and bounded Responses/Chat Completions loops."""
 import json
+import hashlib
 import os
 import re
 import socket
@@ -201,6 +202,9 @@ class EvidenceTools:
             # Keep API requests bounded; epoch-by-epoch training history is available locally.
             payload['models'] = {name: {key: value for key, value in model.items() if key != 'training_history'}
                                  for name, model in payload['models'].items()}
+            if 'coverage' in self.report:
+                payload['test_coverage'] = self.report['coverage']['test']
+                payload['accuracy_population'] = 'Alerts are scored on successful SPP fixes with eligible references only; outages are not validated alerts.'
         elif name == 'compare_nlos':
             path = self.nlos_artifacts / 'report.json'
             if path.exists():
@@ -233,7 +237,39 @@ class EvidenceTools:
             else:
                 payload = {'available': False, 'reason': 'No independently labelled satellite NLOS experiment is loaded'}
         elif name == 'compare_positioning':
-            payload = self.report.get('positioning', {'available': False, 'reason': 'This experiment has no positioning trajectories'})
+            payload = dict(self.report.get('positioning', {'available': False, 'reason': 'This experiment has no positioning trajectories'}))
+            if 'coverage' in self.report:
+                payload.update({'test_coverage': self.report['coverage']['test'],
+                                'baseline_solver': self.report['baseline_solver'],
+                                'evaluation_limitations': self.report['evaluation_limitations'],
+                                'accuracy_population': 'Reference-scored successful fixes only; failed fixes stay in the availability denominator.'})
+                rotation_path = self.artifacts / 'positioning_rotation_report.json'
+                if rotation_path.exists():
+                    rotation = json.loads(rotation_path.read_text(encoding='utf-8'))
+                    payload['rotating_drive_comparison'] = [{
+                        'test_trip': fold['test_trip'], 'scored_epochs': fold['coverage']['scored_epochs'],
+                        'solution_availability': fold['coverage']['solution_availability'],
+                        'rmse_m': {method: metric['rmse_m'] for method, metric in fold['positioning']['methods'].items()},
+                    } for fold in rotation['folds']]
+                    payload['rotation_scope'] = rotation['protocol']['scope']
+                doppler_path = self.artifacts / 'doppler_report.json'
+                if doppler_path.exists():
+                    doppler = json.loads(doppler_path.read_text(encoding='utf-8'))
+                    payload['doppler_method_limitations'] = doppler['policy']['limitations']
+                    payload['method_sources'] = [
+                        {'source': 'RTKLIB pntpos/estvel', 'url': 'https://github.com/tomojitakasu/RTKLIB/blob/rtklib_2.4.3/src/pntpos.c', 'use': 'Direct pyrtklib call for SPP and Doppler velocity.'},
+                        {'source': 'GraphGNSSLib, Wen/Hsu ICRA 2021', 'url': 'https://github.com/weisongwen/GraphGNSSLib', 'use': 'Velocity/history method reference; FGO has not been reproduced.'},
+                        {'source': 'Suzuki 2023', 'url': 'https://www.mdpi.com/1424-8220/23/3/1205', 'use': 'Velocity/position information reference; TDCP and two-step optimization have not been reproduced.'},
+                    ]
+                    for fold in doppler['folds']:
+                        if fold['test_trip'] in self.report['splits']['test']['trips']:
+                            if fold['source_report_sha256'] != hashlib.sha256((self.artifacts / 'report.json').read_bytes()).hexdigest():
+                                raise ValueError('Doppler comparison does not match the active positioning report')
+                            payload['methods'] = {**payload['methods'], 'doppler_filter': fold['metrics']}
+                            payload['doppler_diagnostics'] = fold['diagnostics_on_all_successful_fixes']
+                        for comparison in payload.get('rotating_drive_comparison', []):
+                            if comparison['test_trip'] == fold['test_trip']:
+                                comparison['rmse_m']['doppler_filter'] = fold['metrics']['rmse_m']
         elif name == 'search_knowledge':
             if len(arguments['query']) > 2000:
                 raise ValueError('Search query is too long')

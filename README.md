@@ -12,7 +12,9 @@ v0.3 已完成 KLT 九段采集的双协议对比，以及 UrbanNav 三个新城
 
 ![真实遮挡识别与可折叠可视化工作台](docs/images/nlos-workbench.png)
 
-工程检查和研究边界见[项目检查记录](docs/PROJECT_REVIEW.md)。RAG 包含 11 条短笔记、9 份原创文档的 114 段资料和[七篇论文研究摘要](docs/research/reading_list.md)，采用本地 BGE 中文向量与关键词检索，保留来源行号和实验证据。新增相关查询命中 6/8，无关查询返回空结果 5/6；这些是小型手写查询集的检索检查，不代表回答正确率。工具 Agent 可由 LLM 选择工具和改写查询；当前未接联网搜索。已完成用户配置的 GLM-5.3 真实问答回归验证，保留失败与修订记录，详见[回答质量检查](docs/experiments/glm_quality.md)和 [RAG 实施记录](docs/RAG_RETRIEVAL.md)。
+工程检查和研究边界见[项目检查记录](docs/PROJECT_REVIEW.md)。RAG 包含 11 条短笔记、9 份原创文档的 114 段资料和[20 篇文献摘要与学习指南](docs/research/reading_list.md)，采用本地 BGE 中文向量与关键词检索，保留来源行号和实验证据。网页新增按问题推荐阅读、主题/难度筛选及原文入口，推荐不调用问答模型。新增相关查询命中 6/8，无关查询返回空结果 5/6；这些是小型手写查询集的检索检查，不代表回答正确率。工具 Agent 可由 LLM 选择工具和改写查询；当前未接联网搜索。已完成用户配置的 GLM-5.3 真实问答回归验证，保留失败与修订记录，详见[回答质量检查](docs/experiments/glm_quality.md)和 [RAG 实施记录](docs/RAG_RETRIEVAL.md)。
+
+定位部分仍是离线学习/研究原型：模拟数据上固定滤波优于自适应，真实最终样例仅 11 历元，尚未验证逐卫星 NLOS 识别带来的真实定位增益。与 GSDC/因子图/DGNSS 文献的指标和输入条件对照见[定位能力审计](docs/research/positioning_audit.md)，不能据异构数据直接声称算法领先或用于真实导航部署。
 
 ## 本地新增：真实遮挡识别
 
@@ -139,6 +141,8 @@ python -m venv .venv
 工具包括行程列表、观测汇总、片段风险、模型对照、离线定位指标与本地技术检索。回答记录 `[E1]` 等证据 ID、工具结果、耗时和 API usage。在线观测汇总不读取参考标签，离线误差对照明确使用参考轨迹。实现与评测边界见 [Agent 说明](docs/AGENT.md)。
 
 ## 已运行的结果
+
+2026-10-12 已新增[完整真实路线定位与告警评估](docs/experiments/positioning_expansion.md)：三段 UrbanNav 约94.5分钟、5671个原始历元，轮流留出共1193个可评分点；网页可查看可用率、断解时间线和逐路线滤波对照。增加 Doppler 速度约束基线，黄埔/旺角 RMSE 改善而尖沙咀退步，尚不能证明可靠导航。方法出处及复现范围见[方法来源](docs/research/positioning_methods.md)。运行网页可用 `--artifacts artifacts/urbannav_positioning`；完整步骤见实验记录，旧演示仍可单独启动。
 
 以下是 **15 行程、1,800 历元的模拟伪距实验**；测试为 3 行程、360 历元。验证集选出 LR。
 

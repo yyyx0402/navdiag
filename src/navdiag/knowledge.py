@@ -84,7 +84,8 @@ def _index():
     return records, vectorizer, matrix, counts, lengths, document_frequency
 
 
-def retrieve_knowledge(query: str, limit: int = 3, mode: str | None = None) -> dict:
+def retrieve_knowledge(query: str, limit: int = 3, mode: str | None = None,
+                       source_type: str | None = None, document_ids: set[str] | None = None) -> dict:
     if not query.strip():
         raise ValueError('Search query cannot be empty')
     if not 1 <= limit <= 5:
@@ -127,6 +128,11 @@ def retrieve_knowledge(query: str, limit: int = 3, mode: str | None = None) -> d
         scores = 0.55 * semantic_scores + 0.45 * scores
     selected, per_document, token_sets = [], Counter(), []
     for index in np.argsort(-scores, kind='stable'):
+        record = records[index]
+        if source_type is not None and record.get('source_type') != source_type:
+            continue
+        if document_ids is not None and record['document_id'] not in document_ids:
+            continue
         # BM25/max is a ranking score, not confidence: a lone accidental term
         # must not become relevant just because it is the maximum in this corpus.
         lexical_relevant = char_scores[index] >= 0.065 and raw_bm25[index] >= 2.0
@@ -136,13 +142,14 @@ def retrieve_knowledge(query: str, limit: int = 3, mode: str | None = None) -> d
             continue
         if semantic_scores is not None and semantic_scores[index] < 0.46 and not anchored_lexical:
             continue
-        record = records[index]
         if per_document[record['document_id']] >= 2:
             continue
         terms = set(_tokens(record['content']))
         if any(len(terms & previous) / max(1, len(terms | previous)) > 0.8 for previous in token_sets):
             continue
-        selected.append({**record, 'relevance_score': float(scores[index]),
+        # Reading guides are for the library UI, not additional LLM context.
+        concise_record = {key: value for key, value in record.items() if key not in {'learning', 'open_access_url'}}
+        selected.append({**concise_record, 'relevance_score': float(scores[index]),
                          'retrieval_method': method,
                          'search_query': normalized,
                          'retrieval_scores': {'bm25_normalized': float(bm25[index]),

@@ -18,6 +18,7 @@
       <a href="#nlos-protocol-panel" class="nav-item">⇄ 区域适应性</a>
       <a href="#nlos-fold-panel" class="nav-item">⌁ 卫星信号</a>
       <a href="#diagnostics" class="nav-item">✧ 诊断助手</a>
+      <a href="#library" class="nav-item">▤ 文献学习</a>
       <a href="#trajectories" class="nav-item">▧ 定位与告警</a>
       <a href="#method" class="nav-item">☷ 数据与说明</a>
       <div class="sidebar-note">
@@ -676,6 +677,9 @@
                 <button class="primary" id="ask-button">
                   获取回答<span>↗</span>
                 </button>
+                <button class="subtle-button" id="recommend-from-question">
+                  查找这个问题的相关文献
+                </button>
                 <div id="agent-status" class="muted" role="status">
                   本地资料速查直接展示已有记录；连接模型后可获得解释。
                 </div>
@@ -694,10 +698,62 @@
           </div>
         </details>
       </section>
+      <section id="library">
+        <details class="panel section-panel" id="library-panel">
+          <summary>
+            <span class="summary-number">05</span>
+            <span class="summary-title">文献学习</span>
+            <span class="summary-meta" id="library-count"
+              >问题、方法与原文</span
+            >
+          </summary>
+          <div class="panel-body">
+            <p class="section-description">
+              按问题查找值得阅读的文献，了解方法、输入条件和与本项目的关系。
+            </p>
+            <form id="library-form">
+              <label for="library-query">你想了解什么？</label>
+              <textarea
+                id="library-query"
+                maxlength="2000"
+                placeholder="例如：识别 NLOS 后，如何通过观测加权改善定位？"
+              ></textarea>
+              <div class="chart-toolbar">
+                <label
+                  >主题<select id="library-topic">
+                    <option value="">全部主题</option>
+                  </select></label
+                >
+                <label
+                  >阅读难度<select id="library-difficulty">
+                    <option value="">全部难度</option>
+                  </select></label
+                >
+                <button type="submit" class="primary" id="library-search">
+                  推荐阅读
+                </button>
+                <button type="button" class="subtle-button" id="library-browse">
+                  浏览文献库
+                </button>
+              </div>
+            </form>
+            <p class="muted" id="library-status" role="status">
+              正在加载文献库…
+            </p>
+            <div class="reading-grid" id="library-results"></div>
+            <details class="data-detail">
+              <summary>推荐范围与资料说明</summary>
+              <p class="chart-footnote">
+                相关性推荐在本地完成，不调用问答模型。每篇保存有来源的短摘要与阅读指南，原文通过链接查看。入门/进阶/深入是学习路径建议，不是论文质量评分。核对摘要不等于已阅读全文，也不代表方法已经在本项目实现。
+              </p>
+            </details>
+          </div>
+        </details>
+      </section>
       <section id="trajectories">
         <details class="panel section-panel" id="positioning-panel">
           <summary>
-            <span class="summary-number">05</span
+            <span class="summary-number">06</span
             ><span class="summary-title">定位与失准告警</span
             ><span id="data-badge" class="summary-meta">正在加载</span>
           </summary>
@@ -706,6 +762,46 @@
               查看轨迹、水平误差与告警记录。此处使用独立的定位数据，数据来源见下方标记。
             </p>
             <div id="provenance-warning" class="notice"></div>
+            <details
+              class="chart-card"
+              id="position-coverage-panel"
+              hidden
+              open
+            >
+              <summary>
+                定位覆盖与路线对比<span class="summary-meta"
+                  >完整采集段 · 缺失仍计数</span
+                >
+              </summary>
+              <div class="chart-card-body">
+                <p
+                  id="position-coverage-description"
+                  class="chart-footnote"
+                ></p>
+                <div id="position-coverage-table" class="table-scroll"></div>
+                <div id="position-rotation-panel" hidden>
+                  <h3>逐路线留出的定位效果</h3>
+                  <div id="position-rotation-table" class="table-scroll"></div>
+                  <h3>告警模型 · 三条路线等权平均</h3>
+                  <div class="legend">
+                    <span class="legend-line truth">Precision</span
+                    ><span class="legend-line raw">Recall</span
+                    ><span class="legend-line adaptive">F1</span>
+                  </div>
+                  <div id="position-rotation-bars"></div>
+                  <p class="chart-footnote">
+                    每条路线各测试一次，训练和验证角色按固定循环轮换，模型和阈值由对应验证集选择。这里只比较告警，不是
+                    LOS/NLOS；三条路线均在香港、曾用于前期研究，不能视作跨城市或全新盲测。
+                  </p>
+                  <p class="chart-footnote">
+                    ≤2 m
+                    的前一个比例以可评分点为分母，后一个以所有参考合格历元为分母，包含断解。Doppler
+                    对照参考 RTKLIB 和相关文献的速度约束思路，尚未实现 TDCP
+                    或因子图。
+                  </p>
+                </div>
+              </div>
+            </details>
             <details class="chart-card">
               <summary>
                 定位失准告警模型<span class="summary-meta">独立辅助任务</span>
@@ -742,16 +838,33 @@
                   <label>行程<select id="trip-select"></select></label
                   ><label>设备<select id="device-select"></select></label>
                 </div>
+                <div id="position-availability" hidden>
+                  <h3>完整采集时间线</h3>
+                  <div class="legend">
+                    <span class="legend-line truth">有效解且可评分</span
+                    ><span class="legend-line adaptive"
+                      >有效解但参考不合格或缺失</span
+                    ><span class="legend-line muted">无有效单点解</span>
+                  </div>
+                  <div id="availability-chart" class="chart"></div>
+                  <p id="availability-description" class="chart-footnote"></p>
+                </div>
                 <div class="chart-grid">
                   <div>
                     <div class="panel-heading">
-                      <h3>局部平面轨迹</h3>
+                      <h3>可评分点轨迹</h3>
                       <span>ENU · 米</span>
                     </div>
                     <div class="legend">
                       <span class="legend-line truth">参考轨迹</span
                       ><span class="legend-line raw">GNSS 基线</span
                       ><span class="legend-line adaptive">自适应滤波</span>
+                      <span
+                        id="doppler-legend"
+                        class="legend-line doppler"
+                        hidden
+                        >Doppler 约束</span
+                      >
                     </div>
                     <div id="trajectory-chart" class="chart"></div>
                   </div>
@@ -763,6 +876,8 @@
                     <div id="error-chart" class="chart"></div>
                     <p class="chart-footnote">
                       蓝：水平误差（m）。橙：风险评分（0–1），尚未校准为失准概率。
+                      相邻可评分点间隔超过 1.5
+                      秒时断开连线；断解时不代表仍有有效定位或告警。
                     </p>
                   </div>
                 </div>
@@ -789,7 +904,7 @@
       <section id="method">
         <details class="panel section-panel" id="method-panel">
           <summary>
-            <span class="summary-number">06</span
+            <span class="summary-number">07</span
             ><span class="summary-title">数据与使用说明</span
             ><span class="summary-meta">结论的适用范围</span>
           </summary>

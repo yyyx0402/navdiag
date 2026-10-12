@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "scope": "Exploratory rotating whole-drive tests; the primary Mong Kok result was already inspected. Not an untouched final benchmark.",
+  "folds": [
+    {"id": "mk_test", "train": "UrbanNav_TST_20210517", "validation": "UrbanNav_WP_20210521", "test": "UrbanNav_MK_20210518", "existing_primary": true},
+    {"id": "tst_test", "train": "UrbanNav_WP_20210521", "validation": "UrbanNav_MK_20210518", "test": "UrbanNav_TST_20210517"},
+    {"id": "wp_test", "train": "UrbanNav_MK_20210518", "validation": "UrbanNav_TST_20210517", "test": "UrbanNav_WP_20210521"}
+  ],
+  "selection_basis": "Each acquisition is tested once; source and validation roles follow a fixed cycle, without searching permutations or thresholds on test.",
+  "aggregation": "Equal-weight mean across the three test drives; report individual test counts/availability. Distinct drives, not three cities, and not independent retrain repetitions.",
+  "hyperparameter_search": false
+}

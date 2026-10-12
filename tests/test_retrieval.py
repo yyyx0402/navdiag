@@ -26,6 +26,12 @@ def test_unrelated_question_does_not_fabricate_passages():
     assert search_knowledge('苹果派怎么烤') == []
 
 
+def test_current_positioning_methods_are_project_evidence_and_not_claimed_paper_reproduction():
+    result = search_knowledge('本项目 Doppler qv RTKLIB estvel 速度协方差', limit=5, mode='sparse')
+    assert any(note['source_url'] == 'docs/research/positioning_methods.md' for note in result)
+    assert any('qv' in note['content'] and note['source_type'] == 'project_document' for note in result)
+
+
 def test_chunks_are_bounded_traceable_and_from_allowlisted_docs():
     corpus = json.loads(files('navdiag').joinpath('resources/rag_documents.json').read_text(encoding='utf-8'))
     assert len({item['id'] for item in corpus['chunks']}) == len(corpus['chunks'])
@@ -85,7 +91,7 @@ def test_published_research_is_retrievable_with_scope_and_primary_source():
 
 def test_literature_registry_separates_publication_year_and_reading_scope():
     registry = json.loads(files('navdiag').joinpath('resources/literature.json').read_text(encoding='utf-8'))
-    assert len({item['id'] for item in registry['records']}) == len(registry['records']) == 7
+    assert len({item['id'] for item in registry['records']}) == len(registry['records']) == 20
     for record in registry['records']:
         assert record['authors'] and record['year'] <= 2026 and record['doi']
         assert record['verification']['read_scope'] and record['verification']['checked_at']

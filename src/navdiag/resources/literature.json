@@ -1,7 +1,7 @@
 {
-  "version": 1,
+  "version": 2,
   "policy": "Original bounded research summaries with primary-source metadata; no full articles or PDFs. Author findings are not NavDiag measurements.",
-  "verification_scope": "Primary metadata and the explicitly listed abstract/sections; not a systematic review, retraction audit or independent replication.",
+  "verification_scope": "Primary metadata and listed reading scopes; includes selected PDF table-page visual checks by an AI source-verification subagent for L03, L14 and L20. Not full-paper reading or independent human review.",
   "records": [
     {
       "id": "L01",
@@ -33,6 +33,16 @@
         "read_scope": "arXiv v2 metadata and Abstract",
         "locator": "Abstract",
         "full_text_read_this_update": false
+      },
+      "edition": "conference",
+      "learning": {
+        "topics": ["nlos", "generalization"],
+        "difficulty": "advanced",
+        "why": "为什么只更换 Transformer 名称不构成论文复现？",
+        "how": "以注意力增强 LSTM 联合学习 NLOS 与伪距误差。",
+        "what": "作者香港/Aachen 实验与本项目单卫星历史分类不同。",
+        "project_relation": "当前是单卫星历史分类，没有论文的跨卫星联合结构及误差回归；复现仍是未来工作。",
+        "questions": ["为什么只更换 Transformer 名称不构成论文复现？"]
       }
     },
     {
@@ -66,6 +76,16 @@
         "read_scope": "Indexed primary article excerpts; live PMC CAPTCHA and publisher HTTP 429 prevented whole-page reading",
         "locator": "Abstract; sections 2, 4 and 5 excerpts",
         "full_text_read_this_update": false
+      },
+      "edition": "journal",
+      "learning": {
+        "topics": ["nlos", "preprocessing"],
+        "difficulty": "intermediate",
+        "why": "相关器波形能提供普通信号统计没有的信息吗？",
+        "how": "归一化相关器输出，比较神经网络与 SVM。",
+        "what": "输入层次不同，不能直接迁移其分类成绩。",
+        "project_relation": "当前没有相关器原始输出，与该文并非同输入比较。",
+        "questions": ["相关器波形能提供普通信号统计没有的信息吗？"]
       }
     },
     {
@@ -95,12 +115,23 @@
       ],
       "content": "文献方法：Ozeki 与 Kubo 使用 RINEX 可计算特征训练 SVM，再结合伪距残差检查评估 DGNSS 定位。论文讨论 SNR 波动特征 SFM：在静态实验有帮助，车辆运动时较长窗口可能混入环境变化，效果不同。其数据集中在东京站附近，作者要求其他地点进一步检验。项目启示：历史窗口、残差和特征定义需要按场景核对；NLOS 分类指标与定位误差必须分别验证，不能推定分类更好就必然定位更准。",
       "verification": {
-        "checked_at": "2026-10-11",
+        "checked_at": "2026-10-12",
         "status": "primary_metadata_and_claims_checked",
-        "read_scope": "Publisher metadata, Abstract, sections 2.1 and 4",
-        "locator": "2.1 SVM Classifier; 4 Discussion",
+        "read_scope": "Publisher PDF metadata and Abstract; selected methods/results pages 3, 5–11",
+        "locator": "Table 7, PDF p. 10, visually checked; not full-text reading",
         "full_text_read_this_update": false
-      }
+      },
+      "edition": "journal",
+      "learning": {
+        "topics": ["nlos", "positioning"],
+        "difficulty": "intermediate",
+        "why": "分类后加残差检查，定位是否会改善？",
+        "how": "SVM 与伪距残差检查组合，区分静态和动态评估。",
+        "what": "分类和定位要分别评估，最大误差仍需检查。",
+        "project_relation": "该文连接了分类与定位；本项目逐卫星识别到真实定位收益的闭环仍待验证。",
+        "questions": ["分类后加残差检查，定位是否会改善？"]
+      },
+      "open_access_url": "https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2022.868608/pdf"
     },
     {
       "id": "L04",
@@ -140,6 +171,16 @@
         "read_scope": "Publisher metadata, Abstract and Introduction",
         "locator": "Abstract; 1 Introduction",
         "full_text_read_this_update": false
+      },
+      "edition": "journal",
+      "learning": {
+        "topics": ["preprocessing", "generalization", "nlos"],
+        "difficulty": "intermediate",
+        "why": "如何处理硬件差异和多频缺失？",
+        "how": "开放天空名义归一化与多频逻辑回归分支。",
+        "what": "当前五特征逻辑回归没有复现此物理处理。",
+        "project_relation": "当前缺少开放天空名义校准与多频分支，不能将五特征逻辑回归视为同一方案。",
+        "questions": ["如何处理硬件差异和多频缺失？"]
       }
     },
     {
@@ -172,6 +213,16 @@
         "read_scope": "arXiv metadata and Abstract; conference PDF Abstract",
         "locator": "Abstract; conference PDF page 1",
         "full_text_read_this_update": false
+      },
+      "edition": "conference",
+      "learning": {
+        "topics": ["generalization"],
+        "difficulty": "introductory",
+        "why": "为什么表格任务中树模型可能优于网络？",
+        "how": "在标准表格数据中检查归纳偏置与输入特征。",
+        "what": "不是 GNSS 实验，也不能证明 RF 总是最优。",
+        "project_relation": "通用表格基准只提供背景，具体 RF 与网络排名仍以当前项目报告为准。",
+        "questions": ["为什么表格任务中树模型可能优于网络？"]
       }
     },
     {
@@ -209,6 +260,16 @@
         "read_scope": "arXiv v5 metadata and Abstract",
         "locator": "Abstract",
         "full_text_read_this_update": false
+      },
+      "edition": "conference",
+      "learning": {
+        "topics": ["generalization"],
+        "difficulty": "intermediate",
+        "why": "什么是更公平的深度表格基线？",
+        "how": "统一比较 ResNet、FT-Transformer 与梯度提升树。",
+        "what": "特征列 token 与当前卫星历史窗口不是同一架构。",
+        "project_relation": "FT-Transformer 的特征列 token 与当前卫星历史窗口不同；需要统一输入与比较预算。",
+        "questions": ["什么是更公平的深度表格基线？"]
       }
     },
     {
@@ -251,7 +312,553 @@
         "read_scope": "arXiv v4 metadata and Abstract",
         "locator": "Abstract",
         "full_text_read_this_update": false
+      },
+      "edition": "conference",
+      "learning": {
+        "topics": ["generalization"],
+        "difficulty": "intermediate",
+        "why": "数据性质与调参预算如何影响模型选择？",
+        "how": "在表格基准上比较 NN 与 GBDT 的表现。",
+        "what": "GBDT 不等于 RF，通用基准不能替代当前项目成绩。",
+        "project_relation": "GBDT 不是 RF；文献不构成恢复已暂停的超参搜索或按测试集选模的依据。",
+        "questions": ["数据性质与调参预算如何影响模型选择？"]
       }
+    },
+    {
+      "id": "L08",
+      "document_id": "L08",
+      "title": "GNSS multipath detection using a machine learning approach",
+      "heading": "Hsu 2017：三类信号与伪距/Doppler 一致性",
+      "authors": ["Li-Ta Hsu"],
+      "year": 2017,
+      "venue": "IEEE ITSC 2017",
+      "doi": "10.1109/ITSC.2017.8317700",
+      "source_url": "https://ira.lib.polyu.edu.hk/handle/10397/77100",
+      "source_type": "research_summary",
+      "edition": "conference",
+      "keywords": [
+        "Hsu",
+        "SVM",
+        "三分类",
+        "Doppler",
+        "伪距",
+        "一致性",
+        "NLOS",
+        "多径"
+      ],
+      "content": "文献方法：用 SVM 区分 clean、multipath 和 NLOS，加入伪距与 Doppler 变化一致性特征。 文献观察：作者报告的是三分类实验；它说明物理特征有价值，不能与本项目二分类 F1 直接比较。 项目边界：当前 pr_rate_consistency 具有相关物理动机，但标签、特征定义及数据不同，不是该文复现。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Institutional author record and Abstract",
+        "locator": "Abstract",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["nlos", "preprocessing"],
+        "difficulty": "introductory",
+        "why": "为什么载噪比相似的信号仍可能属于不同接收状态？",
+        "how": "用 SVM 区分 clean、multipath 和 NLOS，加入伪距与 Doppler 变化一致性特征。",
+        "what": "作者报告的是三分类实验；它说明物理特征有价值，不能与本项目二分类 F1 直接比较。",
+        "project_relation": "当前 pr_rate_consistency 具有相关物理动机，但标签、特征定义及数据不同，不是该文复现。",
+        "questions": ["为什么载噪比相似的信号仍可能属于不同接收状态？"]
+      }
+    },
+    {
+      "id": "L09",
+      "document_id": "L09",
+      "title": "Height Aiding, C/N0 Weighting and Consistency Checking for GNSS NLOS and Multipath Mitigation in Urban Areas",
+      "heading": "Groves 与 Jiang 2013：加权、删星与几何代价",
+      "authors": ["Paul D Groves", "Ziyi Jiang"],
+      "year": 2013,
+      "venue": "The Journal of Navigation, 66(5), 653–669",
+      "doi": "10.1017/S0373463313000350",
+      "source_url": "https://www.cambridge.org/core/journals/journal-of-navigation/article/height-aiding-cn0-weighting-and-consistency-checking-for-gnss-nlos-and-multipath-mitigation-in-urban-areas/AD1F8EFE7138F75114175AB26193D8FA",
+      "source_type": "research_summary",
+      "edition": "journal",
+      "keywords": [
+        "Groves",
+        "Jiang",
+        "WLS",
+        "加权最小二乘",
+        "C/N0",
+        "删星",
+        "几何",
+        "一致性",
+        "高度辅助"
+      ],
+      "content": "文献方法：比较地形高度辅助、C/N0 观测加权、顺序一致性检查和子集检查。 文献观察：伦敦实测中部分删星策略反而变差；剔除观测可能损害几何，识别准确率不等于定位收益。 项目边界：本项目的 WLS、稳健解与 NLOS 分类需要在同源观测上闭环验证，不能默认删星必然有益。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Publisher metadata, Abstract and Introduction",
+        "locator": "Abstract; 1 Introduction",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["positioning", "nlos", "preprocessing"],
+        "difficulty": "introductory",
+        "why": "把疑似坏卫星删掉，定位一定更好吗？",
+        "how": "比较地形高度辅助、C/N0 观测加权、顺序一致性检查和子集检查。",
+        "what": "伦敦实测中部分删星策略反而变差；剔除观测可能损害几何，识别准确率不等于定位收益。",
+        "project_relation": "本项目的 WLS、稳健解与 NLOS 分类需要在同源观测上闭环验证，不能默认删星必然有益。",
+        "questions": ["把疑似坏卫星删掉，定位一定更好吗？"]
+      }
+    },
+    {
+      "id": "L10",
+      "document_id": "L10",
+      "title": "Shadow Matching: A New GNSS Positioning Technique for Urban Canyons",
+      "heading": "Groves 2011：地图可见性与 Shadow Matching",
+      "authors": ["Paul D Groves"],
+      "year": 2011,
+      "venue": "The Journal of Navigation, 64(3), 417–430",
+      "doi": "10.1017/S0373463311000087",
+      "source_url": "https://discovery.ucl.ac.uk/id/eprint/1308009/",
+      "source_type": "research_summary",
+      "edition": "journal",
+      "keywords": [
+        "Groves",
+        "Shadow Matching",
+        "阴影匹配",
+        "建筑",
+        "地图",
+        "可见性",
+        "横街"
+      ],
+      "content": "文献方法：用三维建筑模型预测候选位置的卫星可见性，并与实际可见性匹配。 文献观察：作者通过建模展示改善横街方向定位的潜力，不能把建模潜力当作已验证部署精度。 项目边界：UrbanNav 建筑图目前仅用于参考标签，没有进入推理；地图辅助定位是另一条待实现路线。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Institutional metadata and Abstract",
+        "locator": "Abstract",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["maps", "positioning", "nlos"],
+        "difficulty": "introductory",
+        "why": "城市峡谷中横穿街道方向为什么难定位？",
+        "how": "用三维建筑模型预测候选位置的卫星可见性，并与实际可见性匹配。",
+        "what": "作者通过建模展示改善横街方向定位的潜力，不能把建模潜力当作已验证部署精度。",
+        "project_relation": "UrbanNav 建筑图目前仅用于参考标签，没有进入推理；地图辅助定位是另一条待实现路线。",
+        "questions": ["城市峡谷中横穿街道方向为什么难定位？"]
+      }
+    },
+    {
+      "id": "L11",
+      "document_id": "L11",
+      "title": "Towards Robust GNSS Positioning and Real-time Kinematic Using Factor Graph Optimization",
+      "heading": "Wen 与 Hsu 2021：伪距、Doppler 与载波相位因子图",
+      "authors": ["Weisong Wen", "Li-Ta Hsu"],
+      "year": 2021,
+      "venue": "IEEE ICRA 2021",
+      "doi": "10.1109/ICRA48506.2021.9562037",
+      "source_url": "https://arxiv.org/abs/2106.01594v1",
+      "source_type": "research_summary",
+      "edition": "conference",
+      "keywords": [
+        "Wen",
+        "FGO",
+        "因子图",
+        "RTK",
+        "载波相位",
+        "Doppler",
+        "WLS",
+        "历史观测"
+      ],
+      "content": "文献方法：构造因子图，联合历史伪距、Doppler 与载波相位，分别研究 GNSS 定位和 RTK。 文献观察：香港城市峡谷实验报告相对滤波的改善；RTK 与单点伪距定位使用的信息不同。 项目边界：当前只有逐历元最小二乘及平面位置/速度滤波，没有相位模糊度或 GNSS 因子图。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "arXiv v1 metadata and Abstract",
+        "locator": "Abstract",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["positioning", "fusion"],
+        "difficulty": "intermediate",
+        "why": "单历元 WLS 和滤波之外，怎样利用历史 GNSS 观测？",
+        "how": "构造因子图，联合历史伪距、Doppler 与载波相位，分别研究 GNSS 定位和 RTK。",
+        "what": "香港城市峡谷实验报告相对滤波的改善；RTK 与单点伪距定位使用的信息不同。",
+        "project_relation": "当前只有逐历元最小二乘及平面位置/速度滤波，没有相位模糊度或 GNSS 因子图。",
+        "questions": ["单历元 WLS 和滤波之外，怎样利用历史 GNSS 观测？"]
+      }
+    },
+    {
+      "id": "L12",
+      "document_id": "L12",
+      "title": "Factor graph optimization for GNSS/INS integration: A comparison with the extended Kalman filter",
+      "heading": "Wen 等 2021：FGO 与 EKF 的松耦合和紧耦合比较",
+      "authors": ["Weisong Wen", "Tim Pfeifer", "Xiwei Bai", "Li-Ta Hsu"],
+      "year": 2021,
+      "venue": "NAVIGATION, 68(2), 315–331",
+      "doi": "10.1002/navi.421",
+      "source_url": "https://www.ion.org/publications/abstract.cfm?articleID=102910",
+      "source_type": "research_summary",
+      "edition": "journal",
+      "keywords": [
+        "Wen",
+        "EKF",
+        "FGO",
+        "INS",
+        "IMU",
+        "卡尔曼",
+        "因子图",
+        "松耦合",
+        "紧耦合"
+      ],
+      "content": "文献方法：在香港城市峡谷对比 GNSS 伪距与 INS 的松耦合/紧耦合 EKF 和 FGO，分析窗口长度。 文献观察：作者将收益联系到迭代估计和非高斯情况下的历史相关性，不是对全部场景的普遍优越证明。 项目边界：本项目接受已转换 ENU 的平面加速度，尚无姿态、偏置标定及完整惯导紧耦合。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Publisher metadata and Abstract",
+        "locator": "Abstract",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["fusion", "positioning"],
+        "difficulty": "intermediate",
+        "why": "为什么用历史窗口的融合方法可能更抗异常值？",
+        "how": "在香港城市峡谷对比 GNSS 伪距与 INS 的松耦合/紧耦合 EKF 和 FGO，分析窗口长度。",
+        "what": "作者将收益联系到迭代估计和非高斯情况下的历史相关性，不是对全部场景的普遍优越证明。",
+        "project_relation": "本项目接受已转换 ENU 的平面加速度，尚无姿态、偏置标定及完整惯导紧耦合。",
+        "questions": ["为什么用历史窗口的融合方法可能更抗异常值？"]
+      }
+    },
+    {
+      "id": "L13",
+      "document_id": "L13",
+      "title": "3D LiDAR Aided GNSS NLOS Mitigation in Urban Canyons",
+      "heading": "Wen 与 Hsu：LiDAR 环境感知、伪距修正与不确定性",
+      "authors": ["Weisong Wen", "Li-Ta Hsu"],
+      "year": 2021,
+      "venue": "arXiv preprint, 2112.06108v1",
+      "doi": "10.48550/arXiv.2112.06108",
+      "source_url": "https://arxiv.org/abs/2112.06108v1",
+      "source_type": "research_summary",
+      "edition": "preprint",
+      "keywords": [
+        "LiDAR",
+        "点云",
+        "反射点",
+        "伪距修正",
+        "NLOS",
+        "不确定性",
+        "环境感知"
+      ],
+      "content": "文献方法：从实时 LiDAR 点云构造滑窗地图，发现反射点时修正伪距，并重建 NLOS 观测的不确定性。 文献观察：在香港汽车级接收机数据及 GNSS/INS 因子图融合中评估，不是单纯分类任务。 项目边界：当前没有实时点云或反射路径修正；静态参考图不能冒充同等环境感知输入。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "arXiv v1 metadata and Abstract",
+        "locator": "Abstract; cited version is the 2021 preprint, not the 2022 journal edition",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["maps", "nlos", "positioning", "fusion"],
+        "difficulty": "advanced",
+        "why": "识别了反射信号之后，除了直接排除还能做什么？",
+        "how": "从实时 LiDAR 点云构造滑窗地图，发现反射点时修正伪距，并重建 NLOS 观测的不确定性。",
+        "what": "在香港汽车级接收机数据及 GNSS/INS 因子图融合中评估，不是单纯分类任务。",
+        "project_relation": "当前没有实时点云或反射路径修正；静态参考图不能冒充同等环境感知输入。",
+        "questions": ["识别了反射信号之后，除了直接排除还能做什么？"]
+      }
+    },
+    {
+      "id": "L14",
+      "document_id": "L14",
+      "title": "Precise Position Estimation Using Smartphone Raw GNSS Data Based on Two-Step Optimization",
+      "heading": "Suzuki 2023：GSDC 两步优化、Doppler 与 TDCP",
+      "authors": ["Taro Suzuki"],
+      "year": 2023,
+      "venue": "Sensors, 23(3), 1205",
+      "doi": "10.3390/s23031205",
+      "source_url": "https://www.mdpi.com/1424-8220/23/3/1205",
+      "source_type": "research_summary",
+      "edition": "journal",
+      "keywords": [
+        "Suzuki",
+        "GSDC",
+        "手机",
+        "smartphone",
+        "TDCP",
+        "载波相位",
+        "两步",
+        "Doppler",
+        "后处理"
+      ],
+      "content": "文献方法：先优化 Doppler 速度、处理离群与缺失，再用速度约束和时间差分载波相位 TDCP 优化位置。 文献观察：研究采用 GSDC 2022 后处理；作者的比赛指标不能当成本项目 GSDC 2021 的 RMSE。 项目边界：本项目缺少 TDCP 与两步批处理优化，真实最终样例过短，不能与该文直接做成绩排名。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Publisher PDF pp. 2–5, 12, 14–15",
+        "locator": "Tables 2 and 3 visually checked; GSDC score definition; not full-text reading",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["smartphone", "positioning", "fusion", "preprocessing"],
+        "difficulty": "advanced",
+        "why": "手机伪距很吵，怎样获得更精细的轨迹？",
+        "how": "先优化 Doppler 速度、处理离群与缺失，再用速度约束和时间差分载波相位 TDCP 优化位置。",
+        "what": "研究采用 GSDC 2022 后处理；作者的比赛指标不能当成本项目 GSDC 2021 的 RMSE。",
+        "project_relation": "本项目缺少 TDCP 与两步批处理优化，真实最终样例过短，不能与该文直接做成绩排名。",
+        "questions": ["手机伪距很吵，怎样获得更精细的轨迹？"]
+      },
+      "open_access_url": "https://mdpi-res.com/d_attachment/sensors/sensors-23-01205/article_deploy/sensors-23-01205.pdf"
+    },
+    {
+      "id": "L15",
+      "document_id": "L15",
+      "title": "Trajectory Smoothing Using GNSS/PDR Integration Via Factor Graph Optimization in Urban Canyons",
+      "heading": "Zhong 等：手机 GNSS/PDR 因子图与轨迹平滑",
+      "authors": ["Yihan Zhong", "Weisong Wen", "Li-Ta Hsu"],
+      "year": 2022,
+      "venue": "arXiv preprint, 2212.14264v2",
+      "doi": "10.48550/arXiv.2212.14264",
+      "source_url": "https://arxiv.org/abs/2212.14264v2",
+      "source_type": "research_summary",
+      "edition": "preprint",
+      "keywords": [
+        "Zhong",
+        "PDR",
+        "行人",
+        "步态",
+        "手机",
+        "因子图",
+        "平滑",
+        "Doppler"
+      ],
+      "content": "文献方法：从手机 IMU 加速度估计 PDR 相对运动，与原始伪距、Doppler 和软运动模型放入因子图。 文献观察：在香港两组手机级城市峡谷数据上比较 EKF 与 FGO，报告轨迹精度和平滑改善。 项目边界：当前车载平面滤波没有步态/PDR 模型，应用场景和运动约束不同。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "arXiv v2 metadata and Abstract",
+        "locator": "Abstract; first submitted 2022, v2 revised 2023; related journal DOI 10.1109/JIOT.2024.3396360",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["smartphone", "fusion", "positioning"],
+        "difficulty": "advanced",
+        "why": "行人运动信息如何与 GNSS 互补，而不只做曲线平滑？",
+        "how": "从手机 IMU 加速度估计 PDR 相对运动，与原始伪距、Doppler 和软运动模型放入因子图。",
+        "what": "在香港两组手机级城市峡谷数据上比较 EKF 与 FGO，报告轨迹精度和平滑改善。",
+        "project_relation": "当前车载平面滤波没有步态/PDR 模型，应用场景和运动约束不同。",
+        "questions": ["行人运动信息如何与 GNSS 互补，而不只做曲线平滑？"]
+      }
+    },
+    {
+      "id": "L16",
+      "document_id": "L16",
+      "title": "Hong Kong UrbanNav: An Open-Source Multisensory Dataset for Benchmarking Urban Navigation Algorithms",
+      "heading": "Hsu 等 2023：UrbanNav 数据、传感器与评估边界",
+      "authors": [
+        "Li-Ta Hsu",
+        "Feng Huang",
+        "Hoi-Fung Ng",
+        "Guohao Zhang",
+        "Yihan Zhong",
+        "Xiwei Bai",
+        "Weisong Wen"
+      ],
+      "year": 2023,
+      "venue": "NAVIGATION, 70(4), navi.602",
+      "doi": "10.33012/navi.602",
+      "source_url": "https://ira.lib.polyu.edu.hk/handle/10397/109598",
+      "source_type": "research_summary",
+      "edition": "journal",
+      "keywords": [
+        "UrbanNav",
+        "数据集",
+        "dataset",
+        "参考轨迹",
+        "标签",
+        "IMU",
+        "LiDAR",
+        "城市峡谷"
+      ],
+      "content": "文献方法：公开香港多种城市场景的多频 GNSS、IMU、LiDAR、相机及参考轨迹。 文献观察：数据集为多传感器城市导航提供共同输入，仍需独立划分和匹配的标签/指标。 项目边界：本项目仅用三个城区的部分 GNSS 与静态参考图；整套 UrbanNav 不是已经全部使用。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Institutional publication metadata and Abstract",
+        "locator": "Abstract; bibliographic record",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["datasets", "maps", "fusion"],
+        "difficulty": "introductory",
+        "why": "真实城市定位评估需要哪些传感器与参考数据？",
+        "how": "公开香港多种城市场景的多频 GNSS、IMU、LiDAR、相机及参考轨迹。",
+        "what": "数据集为多传感器城市导航提供共同输入，仍需独立划分和匹配的标签/指标。",
+        "project_relation": "本项目仅用三个城区的部分 GNSS 与静态参考图；整套 UrbanNav 不是已经全部使用。",
+        "questions": ["真实城市定位评估需要哪些传感器与参考数据？"]
+      }
+    },
+    {
+      "id": "L17",
+      "document_id": "L17",
+      "title": "Attention-GANs: An Advanced GNSS Data Augmentation Method for Improved NLOS/LOS Classification",
+      "heading": "Nie 与 Yang 2025：Attention-GAN 数据增强",
+      "authors": ["Shichuang Nie", "Hongzhou Yang"],
+      "year": 2025,
+      "venue": "ISPRS Archives, XLVIII-G-2025, 1117–1122",
+      "doi": "10.5194/isprs-archives-XLVIII-G-2025-1117-2025",
+      "source_url": "https://isprs-archives.copernicus.org/articles/XLVIII-G-2025/1117/2025/",
+      "source_type": "research_summary",
+      "edition": "conference",
+      "keywords": [
+        "GAN",
+        "Attention-GAN",
+        "数据增强",
+        "类别不均衡",
+        "合成样本",
+        "UrbanNav",
+        "NLOS"
+      ],
+      "content": "文献方法：在 GAN 生成器和判别器中加入多头注意力，使用 UrbanNav 数据比较增强后的分类器。 文献观察：作者报告数据不均衡改善；摘要不足以证明在独立新城市有效，也不说明生成标签等于真实采集。 项目边界：当前没有 GAN 数据增强；必须只在训练集生成，禁止让目标测试信息进入增强过程。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Publisher metadata and Abstract",
+        "locator": "Abstract; 2025-07-30 version",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["nlos", "generalization", "preprocessing"],
+        "difficulty": "advanced",
+        "why": "标签不均衡时，合成样本能否帮助分类？",
+        "how": "在 GAN 生成器和判别器中加入多头注意力，使用 UrbanNav 数据比较增强后的分类器。",
+        "what": "作者报告数据不均衡改善；摘要不足以证明在独立新城市有效，也不说明生成标签等于真实采集。",
+        "project_relation": "当前没有 GAN 数据增强；必须只在训练集生成，禁止让目标测试信息进入增强过程。",
+        "questions": ["标签不均衡时，合成样本能否帮助分类？"]
+      }
+    },
+    {
+      "id": "L18",
+      "document_id": "L18",
+      "title": "GNSS smartphones positioning: advances, challenges, opportunities, and future perspectives",
+      "heading": "Zangenehnejad 与 Gao 2021：手机 GNSS 误差与方法综述",
+      "authors": ["Farzaneh Zangenehnejad", "Yang Gao"],
+      "year": 2021,
+      "venue": "Satellite Navigation, 2, 24",
+      "doi": "10.1186/s43020-021-00054-y",
+      "source_url": "https://link.springer.com/article/10.1186/s43020-021-00054-y",
+      "source_type": "research_summary",
+      "edition": "review",
+      "keywords": [
+        "手机",
+        "Android",
+        "smartphone",
+        "天线",
+        "噪声",
+        "综述",
+        "持握",
+        "误差"
+      ],
+      "content": "文献方法：综述 Android 原始 GNSS、观测噪声、天线、环境、持握方式及算法方向。 文献观察：资料帮助建立硬件和观测条件的框架，并非在本项目数据上的统一模型竞赛。 项目边界：可用于解释 SJC 与 MTV 的设备和场景差异，不能从行程成绩孤立归因于模型。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Publisher metadata and Abstract",
+        "locator": "Abstract",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["smartphone", "preprocessing", "positioning"],
+        "difficulty": "introductory",
+        "why": "手机和专用接收机为什么不能直接比较精度？",
+        "how": "综述 Android 原始 GNSS、观测噪声、天线、环境、持握方式及算法方向。",
+        "what": "资料帮助建立硬件和观测条件的框架，并非在本项目数据上的统一模型竞赛。",
+        "project_relation": "可用于解释 SJC 与 MTV 的设备和场景差异，不能从行程成绩孤立归因于模型。",
+        "questions": ["手机和专用接收机为什么不能直接比较精度？"]
+      }
+    },
+    {
+      "id": "L19",
+      "document_id": "L19",
+      "title": "3-D LiDAR-Aided GNSS NLOS Mitigation for Reliable GNSS-RTK Positioning in Urban Canyons",
+      "heading": "Liu 等 2025：LiDAR 与 GNSS-RTK 紧耦合",
+      "authors": [
+        "Xikun Liu",
+        "Weisong Wen",
+        "Feng Huang",
+        "Han Gao",
+        "Yongliang Wang",
+        "Li-Ta Hsu"
+      ],
+      "year": 2025,
+      "venue": "IEEE Transactions on Instrumentation and Measurement, 74, 9544915",
+      "doi": "10.1109/TIM.2025.3629836",
+      "source_url": "https://ira.lib.polyu.edu.hk/handle/10397/117995",
+      "source_type": "research_summary",
+      "edition": "journal",
+      "keywords": [
+        "Liu",
+        "RTK",
+        "LiDAR",
+        "模糊度",
+        "紧耦合",
+        "载波相位",
+        "城市"
+      ],
+      "content": "文献方法：将点云辅助的 NLOS 缓解与 GNSS-RTK/LiDAR 紧耦合结合，改善浮点解和状态不确定性。 文献观察：作者在 UrbanNav 上报告改善，并涉及模糊度解算；额外传感器与 RTK 信息不能忽略。 项目边界：当前无载波相位模糊度解算或 LiDAR 里程计，不能与该系统按同输入基线比较。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Institutional journal publication metadata and Abstract",
+        "locator": "Abstract; 2025 journal edition (arXiv initial manuscript was 2022)",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["maps", "positioning", "fusion"],
+        "difficulty": "advanced",
+        "why": "载波相位、几何和 LiDAR 如何一起提高城市定位可靠性？",
+        "how": "将点云辅助的 NLOS 缓解与 GNSS-RTK/LiDAR 紧耦合结合，改善浮点解和状态不确定性。",
+        "what": "作者在 UrbanNav 上报告改善，并涉及模糊度解算；额外传感器与 RTK 信息不能忽略。",
+        "project_relation": "当前无载波相位模糊度解算或 LiDAR 里程计，不能与该系统按同输入基线比较。",
+        "questions": ["载波相位、几何和 LiDAR 如何一起提高城市定位可靠性？"]
+      }
+    },
+    {
+      "id": "L20",
+      "document_id": "L20",
+      "title": "GNSS Outlier Mitigation Via Graduated Non-Convexity Factor Graph Optimization",
+      "heading": "Wen 等：非凸鲁棒权重与 FGO-GNC",
+      "authors": ["Weisong Wen", "Guohao Zhang", "Li-Ta Hsu"],
+      "year": 2022,
+      "venue": "IEEE Transactions on Vehicular Technology, 71(1), 297–310",
+      "doi": "10.1109/TVT.2021.3130909",
+      "source_url": "https://ira.lib.polyu.edu.hk/handle/10397/92728",
+      "source_type": "research_summary",
+      "edition": "journal",
+      "keywords": [
+        "FGO-GNC",
+        "Geman",
+        "鲁棒",
+        "稳健",
+        "异常观测",
+        "权重",
+        "因子图",
+        "非凸"
+      ],
+      "content": "文献方法：在因子图中用 Geman–McClure 非凸损失及逐步松弛估计观测权重，利用批量历史数据。 文献观察：汽车级与手机级香港城市峡谷实验说明异常观测缓解有价值，也仍受健康观测质量限制。 项目边界：当前稳健 WLS 是独立历元解，并非 FGO-GNC；文献均值不能当作本项目 RMSE。",
+      "verification": {
+        "checked_at": "2026-10-12",
+        "status": "primary_metadata_and_claims_checked",
+        "read_scope": "Final Accepted Manuscript pp. 6–7, 11–12; institutional journal metadata",
+        "locator": "Tables I, IV, V visually checked; 2D mean, not RMSE; not full-text reading",
+        "full_text_read_this_update": false
+      },
+      "learning": {
+        "topics": ["positioning", "fusion", "preprocessing"],
+        "difficulty": "advanced",
+        "why": "普通鲁棒损失面对多颗坏卫星有什么限制？",
+        "how": "在因子图中用 Geman–McClure 非凸损失及逐步松弛估计观测权重，利用批量历史数据。",
+        "what": "汽车级与手机级香港城市峡谷实验说明异常观测缓解有价值，也仍受健康观测质量限制。",
+        "project_relation": "当前稳健 WLS 是独立历元解，并非 FGO-GNC；文献均值不能当作本项目 RMSE。",
+        "questions": ["普通鲁棒损失面对多颗坏卫星有什么限制？"]
+      },
+      "open_access_url": "https://ira.lib.polyu.edu.hk/bitstream/10397/92728/1/Wen_Gnss_Outlier_Mitigation.pdf"
     }
   ]
 }

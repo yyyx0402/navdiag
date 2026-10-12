@@ -1,0 +1,1332 @@
+{
+  "checked_at": "2026-10-12",
+  "scope": "Exploratory full-acquisition evaluation; successful-fix accuracy and raw/eligible-reference coverage are separate. Not a blind benchmark.",
+  "source_files_sha256": {
+    "artifacts/urbannav_positioning/report.json": "157a440012d0048d1a4587bc70d63aa15be534554dde9874b85cbe4005525a8b",
+    "artifacts/urbannav_positioning/positioning_rotation_report.json": "134c6177de5af77b3c845ab9364f9bd1dbca47e4e8cfd905a993acd2bc865052",
+    "artifacts/urbannav_positioning/doppler_report.json": "351836b9de11f181b35941dd5c347dc059133401543820f046e1519bb37854ef",
+    "artifacts/urbannav_positioning/frozen_plan.json": "56bb463b1453415a63469bca2a058fdf783bf5765c1e712813b07761a5e5cc53",
+    "artifacts/urbannav_positioning/rotation_frozen_plan.json": "b4a901bddeceec5680524174e09db43824e46083fa46c662bf4d148ff3100a76",
+    "artifacts/urbannav_positioning/doppler_frozen_plan.json": "f95ef7c7ea89b1b8249a1b1f291d66afd293bf59d79ee38f13eda4caa8b987c2"
+  },
+  "rotation": {
+    "version": 1,
+    "task_type": "epoch_position_error_rotation",
+    "data_kind": "real",
+    "protocol": {
+      "version": 1,
+      "scope": "Exploratory rotating whole-drive tests; the primary Mong Kok result was already inspected. Not an untouched final benchmark.",
+      "folds": [
+        {
+          "id": "mk_test",
+          "train": "UrbanNav_TST_20210517",
+          "validation": "UrbanNav_WP_20210521",
+          "test": "UrbanNav_MK_20210518",
+          "existing_primary": true
+        },
+        {
+          "id": "tst_test",
+          "train": "UrbanNav_WP_20210521",
+          "validation": "UrbanNav_MK_20210518",
+          "test": "UrbanNav_TST_20210517"
+        },
+        {
+          "id": "wp_test",
+          "train": "UrbanNav_MK_20210518",
+          "validation": "UrbanNav_TST_20210517",
+          "test": "UrbanNav_WP_20210521"
+        }
+      ],
+      "selection_basis": "Each acquisition is tested once; source and validation roles follow a fixed cycle, without searching permutations or thresholds on test.",
+      "aggregation": "Equal-weight mean across the three test drives; report individual test counts/availability. Distinct drives, not three cities, and not independent retrain repetitions.",
+      "hyperparameter_search": false
+    },
+    "folds": [
+      {
+        "id": "mk_test",
+        "report_path": "report.json",
+        "report_sha256": "157a440012d0048d1a4587bc70d63aa15be534554dde9874b85cbe4005525a8b",
+        "test_trip": "UrbanNav_MK_20210518",
+        "selected_model": "random_forest",
+        "models": {
+          "fixed_rules": {
+            "validation": {
+              "threshold": 0.5,
+              "rows": 743,
+              "positives": 243,
+              "predicted_positives": 25,
+              "true_positives": 19,
+              "true_negatives": 494,
+              "false_positives": 6,
+              "false_negatives": 224,
+              "accuracy": 0.6904441453566622,
+              "balanced_accuracy": 0.5330946502057613,
+              "precision": 0.76,
+              "recall": 0.07818930041152264,
+              "f1": 0.1417910447761194,
+              "false_positive_rate": 0.012,
+              "average_precision": 0.36090435283496447,
+              "roc_auc": 0.5330946502057613,
+              "brier_score": 0.30955585464333785,
+              "confusion_matrix": [
+                [
+                  494,
+                  6
+                ],
+                [
+                  224,
+                  19
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.5,
+              "rows": 139,
+              "positives": 55,
+              "predicted_positives": 1,
+              "true_positives": 1,
+              "true_negatives": 84,
+              "false_positives": 0,
+              "false_negatives": 54,
+              "accuracy": 0.6115107913669064,
+              "balanced_accuracy": 0.509090909090909,
+              "precision": 1.0,
+              "recall": 0.01818181818181818,
+              "f1": 0.03571428571428571,
+              "false_positive_rate": 0.0,
+              "average_precision": 0.4066710268149117,
+              "roc_auc": 0.509090909090909,
+              "brier_score": 0.38848920863309355,
+              "confusion_matrix": [
+                [
+                  84,
+                  0
+                ],
+                [
+                  54,
+                  1
+                ]
+              ]
+            }
+          },
+          "logistic_regression": {
+            "validation": {
+              "threshold": 0.25,
+              "rows": 743,
+              "positives": 243,
+              "predicted_positives": 302,
+              "true_positives": 193,
+              "true_negatives": 391,
+              "false_positives": 109,
+              "false_negatives": 50,
+              "accuracy": 0.7860026917900403,
+              "balanced_accuracy": 0.788119341563786,
+              "precision": 0.6390728476821192,
+              "recall": 0.7942386831275721,
+              "f1": 0.708256880733945,
+              "false_positive_rate": 0.218,
+              "average_precision": 0.6799146592795373,
+              "roc_auc": 0.8438024691358024,
+              "brier_score": 0.1549331046974671,
+              "confusion_matrix": [
+                [
+                  391,
+                  109
+                ],
+                [
+                  50,
+                  193
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.25,
+              "rows": 139,
+              "positives": 55,
+              "predicted_positives": 88,
+              "true_positives": 47,
+              "true_negatives": 43,
+              "false_positives": 41,
+              "false_negatives": 8,
+              "accuracy": 0.6474820143884892,
+              "balanced_accuracy": 0.6832251082251082,
+              "precision": 0.5340909090909091,
+              "recall": 0.8545454545454545,
+              "f1": 0.6573426573426573,
+              "false_positive_rate": 0.4880952380952381,
+              "average_precision": 0.5656755002127768,
+              "roc_auc": 0.6945887445887446,
+              "brier_score": 0.2572313803130026,
+              "confusion_matrix": [
+                [
+                  43,
+                  41
+                ],
+                [
+                  8,
+                  47
+                ]
+              ]
+            }
+          },
+          "random_forest": {
+            "validation": {
+              "threshold": 0.25,
+              "rows": 743,
+              "positives": 243,
+              "predicted_positives": 338,
+              "true_positives": 207,
+              "true_negatives": 369,
+              "false_positives": 131,
+              "false_negatives": 36,
+              "accuracy": 0.775235531628533,
+              "balanced_accuracy": 0.7949259259259259,
+              "precision": 0.6124260355029586,
+              "recall": 0.8518518518518519,
+              "f1": 0.7125645438898451,
+              "false_positive_rate": 0.262,
+              "average_precision": 0.6955735399550567,
+              "roc_auc": 0.8448312757201646,
+              "brier_score": 0.15231284189722705,
+              "confusion_matrix": [
+                [
+                  369,
+                  131
+                ],
+                [
+                  36,
+                  207
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.25,
+              "rows": 139,
+              "positives": 55,
+              "predicted_positives": 85,
+              "true_positives": 45,
+              "true_negatives": 44,
+              "false_positives": 40,
+              "false_negatives": 10,
+              "accuracy": 0.6402877697841727,
+              "balanced_accuracy": 0.670995670995671,
+              "precision": 0.5294117647058824,
+              "recall": 0.8181818181818182,
+              "f1": 0.6428571428571429,
+              "false_positive_rate": 0.47619047619047616,
+              "average_precision": 0.536759478452675,
+              "roc_auc": 0.6851731601731601,
+              "brier_score": 0.2271938878351285,
+              "confusion_matrix": [
+                [
+                  44,
+                  40
+                ],
+                [
+                  10,
+                  45
+                ]
+              ]
+            }
+          },
+          "gru": {
+            "validation": {
+              "threshold": 0.35000000000000003,
+              "rows": 743,
+              "positives": 243,
+              "predicted_positives": 378,
+              "true_positives": 217,
+              "true_negatives": 339,
+              "false_positives": 161,
+              "false_negatives": 26,
+              "accuracy": 0.7483176312247645,
+              "balanced_accuracy": 0.7855020576131688,
+              "precision": 0.5740740740740741,
+              "recall": 0.8930041152263375,
+              "f1": 0.6988727858293076,
+              "false_positive_rate": 0.322,
+              "average_precision": 0.665509061935535,
+              "roc_auc": 0.8463374485596707,
+              "brier_score": 0.15317901968955994,
+              "confusion_matrix": [
+                [
+                  339,
+                  161
+                ],
+                [
+                  26,
+                  217
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.35000000000000003,
+              "rows": 139,
+              "positives": 55,
+              "predicted_positives": 88,
+              "true_positives": 49,
+              "true_negatives": 45,
+              "false_positives": 39,
+              "false_negatives": 6,
+              "accuracy": 0.6762589928057554,
+              "balanced_accuracy": 0.7133116883116883,
+              "precision": 0.5568181818181818,
+              "recall": 0.8909090909090909,
+              "f1": 0.6853146853146853,
+              "false_positive_rate": 0.4642857142857143,
+              "average_precision": 0.543028974395009,
+              "roc_auc": 0.7227272727272727,
+              "brier_score": 0.2030552178621292,
+              "confusion_matrix": [
+                [
+                  45,
+                  39
+                ],
+                [
+                  6,
+                  49
+                ]
+              ]
+            }
+          }
+        },
+        "coverage": {
+          "raw_epochs": 3350,
+          "raw_time_span_s": 3349.0009999275208,
+          "nominal_cadence_s": 1.0,
+          "solution_epochs": 577,
+          "solution_availability": 0.17223880597014926,
+          "reference_time_matched_epochs": 2312,
+          "eligible_reference_epochs": 1270,
+          "scored_epochs": 139,
+          "scored_fraction_of_raw": 0.04149253731343284,
+          "solution_availability_on_eligible_reference": 0.1094488188976378,
+          "longest_solution_outage_s": 464.00099992752075,
+          "outage_duration_definition": "Last minus first missing epoch plus median raw epoch cadence.",
+          "causal_filter_segments": 43,
+          "causal_gru_segments": 63,
+          "filter_reset_gap_s": 10,
+          "gru_reset_gap_s": 5
+        },
+        "positioning": {
+          "methods": {
+            "wls": {
+              "input_epochs": 139,
+              "nonfinite_epochs": 0,
+              "epochs": 139,
+              "median_m": 7.56280221773702,
+              "p95_m": 28.046340456855575,
+              "rmse_m": 15.481160338189817,
+              "within_error_limits_m": {
+                "1": 0.03597122302158273,
+                "2": 0.11510791366906475,
+                "5": 0.3597122302158273,
+                "10": 0.60431654676259
+              },
+              "eligible_reference_epochs": 1270,
+              "available_and_within_error_limits_m": {
+                "1": 0.003937007874015748,
+                "2": 0.012598425196850394,
+                "5": 0.03937007874015748,
+                "10": 0.06614173228346457
+              }
+            },
+            "fixed_filter": {
+              "input_epochs": 139,
+              "nonfinite_epochs": 0,
+              "epochs": 139,
+              "median_m": 6.829938850373837,
+              "p95_m": 27.6345809247044,
+              "rmse_m": 15.668570448412515,
+              "within_error_limits_m": {
+                "1": 0.03597122302158273,
+                "2": 0.11510791366906475,
+                "5": 0.381294964028777,
+                "10": 0.60431654676259
+              },
+              "eligible_reference_epochs": 1270,
+              "available_and_within_error_limits_m": {
+                "1": 0.003937007874015748,
+                "2": 0.012598425196850394,
+                "5": 0.04173228346456693,
+                "10": 0.06614173228346457
+              }
+            },
+            "adaptive_filter": {
+              "input_epochs": 139,
+              "nonfinite_epochs": 0,
+              "epochs": 139,
+              "median_m": 6.720264958506406,
+              "p95_m": 28.01078729332256,
+              "rmse_m": 15.751203772409276,
+              "within_error_limits_m": {
+                "1": 0.02877697841726619,
+                "2": 0.11510791366906475,
+                "5": 0.37410071942446044,
+                "10": 0.5971223021582733
+              },
+              "eligible_reference_epochs": 1270,
+              "available_and_within_error_limits_m": {
+                "1": 0.0031496062992125984,
+                "2": 0.012598425196850394,
+                "5": 0.04094488188976378,
+                "10": 0.06535433070866142
+              }
+            }
+          },
+          "settings_selected_on": "validation",
+          "fixed_sigma_m": 5,
+          "acceleration_noise_mps2": 3,
+          "risk_bin_edges": [
+            0.0,
+            0.2,
+            0.4,
+            0.6000000000000001,
+            0.8,
+            1.0
+          ],
+          "risk_bin_variances_m2": [
+            51.73274451416691,
+            77.31751845843448,
+            83.6380133102092,
+            141.42786696578906,
+            151.4591169569917
+          ],
+          "uses_imu": false,
+          "warning": "Empirical planar-filter baseline. Report failures as well as improvements; this is not a production INS.",
+          "coverage_policy": "No position or alert output is credited at failed SPP epochs. Accuracy is conditional on reference-scored fixes; the joint availability/accuracy fraction uses all quality-eligible reference epochs.",
+          "test_independent_acquisitions": 1
+        }
+      },
+      {
+        "id": "tst_test",
+        "report_path": "folds/tst_test/report.json",
+        "report_sha256": "ad5cca6a7530debe80fd4668b1e571bbc275d3301f0ca3caeb2d03b6e0f09f68",
+        "test_trip": "UrbanNav_TST_20210517",
+        "selected_model": "gru",
+        "models": {
+          "fixed_rules": {
+            "validation": {
+              "threshold": 0.5,
+              "rows": 139,
+              "positives": 55,
+              "predicted_positives": 1,
+              "true_positives": 1,
+              "true_negatives": 84,
+              "false_positives": 0,
+              "false_negatives": 54,
+              "accuracy": 0.6115107913669064,
+              "balanced_accuracy": 0.509090909090909,
+              "precision": 1.0,
+              "recall": 0.01818181818181818,
+              "f1": 0.03571428571428571,
+              "false_positive_rate": 0.0,
+              "average_precision": 0.4066710268149117,
+              "roc_auc": 0.509090909090909,
+              "brier_score": 0.38848920863309355,
+              "confusion_matrix": [
+                [
+                  84,
+                  0
+                ],
+                [
+                  54,
+                  1
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.5,
+              "rows": 311,
+              "positives": 54,
+              "predicted_positives": 28,
+              "true_positives": 6,
+              "true_negatives": 235,
+              "false_positives": 22,
+              "false_negatives": 48,
+              "accuracy": 0.77491961414791,
+              "balanced_accuracy": 0.512753999135322,
+              "precision": 0.21428571428571427,
+              "recall": 0.1111111111111111,
+              "f1": 0.14634146341463414,
+              "false_positive_rate": 0.08560311284046693,
+              "average_precision": 0.17815035982238556,
+              "roc_auc": 0.512753999135322,
+              "brier_score": 0.22508038585209003,
+              "confusion_matrix": [
+                [
+                  235,
+                  22
+                ],
+                [
+                  48,
+                  6
+                ]
+              ]
+            }
+          },
+          "logistic_regression": {
+            "validation": {
+              "threshold": 0.5,
+              "rows": 139,
+              "positives": 55,
+              "predicted_positives": 92,
+              "true_positives": 52,
+              "true_negatives": 44,
+              "false_positives": 40,
+              "false_negatives": 3,
+              "accuracy": 0.6906474820143885,
+              "balanced_accuracy": 0.7346320346320346,
+              "precision": 0.5652173913043478,
+              "recall": 0.9454545454545454,
+              "f1": 0.7074829931972789,
+              "false_positive_rate": 0.47619047619047616,
+              "average_precision": 0.550693199578169,
+              "roc_auc": 0.7452380952380953,
+              "brier_score": 0.2437813803005262,
+              "confusion_matrix": [
+                [
+                  44,
+                  40
+                ],
+                [
+                  3,
+                  52
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.5,
+              "rows": 311,
+              "positives": 54,
+              "predicted_positives": 129,
+              "true_positives": 48,
+              "true_negatives": 176,
+              "false_positives": 81,
+              "false_negatives": 6,
+              "accuracy": 0.7202572347266881,
+              "balanced_accuracy": 0.7868568958063121,
+              "precision": 0.37209302325581395,
+              "recall": 0.8888888888888888,
+              "f1": 0.5245901639344263,
+              "false_positive_rate": 0.3151750972762646,
+              "average_precision": 0.4599440166902485,
+              "roc_auc": 0.8601383484651968,
+              "brier_score": 0.18647888073758742,
+              "confusion_matrix": [
+                [
+                  176,
+                  81
+                ],
+                [
+                  6,
+                  48
+                ]
+              ]
+            }
+          },
+          "random_forest": {
+            "validation": {
+              "threshold": 0.4,
+              "rows": 139,
+              "positives": 55,
+              "predicted_positives": 85,
+              "true_positives": 51,
+              "true_negatives": 50,
+              "false_positives": 34,
+              "false_negatives": 4,
+              "accuracy": 0.7266187050359713,
+              "balanced_accuracy": 0.7612554112554113,
+              "precision": 0.6,
+              "recall": 0.9272727272727272,
+              "f1": 0.7285714285714285,
+              "false_positive_rate": 0.40476190476190477,
+              "average_precision": 0.5504879100033984,
+              "roc_auc": 0.7584415584415584,
+              "brier_score": 0.2019814052465211,
+              "confusion_matrix": [
+                [
+                  50,
+                  34
+                ],
+                [
+                  4,
+                  51
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.4,
+              "rows": 311,
+              "positives": 54,
+              "predicted_positives": 158,
+              "true_positives": 52,
+              "true_negatives": 151,
+              "false_positives": 106,
+              "false_negatives": 2,
+              "accuracy": 0.6527331189710611,
+              "balanced_accuracy": 0.7752558005476293,
+              "precision": 0.3291139240506329,
+              "recall": 0.9629629629629629,
+              "f1": 0.49056603773584906,
+              "false_positive_rate": 0.41245136186770426,
+              "average_precision": 0.4358368233153293,
+              "roc_auc": 0.8368641014555411,
+              "brier_score": 0.19338142499464583,
+              "confusion_matrix": [
+                [
+                  151,
+                  106
+                ],
+                [
+                  2,
+                  52
+                ]
+              ]
+            }
+          },
+          "gru": {
+            "validation": {
+              "threshold": 0.6500000000000001,
+              "rows": 139,
+              "positives": 55,
+              "predicted_positives": 71,
+              "true_positives": 47,
+              "true_negatives": 60,
+              "false_positives": 24,
+              "false_negatives": 8,
+              "accuracy": 0.7697841726618705,
+              "balanced_accuracy": 0.7844155844155845,
+              "precision": 0.6619718309859155,
+              "recall": 0.8545454545454545,
+              "f1": 0.746031746031746,
+              "false_positive_rate": 0.2857142857142857,
+              "average_precision": 0.6587037183381765,
+              "roc_auc": 0.812987012987013,
+              "brier_score": 0.18801628053188324,
+              "confusion_matrix": [
+                [
+                  60,
+                  24
+                ],
+                [
+                  8,
+                  47
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.6500000000000001,
+              "rows": 311,
+              "positives": 54,
+              "predicted_positives": 119,
+              "true_positives": 42,
+              "true_negatives": 180,
+              "false_positives": 77,
+              "false_negatives": 12,
+              "accuracy": 0.7138263665594855,
+              "balanced_accuracy": 0.7390834414180718,
+              "precision": 0.35294117647058826,
+              "recall": 0.7777777777777778,
+              "f1": 0.48554913294797686,
+              "false_positive_rate": 0.29961089494163423,
+              "average_precision": 0.3664376094559541,
+              "roc_auc": 0.7792189076235769,
+              "brier_score": 0.23308217525482178,
+              "confusion_matrix": [
+                [
+                  180,
+                  77
+                ],
+                [
+                  12,
+                  42
+                ]
+              ]
+            }
+          }
+        },
+        "coverage": {
+          "raw_epochs": 786,
+          "raw_time_span_s": 785.0,
+          "nominal_cadence_s": 1.0,
+          "solution_epochs": 351,
+          "solution_availability": 0.44656488549618323,
+          "reference_time_matched_epochs": 786,
+          "eligible_reference_epochs": 646,
+          "scored_epochs": 311,
+          "scored_fraction_of_raw": 0.39567430025445294,
+          "solution_availability_on_eligible_reference": 0.48142414860681115,
+          "longest_solution_outage_s": 103.0,
+          "outage_duration_definition": "Last minus first missing epoch plus median raw epoch cadence.",
+          "causal_filter_segments": 13,
+          "causal_gru_segments": 21,
+          "filter_reset_gap_s": 10,
+          "gru_reset_gap_s": 5
+        },
+        "positioning": {
+          "methods": {
+            "wls": {
+              "input_epochs": 311,
+              "nonfinite_epochs": 0,
+              "epochs": 311,
+              "median_m": 4.875596072351594,
+              "p95_m": 14.58975122291369,
+              "rmse_m": 7.880999101924198,
+              "within_error_limits_m": {
+                "1": 0.05466237942122187,
+                "2": 0.19292604501607716,
+                "5": 0.5176848874598071,
+                "10": 0.8263665594855305
+              },
+              "eligible_reference_epochs": 646,
+              "available_and_within_error_limits_m": {
+                "1": 0.02631578947368421,
+                "2": 0.09287925696594428,
+                "5": 0.24922600619195046,
+                "10": 0.3978328173374613
+              }
+            },
+            "fixed_filter": {
+              "input_epochs": 311,
+              "nonfinite_epochs": 0,
+              "epochs": 311,
+              "median_m": 4.853800055895469,
+              "p95_m": 14.841249419666024,
+              "rmse_m": 9.559284887220137,
+              "within_error_limits_m": {
+                "1": 0.06109324758842444,
+                "2": 0.1832797427652733,
+                "5": 0.5144694533762058,
+                "10": 0.8327974276527331
+              },
+              "eligible_reference_epochs": 646,
+              "available_and_within_error_limits_m": {
+                "1": 0.029411764705882353,
+                "2": 0.08823529411764706,
+                "5": 0.2476780185758514,
+                "10": 0.40092879256965946
+              }
+            },
+            "adaptive_filter": {
+              "input_epochs": 311,
+              "nonfinite_epochs": 0,
+              "epochs": 311,
+              "median_m": 4.98587409440673,
+              "p95_m": 12.222725551213957,
+              "rmse_m": 6.901632835407845,
+              "within_error_limits_m": {
+                "1": 0.05144694533762058,
+                "2": 0.19614147909967847,
+                "5": 0.5048231511254019,
+                "10": 0.864951768488746
+              },
+              "eligible_reference_epochs": 646,
+              "available_and_within_error_limits_m": {
+                "1": 0.02476780185758514,
+                "2": 0.09442724458204334,
+                "5": 0.24303405572755418,
+                "10": 0.41640866873065013
+              }
+            }
+          },
+          "settings_selected_on": "validation",
+          "fixed_sigma_m": 2,
+          "acceleration_noise_mps2": 3,
+          "risk_bin_edges": [
+            0.0,
+            0.2,
+            0.4,
+            0.6000000000000001,
+            0.8,
+            1.0
+          ],
+          "risk_bin_variances_m2": [
+            12.255629972699133,
+            12.255629972699133,
+            62.87002946713008,
+            222.09362635467406,
+            222.09362635467406
+          ],
+          "uses_imu": false,
+          "warning": "Empirical planar-filter baseline. Report failures as well as improvements; this is not a production INS.",
+          "coverage_policy": "No position or alert output is credited at failed SPP epochs. Accuracy is conditional on reference-scored fixes; the joint availability/accuracy fraction uses all quality-eligible reference epochs.",
+          "test_independent_acquisitions": 1
+        }
+      },
+      {
+        "id": "wp_test",
+        "report_path": "folds/wp_test/report.json",
+        "report_sha256": "885463a702ed285f7040d805a14b0bc262636ae9af4c110683a097bc74063ee4",
+        "test_trip": "UrbanNav_WP_20210521",
+        "selected_model": "logistic_regression",
+        "models": {
+          "fixed_rules": {
+            "validation": {
+              "threshold": 0.5,
+              "rows": 311,
+              "positives": 54,
+              "predicted_positives": 28,
+              "true_positives": 6,
+              "true_negatives": 235,
+              "false_positives": 22,
+              "false_negatives": 48,
+              "accuracy": 0.77491961414791,
+              "balanced_accuracy": 0.512753999135322,
+              "precision": 0.21428571428571427,
+              "recall": 0.1111111111111111,
+              "f1": 0.14634146341463414,
+              "false_positive_rate": 0.08560311284046693,
+              "average_precision": 0.17815035982238556,
+              "roc_auc": 0.512753999135322,
+              "brier_score": 0.22508038585209003,
+              "confusion_matrix": [
+                [
+                  235,
+                  22
+                ],
+                [
+                  48,
+                  6
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.5,
+              "rows": 743,
+              "positives": 243,
+              "predicted_positives": 25,
+              "true_positives": 19,
+              "true_negatives": 494,
+              "false_positives": 6,
+              "false_negatives": 224,
+              "accuracy": 0.6904441453566622,
+              "balanced_accuracy": 0.5330946502057613,
+              "precision": 0.76,
+              "recall": 0.07818930041152264,
+              "f1": 0.1417910447761194,
+              "false_positive_rate": 0.012,
+              "average_precision": 0.36090435283496447,
+              "roc_auc": 0.5330946502057613,
+              "brier_score": 0.30955585464333785,
+              "confusion_matrix": [
+                [
+                  494,
+                  6
+                ],
+                [
+                  224,
+                  19
+                ]
+              ]
+            }
+          },
+          "logistic_regression": {
+            "validation": {
+              "threshold": 0.6500000000000001,
+              "rows": 311,
+              "positives": 54,
+              "predicted_positives": 181,
+              "true_positives": 52,
+              "true_negatives": 128,
+              "false_positives": 129,
+              "false_negatives": 2,
+              "accuracy": 0.5787781350482315,
+              "balanced_accuracy": 0.730508718835567,
+              "precision": 0.287292817679558,
+              "recall": 0.9629629629629629,
+              "f1": 0.4425531914893617,
+              "false_positive_rate": 0.5019455252918288,
+              "average_precision": 0.33124297216059545,
+              "roc_auc": 0.7422539270788298,
+              "brier_score": 0.38278766324128727,
+              "confusion_matrix": [
+                [
+                  128,
+                  129
+                ],
+                [
+                  2,
+                  52
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.6500000000000001,
+              "rows": 743,
+              "positives": 243,
+              "predicted_positives": 269,
+              "true_positives": 165,
+              "true_negatives": 396,
+              "false_positives": 104,
+              "false_negatives": 78,
+              "accuracy": 0.7550471063257066,
+              "balanced_accuracy": 0.7355061728395063,
+              "precision": 0.6133828996282528,
+              "recall": 0.6790123456790124,
+              "f1": 0.64453125,
+              "false_positive_rate": 0.208,
+              "average_precision": 0.6055125109980581,
+              "roc_auc": 0.8185432098765432,
+              "brier_score": 0.184776860450733,
+              "confusion_matrix": [
+                [
+                  396,
+                  104
+                ],
+                [
+                  78,
+                  165
+                ]
+              ]
+            }
+          },
+          "random_forest": {
+            "validation": {
+              "threshold": 0.55,
+              "rows": 311,
+              "positives": 54,
+              "predicted_positives": 144,
+              "true_positives": 42,
+              "true_negatives": 155,
+              "false_positives": 102,
+              "false_negatives": 12,
+              "accuracy": 0.6334405144694534,
+              "balanced_accuracy": 0.6904453091223519,
+              "precision": 0.2916666666666667,
+              "recall": 0.7777777777777778,
+              "f1": 0.42424242424242425,
+              "false_positive_rate": 0.3968871595330739,
+              "average_precision": 0.3500272614341499,
+              "roc_auc": 0.7367776336647932,
+              "brier_score": 0.2619658292548956,
+              "confusion_matrix": [
+                [
+                  155,
+                  102
+                ],
+                [
+                  12,
+                  42
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.55,
+              "rows": 743,
+              "positives": 243,
+              "predicted_positives": 258,
+              "true_positives": 154,
+              "true_negatives": 396,
+              "false_positives": 104,
+              "false_negatives": 89,
+              "accuracy": 0.7402422611036339,
+              "balanced_accuracy": 0.7128724279835391,
+              "precision": 0.5968992248062015,
+              "recall": 0.6337448559670782,
+              "f1": 0.6147704590818364,
+              "false_positive_rate": 0.208,
+              "average_precision": 0.5803187513655117,
+              "roc_auc": 0.8087489711934157,
+              "brier_score": 0.18397599704653086,
+              "confusion_matrix": [
+                [
+                  396,
+                  104
+                ],
+                [
+                  89,
+                  154
+                ]
+              ]
+            }
+          },
+          "gru": {
+            "validation": {
+              "threshold": 0.45,
+              "rows": 311,
+              "positives": 54,
+              "predicted_positives": 150,
+              "true_positives": 38,
+              "true_negatives": 145,
+              "false_positives": 112,
+              "false_negatives": 16,
+              "accuracy": 0.5884244372990354,
+              "balanced_accuracy": 0.633953019167027,
+              "precision": 0.25333333333333335,
+              "recall": 0.7037037037037037,
+              "f1": 0.37254901960784315,
+              "false_positive_rate": 0.4357976653696498,
+              "average_precision": 0.30043465829848104,
+              "roc_auc": 0.6879233318922034,
+              "brier_score": 0.21144378185272217,
+              "confusion_matrix": [
+                [
+                  145,
+                  112
+                ],
+                [
+                  16,
+                  38
+                ]
+              ]
+            },
+            "test": {
+              "threshold": 0.45,
+              "rows": 743,
+              "positives": 243,
+              "predicted_positives": 279,
+              "true_positives": 162,
+              "true_negatives": 383,
+              "false_positives": 117,
+              "false_negatives": 81,
+              "accuracy": 0.7335127860026918,
+              "balanced_accuracy": 0.7163333333333333,
+              "precision": 0.5806451612903226,
+              "recall": 0.6666666666666666,
+              "f1": 0.6206896551724138,
+              "false_positive_rate": 0.234,
+              "average_precision": 0.6289651792752384,
+              "roc_auc": 0.8119506172839507,
+              "brier_score": 0.2139192670583725,
+              "confusion_matrix": [
+                [
+                  383,
+                  117
+                ],
+                [
+                  81,
+                  162
+                ]
+              ]
+            }
+          }
+        },
+        "coverage": {
+          "raw_epochs": 1535,
+          "raw_time_span_s": 1534.0010001659393,
+          "nominal_cadence_s": 1.0,
+          "solution_epochs": 887,
+          "solution_availability": 0.5778501628664495,
+          "reference_time_matched_epochs": 1535,
+          "eligible_reference_epochs": 1317,
+          "scored_epochs": 743,
+          "scored_fraction_of_raw": 0.48403908794788275,
+          "solution_availability_on_eligible_reference": 0.5641609719058466,
+          "longest_solution_outage_s": 87.0,
+          "outage_duration_definition": "Last minus first missing epoch plus median raw epoch cadence.",
+          "causal_filter_segments": 21,
+          "causal_gru_segments": 35,
+          "filter_reset_gap_s": 10,
+          "gru_reset_gap_s": 5
+        },
+        "positioning": {
+          "methods": {
+            "wls": {
+              "input_epochs": 743,
+              "nonfinite_epochs": 0,
+              "epochs": 743,
+              "median_m": 5.233388855828933,
+              "p95_m": 22.30083377048295,
+              "rmse_m": 12.15275997517014,
+              "within_error_limits_m": {
+                "1": 0.013458950201884253,
+                "2": 0.09421265141318977,
+                "5": 0.4952893674293405,
+                "10": 0.6729475100942126
+              },
+              "eligible_reference_epochs": 1317,
+              "available_and_within_error_limits_m": {
+                "1": 0.007593014426727411,
+                "2": 0.05315110098709187,
+                "5": 0.27942293090356873,
+                "10": 0.37965072133637057
+              }
+            },
+            "fixed_filter": {
+              "input_epochs": 743,
+              "nonfinite_epochs": 0,
+              "epochs": 743,
+              "median_m": 5.4663322462897925,
+              "p95_m": 22.692014314623886,
+              "rmse_m": 15.84793262850354,
+              "within_error_limits_m": {
+                "1": 0.02288021534320323,
+                "2": 0.08882907133243607,
+                "5": 0.47240915208613726,
+                "10": 0.676985195154778
+              },
+              "eligible_reference_epochs": 1317,
+              "available_and_within_error_limits_m": {
+                "1": 0.012908124525436599,
+                "2": 0.05011389521640091,
+                "5": 0.26651480637813213,
+                "10": 0.3819286256643888
+              }
+            },
+            "adaptive_filter": {
+              "input_epochs": 743,
+              "nonfinite_epochs": 0,
+              "epochs": 743,
+              "median_m": 5.327420263353798,
+              "p95_m": 22.746650289608095,
+              "rmse_m": 12.285033395870567,
+              "within_error_limits_m": {
+                "1": 0.029609690444145357,
+                "2": 0.1009421265141319,
+                "5": 0.48048452220726784,
+                "10": 0.6648721399730821
+              },
+              "eligible_reference_epochs": 1317,
+              "available_and_within_error_limits_m": {
+                "1": 0.016704631738800303,
+                "2": 0.05694760820045558,
+                "5": 0.27107061503416857,
+                "10": 0.37509491268033407
+              }
+            }
+          },
+          "settings_selected_on": "validation",
+          "fixed_sigma_m": 2,
+          "acceleration_noise_mps2": 1,
+          "risk_bin_edges": [
+            0.0,
+            0.2,
+            0.4,
+            0.6000000000000001,
+            0.8,
+            1.0
+          ],
+          "risk_bin_variances_m2": [
+            4.631868713383248,
+            14.768582746890054,
+            14.768582746890054,
+            27.988529544733964,
+            50.2106955519425
+          ],
+          "uses_imu": false,
+          "warning": "Empirical planar-filter baseline. Report failures as well as improvements; this is not a production INS.",
+          "coverage_policy": "No position or alert output is credited at failed SPP epochs. Accuracy is conditional on reference-scored fixes; the joint availability/accuracy fraction uses all quality-eligible reference epochs.",
+          "test_independent_acquisitions": 1
+        }
+      }
+    ],
+    "total_raw_test_epochs": 5671,
+    "total_scored_test_epochs": 1193,
+    "distinct_test_acquisitions": 3,
+    "models_macro": {
+      "fixed_rules": {
+        "precision": 0.6580952380952381,
+        "recall": 0.06916074323481732,
+        "f1": 0.10794893130167975,
+        "average_precision": 0.31524191315742056
+      },
+      "logistic_regression": {
+        "precision": 0.5065222773249919,
+        "recall": 0.8074822297044518,
+        "f1": 0.6088213570923612,
+        "average_precision": 0.5437106759670278
+      },
+      "random_forest": {
+        "precision": 0.48514163785423897,
+        "recall": 0.8049632123706197,
+        "f1": 0.5827312132249428,
+        "average_precision": 0.5176383510445054
+      },
+      "gru": {
+        "precision": 0.4968015065263642,
+        "recall": 0.7784511784511784,
+        "f1": 0.5971844911450254,
+        "average_precision": 0.5128105877087338
+      }
+    },
+    "limitations": [
+      "Only three drives, one receiver/antenna configuration and one city; area and date are confounded.",
+      "These acquisitions were already inspected for NLOS classification; this is a new positioning task, not a globally blind final benchmark.",
+      "One whole test acquisition yields more epochs but only one independent test drive.",
+      "SPP solver differs from the GSDC-derived-data adapter; scores must not be pooled without recording that difference.",
+      "SPAN reference quality and time guards affect evaluation coverage; all removed/failed epochs must be reported.",
+      "No raw IMU integration, TDCP, RTK ambiguity resolution or NLOS-prediction-driven positioning in this branch.",
+      "Exploratory rotating whole-drive tests; the primary Mong Kok result was already inspected. Not an untouched final benchmark.",
+      "Equal-weight mean across the three test drives; report individual test counts/availability. Distinct drives, not three cities, and not independent retrain repetitions."
+    ]
+  },
+  "doppler": {
+    "version": 1,
+    "task_type": "doppler_positioning_comparison",
+    "policy": {
+      "version": 1,
+      "method": "Causal planar Kalman filter with SPP position and independent approximate Doppler velocity measurement updates",
+      "position_sigma_candidates_m": [
+        2,
+        5,
+        10,
+        20
+      ],
+      "acceleration_noise_candidates_mps2": [
+        1,
+        3
+      ],
+      "settings_selected_on": "validation RMSE only, same eight position/process candidates as the existing filter baseline",
+      "velocity_covariance_eigenvalue_floor_m2ps2": 0.04,
+      "position_gate_nis": 100,
+      "velocity_gate_nis": 25,
+      "reset_gap_s": 10,
+      "uses_future_observations": false,
+      "uses_reference_as_input": false,
+      "uses_nlos_predictions": false,
+      "source_methods": [
+        "RTKLIB pntpos/estvel",
+        "GraphGNSSLib pseudorange and Doppler motion information",
+        "Suzuki 2023 separation of velocity and position information"
+      ],
+      "limitations": [
+        "Method-inspired baseline, not GraphGNSSLib FGO or Suzuki TDCP/two-step algorithm reproduction.",
+        "Sequential position/velocity updates approximate their correlation as zero; RTKLIB velocity covariance is a model estimate, not empirical calibration.",
+        "Doppler is extracted only at the unchanged successful SPP population; no outage bridging or extra valid positions are credited.",
+        "Additional development experiment after inspecting baseline results, not a blind final benchmark. No alert/NLOS model retraining."
+      ]
+    },
+    "folds": [
+      {
+        "id": "mk_test",
+        "test_trip": "UrbanNav_MK_20210518",
+        "source_report_sha256": "157a440012d0048d1a4587bc70d63aa15be534554dde9874b85cbe4005525a8b",
+        "metrics": {
+          "input_epochs": 139,
+          "nonfinite_epochs": 0,
+          "epochs": 139,
+          "median_m": 8.979496205080022,
+          "p95_m": 33.150607833240215,
+          "rmse_m": 14.610350481152937,
+          "within_error_limits_m": {
+            "1": 0.02158273381294964,
+            "2": 0.1079136690647482,
+            "5": 0.38848920863309355,
+            "10": 0.60431654676259
+          },
+          "eligible_reference_epochs": 1270,
+          "available_and_within_error_limits_m": {
+            "1": 0.002362204724409449,
+            "2": 0.011811023622047244,
+            "5": 0.04251968503937008,
+            "10": 0.06614173228346457
+          }
+        },
+        "diagnostics_on_all_successful_fixes": {
+          "epochs": 577,
+          "segments": 43,
+          "velocity_updates": 563,
+          "missing_velocity_epochs": 0,
+          "invalid_covariance_epochs": 0,
+          "position_gate_rejections": 22,
+          "velocity_gate_rejections": 14
+        },
+        "settings": {
+          "position_sigma_m": 2,
+          "acceleration_noise_mps2": 1,
+          "selected_on": "validation",
+          "validation_rmse_m": 11.16988117231121
+        },
+        "baseline_cohort_unchanged": true,
+        "alert_models_retrained": false
+      },
+      {
+        "id": "tst_test",
+        "test_trip": "UrbanNav_TST_20210517",
+        "source_report_sha256": "ad5cca6a7530debe80fd4668b1e571bbc275d3301f0ca3caeb2d03b6e0f09f68",
+        "metrics": {
+          "input_epochs": 311,
+          "nonfinite_epochs": 0,
+          "epochs": 311,
+          "median_m": 6.730499700954305,
+          "p95_m": 14.866054672984774,
+          "rmse_m": 8.530918793320259,
+          "within_error_limits_m": {
+            "1": 0.022508038585209004,
+            "2": 0.06752411575562701,
+            "5": 0.3279742765273312,
+            "10": 0.7684887459807074
+          },
+          "eligible_reference_epochs": 646,
+          "available_and_within_error_limits_m": {
+            "1": 0.010835913312693499,
+            "2": 0.032507739938080496,
+            "5": 0.15789473684210525,
+            "10": 0.369969040247678
+          }
+        },
+        "diagnostics_on_all_successful_fixes": {
+          "epochs": 351,
+          "segments": 13,
+          "velocity_updates": 336,
+          "missing_velocity_epochs": 0,
+          "invalid_covariance_epochs": 0,
+          "position_gate_rejections": 0,
+          "velocity_gate_rejections": 15
+        },
+        "settings": {
+          "position_sigma_m": 5,
+          "acceleration_noise_mps2": 1,
+          "selected_on": "validation",
+          "validation_rmse_m": 14.11705101508694
+        },
+        "baseline_cohort_unchanged": true,
+        "alert_models_retrained": false
+      },
+      {
+        "id": "wp_test",
+        "test_trip": "UrbanNav_WP_20210521",
+        "source_report_sha256": "885463a702ed285f7040d805a14b0bc262636ae9af4c110683a097bc74063ee4",
+        "metrics": {
+          "input_epochs": 743,
+          "nonfinite_epochs": 0,
+          "epochs": 743,
+          "median_m": 6.339085591921284,
+          "p95_m": 20.816597791254086,
+          "rmse_m": 11.16988117231121,
+          "within_error_limits_m": {
+            "1": 0.013458950201884253,
+            "2": 0.08344549125168237,
+            "5": 0.44010767160161507,
+            "10": 0.6648721399730821
+          },
+          "eligible_reference_epochs": 1317,
+          "available_and_within_error_limits_m": {
+            "1": 0.007593014426727411,
+            "2": 0.047076689445709946,
+            "5": 0.24829157175398633,
+            "10": 0.37509491268033407
+          }
+        },
+        "diagnostics_on_all_successful_fixes": {
+          "epochs": 887,
+          "segments": 21,
+          "velocity_updates": 822,
+          "missing_velocity_epochs": 0,
+          "invalid_covariance_epochs": 0,
+          "position_gate_rejections": 18,
+          "velocity_gate_rejections": 65
+        },
+        "settings": {
+          "position_sigma_m": 2,
+          "acceleration_noise_mps2": 1,
+          "selected_on": "validation",
+          "validation_rmse_m": 7.215592333072501
+        },
+        "baseline_cohort_unchanged": true,
+        "alert_models_retrained": false
+      }
+    ],
+    "input_files_sha256": {
+      "config/urbannav_doppler.json": "4b061290e7a34f552b41d86d4dcf2b2181c1d5ab0486cdf3bc2c064d87459bbd",
+      "data/processed/urbannav_positioning_v3/epochs.csv": "21736380e0af4fc1bc95177a6b8839885257b2baeef37c269f6560babc49c6af",
+      "data/processed/urbannav_positioning_v3/observations.csv": "6ec273e6a74efa3ca2428974b746f919600d9ada2fe7cdad3af160f78aa9dae8",
+      "data/processed/urbannav_doppler/velocity.csv": "78f1dfea3c842b6447793e44544cd019a630de68c177378ba6eab0693b15b2f5",
+      "data/processed/urbannav_doppler/preprocessing_plan.json": "8b5602e2ce299f49915b64649f4c350537d8454c2ce346881ebf21c485f6a691",
+      "artifacts/urbannav_positioning/positioning_rotation_report.json": "134c6177de5af77b3c845ab9364f9bd1dbca47e4e8cfd905a993acd2bc865052",
+      "src/navdiag/doppler.py": "14344f754a810fbcafb2d832ebac438135a43f919bc72caaf87ead12aa3ebc23",
+      "scripts/run_doppler_comparison.py": "d33f9135e13a4e14b466ea5e4909815d75f01b0e9805fc40b2e07aaffa679735"
+    }
+  }
+}
